@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core surfaces */
+  --color-paper: #faf9f7;
+  --color-paper-raised: #ffffff;
+  --color-ink: #16181d;
+  --color-ink-soft: #4b4f58;
+
+  /* Stone neutral scale (warm gray, ties to the "keep" masonry motif) */
+  --color-stone-100: #f2f0ec;
+  --color-stone-200: #e4e1da;
+  --color-stone-300: #cac5b9;
+  --color-stone-400: #a6a094;
+  --color-stone-600: #706a5c;
+  --color-stone-800: #3c382f;
+
+  /* Brand accent — bronze, used sparingly for emphasis/CTA only */
+  --color-accent: #a3611f;
+  --color-accent-strong: #7c4816;
+  --color-accent-soft: #f1e3d2;
+
+  /* Capability-status colors — deliberately distinct from the brand accent */
+  --color-status-current-fg: #1e6b45;
+  --color-status-current-bg: #e4f2ea;
+  --color-status-planned-fg: #29527a;
+  --color-status-planned-bg: #e6eef5;
+  --color-status-unknown-fg: #5c574c;
+  --color-status-unknown-bg: #efece5;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--color-paper);
+  --color-paper-raised: var(--color-paper-raised);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+
+  --color-stone-100: var(--color-stone-100);
+  --color-stone-200: var(--color-stone-200);
+  --color-stone-300: var(--color-stone-300);
+  --color-stone-400: var(--color-stone-400);
+  --color-stone-600: var(--color-stone-600);
+  --color-stone-800: var(--color-stone-800);
+
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-accent-soft: var(--color-accent-soft);
+
+  --color-status-current-fg: var(--color-status-current-fg);
+  --color-status-current-bg: var(--color-status-current-bg);
+  --color-status-planned-fg: var(--color-status-planned-fg);
+  --color-status-planned-bg: var(--color-status-planned-bg);
+  --color-status-unknown-fg: var(--color-status-unknown-fg);
+  --color-status-unknown-bg: var(--color-status-unknown-bg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-paper: #14161a;
+    --color-paper-raised: #1b1e23;
+    --color-ink: #f2f0ec;
+    --color-ink-soft: #b8b4aa;
+
+    --color-stone-100: #24262b;
+    --color-stone-200: #2d3036;
+    --color-stone-300: #3c3f46;
+    --color-stone-400: #5c5f66;
+    --color-stone-600: #96938a;
+    --color-stone-800: #d8d4c9;
+
+    --color-accent: #c98a45;
+    --color-accent-strong: #e0a563;
+    --color-accent-soft: #3a2d1c;
+
+    --color-status-current-fg: #7bd6a8;
+    --color-status-current-bg: #1a3327;
+    --color-status-planned-fg: #8fc0ec;
+    --color-status-planned-bg: #1c2c3d;
+    --color-status-unknown-fg: #c7c2b4;
+    --color-status-unknown-bg: #2c2a24;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
