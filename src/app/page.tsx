@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 text-center">
       <div className="space-y-4">
-        <Wordmark className="text-5xl sm:text-6xl" />
+        <Wordmark as="h1" className="text-5xl sm:text-6xl" />
         <Tagline className="text-sm sm:text-base" />
         <p className="text-ink-soft">Built for Managed Service Providers</p>
       </div>

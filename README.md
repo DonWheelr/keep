@@ -23,6 +23,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Structure
 
+Quick orientation only — see `WEBSITE_ARCHITECTURE.md` for anything more
+than this:
+
 ```
 src/
   app/                 route segments (one folder per page)
@@ -31,10 +34,13 @@ src/
 mdx-components.tsx     required by @next/mdx for the App Router
 ```
 
-## Content rules
+## Architecture
 
-- Every capability claim must be labeled Current Capability, Planned
-  Capability, or Unknown — see `src/components/capability-status.tsx`.
-- No unsupported marketing claims.
-- Evaluation forms may call the Control Plane API in the future; this repo
-  does not embed Control Plane logic itself.
+`WEBSITE_ARCHITECTURE.md` is the single source of truth for this
+repository's site map, information architecture, component architecture,
+design system, content governance (including the Current/Planned/Unknown
+capability rule and the "no unsupported marketing claims" rule), SEO
+architecture, future expansion planning, and deployment/hosting
+architecture. Read it before making structural changes; don't restate its
+rules here — update it there instead, so this README can't drift out of
+sync with the rules it's describing.

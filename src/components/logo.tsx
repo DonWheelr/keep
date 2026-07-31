@@ -2,13 +2,20 @@ import Link from "next/link";
 
 const TAGLINE_PARTS = ["Know", "Evaluate", "Enforce", "Protect"];
 
-export function Wordmark({ className = "" }: { className?: string }) {
+export function Wordmark({
+  className = "",
+  as = "span",
+}: {
+  className?: string;
+  as?: "span" | "h1";
+}) {
+  const Tag = as;
   return (
-    <span
+    <Tag
       className={`font-sans text-xl font-bold tracking-[0.08em] text-ink ${className}`}
     >
       KEEP
-    </span>
+    </Tag>
   );
 }
 
