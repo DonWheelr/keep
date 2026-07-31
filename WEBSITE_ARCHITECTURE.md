@@ -203,27 +203,37 @@ and how visitors arrive at / leave from it. This section describes the
 ### Technology Alignment
 
 The public website should stay aligned with the KEEP application's own
-technology and visual design language wherever practical, rather than
-accumulating an independent stack or a divergent look by default.
+engineering technology wherever practical, rather than accumulating an
+independent stack by default. This subsection covers framework, language,
+styling *mechanism*, linting/formatting, project structure, component
+conventions, naming conventions, and build tooling.
 
-**Rationale:** a second, divergent frontend stack is a second set of
-tooling, conventions, and upgrade paths for whoever maintains both, and a
-divergent visual language undercuts the point of a shared brand. That
+**This subsection deliberately does not cover the visual design system
+itself** (design tokens, typography, spacing, components, iconography,
+interaction patterns) — that is governed the other way around, by the
+website, per
+[KEEP Design System Authority](#keep-design-system-authority) at the top
+of Section 4. Until 2026-07-30 this subsection's original wording lumped
+"technology and visual design language" together under one
+website-follows-application rule; that was superseded by the architecture
+decision recorded in Section 4, not merely amended alongside it, since the
+two directions directly conflicted. This is the reconciled version.
+
+**Rationale:** a second, divergent engineering stack is a second set of
+tooling, conventions, and upgrade paths for whoever maintains both. That
 cost should only be paid when the website gets a specific benefit for it
 in return — alignment is the default, not something that has to justify
 itself case by case.
 
-**Rule:** the website should follow the KEEP application's visual design
-language and technology choices wherever practical, including — but not
-limited to — framework, language, styling approach, linting/formatting,
-project structure, component conventions, naming conventions, and build
-tooling.
+**Rule:** the website should follow the KEEP application's engineering
+technology choices wherever practical, across every dimension listed
+above.
 
-**Rule:** any divergence from the application's technology or visual
-design language must be intentional, documented in this subsection, and
-justified by a requirement specific to the website. A difference adopted
-by default, by habit, or without a stated website-specific reason does
-not meet this bar.
+**Rule:** any divergence from the application's engineering technology
+must be intentional, documented in this subsection, and justified by a
+requirement specific to the website. A difference adopted by default, by
+habit, or without a stated website-specific reason does not meet this
+bar.
 
 ### Global components **[Current]**
 - `SiteHeader` (`src/components/site-header.tsx`) — logo, desktop nav,
@@ -314,6 +324,94 @@ not meet this bar.
 ---
 
 ## 4. Design System Architecture
+
+### KEEP Design System Authority
+
+The KEEP website is the reference implementation of the KEEP Design
+System. The KEEP application should progressively adopt that design
+system over time. This is the opposite direction from
+[Technology Alignment](#technology-alignment) in Section 3, which governs
+engineering technology (framework, tooling, structure) and deliberately
+does not cover the visual design system — the two subsections divide the
+same cross-project relationship along different axes rather than
+disagreeing with each other.
+
+**Evidence this decision was based on** (a comparative assessment of this
+repo against `/Users/donwheeler/Developer/cdacs`, branch `control-plane-v1`,
+read-only, no dev server run — see that assessment for full detail): the
+application's `globals.css` still carries an unused, dead `create-next-app`
+scaffold; its real, rendered UI is built almost entirely from inline
+`style={{}}` hex/rgba literals rather than any token system; its intended
+typefaces (DM Sans/DM Mono) are referenced by name but never actually
+loaded anywhere (no `next/font`, no `@font-face`, no font link — a real,
+verified bug, not a stylistic choice); and neither project has a shared
+Button, Card, Form, or Table component today. The website, by contrast,
+already has a real, consistently-applied token system
+(`src/app/globals.css`'s `@theme inline` block) and correctly loads its
+fonts via `next/font/google`. Design authority follows the project that
+actually has working practice, not the project with more operational
+history.
+
+**This is a long-term architectural direction, not an immediate
+implementation task.** No timeline is set here, and nothing in the KEEP
+application changes as a result of this entry alone — adoption happens
+progressively, application-side, in future work scoped separately from
+this document. This document does not modify, and has no authority over,
+the KEEP application's own repository or its canonical architecture
+documents (per that repo's own `CLAUDE.md`, which reserves those to a
+different process).
+
+**Design goals** guiding that eventual adoption:
+- Premium, modern appearance.
+- Ease of use.
+- Consistent spacing.
+- High-quality typography.
+- Shared component language.
+- Shared design tokens.
+- Shared iconography.
+- Shared interaction patterns.
+
+**Preserved operational semantics — permanent exceptions, not temporary
+ones:**
+- Severity colors remain application-specific. The application's locked
+  six-state severity system (`CRITICAL`/`HIGH_RISK`/`WARNING`/`INFO`/
+  `UNKNOWN`/`OK`, `src/lib/severity.ts` in the application repo) carries
+  real operational meaning this design system was never built to serve,
+  and is not being replaced or renamed to match this site's
+  Current/Planned/Unknown vocabulary. The word "Unknown" is allowed to
+  keep meaning two different things in the two systems — see
+  [Status badge rules](#status-badge-rules-current-extends-into-governance).
+- Operational urgency (blinking, alerts, and similar motion) remains
+  application-specific. The application's urgency-driven motion is
+  intentional signal, not decoration, and this site's restrained-motion
+  posture is not a template it should be forced into.
+- The website itself remains calm and informational — adopting a shared
+  design system does not mean importing the application's urgency
+  patterns onto marketing/evaluation pages. See
+  [Icons](#icons-unknown) and the rest of this section for the website's
+  own current (deliberately minimal) motion and iconography posture,
+  which stays the website's own default regardless of what the
+  application eventually adopts.
+
+**Technical goals for the application, over time — [Planned], application-side,
+not tracked as work in this repository:**
+- Eliminate inline color literals.
+- Replace raw styling with shared design tokens.
+- Introduce shared Button, Card, Form, and Table components. Neither
+  project has these today (see [Component Architecture](#3-component-architecture)) —
+  this is new shared infrastructure to build, not an existing website
+  component set to port. How "shared" is actually distributed between two
+  separate repositories — a published package, a monorepo, or another
+  mechanism — is **[Unknown]**, not decided here. The application
+  repository's own architecture already has one precedent worth
+  considering when that decision is made: a small internal package
+  consumed as a real `file:` dependency by more than one app in that
+  repo — but adopting that specific pattern for design-system sharing is
+  a future decision, not something this entry settles.
+- Load fonts correctly via Next.js (`next/font`) — this alone fixes the
+  application's current silent font-fallback bug regardless of any
+  broader token work.
+- Move toward a unified visual identity with the website.
 
 ### Typography **[Current]**
 - Single sans family — Geist Sans (`--font-sans`) — for all UI and body
