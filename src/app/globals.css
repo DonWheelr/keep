@@ -21,8 +21,10 @@
   --color-accent-soft: #f1e3d2;
 
   /* Capability-status colors — deliberately distinct from the brand accent */
-  --color-status-current-fg: #1e6b45;
-  --color-status-current-bg: #e4f2ea;
+  --color-status-validated-fg: #1e6b45;
+  --color-status-validated-bg: #e4f2ea;
+  --color-status-evaluation-fg: #7a5400;
+  --color-status-evaluation-bg: #f5ecd7;
   --color-status-planned-fg: #29527a;
   --color-status-planned-bg: #e6eef5;
   --color-status-unknown-fg: #5c574c;
@@ -46,8 +48,10 @@
   --color-accent-strong: var(--color-accent-strong);
   --color-accent-soft: var(--color-accent-soft);
 
-  --color-status-current-fg: var(--color-status-current-fg);
-  --color-status-current-bg: var(--color-status-current-bg);
+  --color-status-validated-fg: var(--color-status-validated-fg);
+  --color-status-validated-bg: var(--color-status-validated-bg);
+  --color-status-evaluation-fg: var(--color-status-evaluation-fg);
+  --color-status-evaluation-bg: var(--color-status-evaluation-bg);
   --color-status-planned-fg: var(--color-status-planned-fg);
   --color-status-planned-bg: var(--color-status-planned-bg);
   --color-status-unknown-fg: var(--color-status-unknown-fg);
@@ -75,8 +79,10 @@
     --color-accent-strong: #e0a563;
     --color-accent-soft: #3a2d1c;
 
-    --color-status-current-fg: #7bd6a8;
-    --color-status-current-bg: #1a3327;
+    --color-status-validated-fg: #7bd6a8;
+    --color-status-validated-bg: #1a3327;
+    --color-status-evaluation-fg: #e0b84a;
+    --color-status-evaluation-bg: #3a2f14;
     --color-status-planned-fg: #8fc0ec;
     --color-status-planned-bg: #1c2c3d;
     --color-status-unknown-fg: #c7c2b4;

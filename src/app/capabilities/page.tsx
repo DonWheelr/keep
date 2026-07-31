@@ -8,7 +8,7 @@ import { KEEP_ARCHITECTURE } from "@/lib/citation-sources";
 export const metadata: Metadata = {
   title: "Capabilities",
   description:
-    "What KEEP does today, grouped by area, each item labeled Current, Planned, or Unknown.",
+    "What KEEP does today, grouped by area, each item labeled Validated, Evaluation, Planned, or Unknown.",
 };
 
 function Capability({
@@ -16,7 +16,7 @@ function Capability({
   name,
   description,
 }: {
-  status: "current" | "planned" | "unknown";
+  status: "validated" | "evaluation" | "planned" | "unknown";
   name: string;
   description: string;
 }) {
@@ -40,15 +40,39 @@ export default function CapabilitiesPage() {
       <H1 className="mt-2">Capabilities</H1>
 
       <Body className="mt-6">
-        Every capability below is labeled Current, Planned, or Unknown. No
-        entry ships without a label. Current means validated against real
-        hardware or a live deployment — not just designed and built.
-        Planned means designed and built but not yet validated that way.
-        Unknown is used only where a capability&apos;s status is genuinely
-        unresolved.
+        KEEP is intentionally conservative when classifying capabilities. A
+        capability is only marked Validated after it has been proven in the
+        environment that matters for that capability. Capabilities marked
+        Evaluation are fully implemented and available today but are still
+        gathering real-world validation through the Founding Evaluator
+        Program.
+      </Body>
+      <Body className="mt-4">
+        Every capability below is labeled Validated, Evaluation, Planned, or
+        Unknown.
+      </Body>
+      <Body className="mt-4">
+        Validated means proven in the environment that matters for it — real
+        hardware or a live deployment for hardware-dependent capabilities,
+        real persisted data through the intended workflow for software-only
+        ones.
+      </Body>
+      <Body className="mt-4">
+        Evaluation means fully implemented and usable today, but not yet
+        proven in a real target environment. This is exactly what the
+        Founding Evaluator Program exists to validate.
+      </Body>
+      <Body className="mt-4">
+        Planned means designed, scaffolded, or partially built, but not yet
+        usable end-to-end.
+      </Body>
+      <Body className="mt-4">
+        Unknown is used only where the evidence itself is insufficient to
+        classify.
       </Body>
       <div className="mt-4 flex flex-wrap gap-2">
-        <CapabilityStatus status="current" />
+        <CapabilityStatus status="validated" />
+        <CapabilityStatus status="evaluation" />
         <CapabilityStatus status="planned" />
         <CapabilityStatus status="unknown" />
       </div>
@@ -56,21 +80,26 @@ export default function CapabilitiesPage() {
       <H2 className="mt-12">Network & Device Discovery</H2>
       <ul>
         <Capability
-          status="current"
+          status="validated"
           name="Automated network discovery"
           description="Scans a client network to identify devices and services, tuned to avoid disrupting live traffic on production networks."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Passive device discovery"
           description="Identifies devices present on a network segment without actively probing them."
+        />
+        <Capability
+          status="validated"
+          name="Docker container and topology discovery"
+          description="Identifies containers running on a Docker host and maps the network relationships between them."
         />
       </ul>
 
       <H2 className="mt-12">Device Health & Power Monitoring</H2>
       <ul>
         <Capability
-          status="current"
+          status="validated"
           name="UPS and power monitoring"
           description="Tracks battery status, runtime, and power events for supported UPS hardware."
         />
@@ -80,41 +109,46 @@ export default function CapabilitiesPage() {
           description="Monitors server and network-closet temperature via supported sensors."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Printer monitoring"
           description="Tracks toner, paper, and error states on networked printers."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Storage and disk monitoring"
           description="Tracks disk health and capacity on supported Windows devices."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Unauthorized device detection on switch ports"
           description="Flags a device connecting to a previously idle switch port."
+        />
+        <Capability
+          status="evaluation"
+          name="Uptime Kuma availability monitoring"
+          description="Tracks uptime and availability for monitored services and devices via an integrated availability-monitoring instance."
         />
       </ul>
 
       <H2 className="mt-12">Compliance & Security Tracking</H2>
       <ul>
         <Capability
-          status="current"
+          status="validated"
           name="Antivirus compliance tracking"
           description="Tracks AV coverage and definition currency across monitored devices."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Patch and end-of-life exposure reporting"
           description="Classifies devices by patch and operating-system support status, including Windows end-of-life exposure."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Identity conflict detection"
           description="Cross-references directory and endpoint activity to surface stale accounts and related identity mismatches."
         />
         <Capability
-          status="planned"
+          status="validated"
           name="Vulnerability scanning"
           description="Runs network vulnerability scans and links findings to incident tracking for remediation evidence."
         />
@@ -123,65 +157,80 @@ export default function CapabilitiesPage() {
       <H2 className="mt-12">Asset & License Management</H2>
       <ul>
         <Capability
-          status="current"
+          status="validated"
           name="Hardware asset register"
           description="Tracks hardware inventory, warranty, and end-of-life dates, flagging coverage gaps."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Software license and agreement tracking"
           description="Tracks license seat utilization and vendor agreement expiration with configurable advance alerts."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Device decommission records"
           description="Produces a signed record of asset removal, including data sanitization method and sign-off."
+        />
+        <Capability
+          status="evaluation"
+          name="Repair vs. replace decision support"
+          description="Compares incident repair cost against replacement cost to support hardware lifecycle decisions."
         />
       </ul>
 
       <H2 className="mt-12">Incident Management & Reporting</H2>
       <ul>
         <Capability
-          status="current"
+          status="validated"
           name="Incident detection and alerting"
           description="Opens and tracks incidents from device conditions, with escalation and response logging."
         />
         <Capability
-          status="current"
+          status="validated"
           name="SLA tracking"
           description="Tracks response and resolution deadlines against configurable per-client service targets."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Compliance and operational reporting"
           description="Produces recurring reports, including site assessment, quarterly compliance, and end-of-life exposure reports, with reports available to support relevant IT general control evidence."
         />
         <Capability
-          status="current"
+          status="validated"
           name="Knowledge base"
           description="Captures resolution guidance tied to specific device conditions, drawn from prior incident work."
+        />
+        <Capability
+          status="evaluation"
+          name="SOX IT general controls reporting"
+          description="Maps vulnerability management, endpoint protection, access monitoring, and change control activity to SOX IT general control categories."
+        />
+        <Capability
+          status="evaluation"
+          name="Merlin AI device diagnosis"
+          description="Reviews a device's open incidents, work log, and event history to produce a plain-English diagnosis. Analysis only — it does not take action."
         />
       </ul>
 
       <H2 className="mt-12">Notifications & Integrations</H2>
       <ul>
         <Capability
-          status="current"
+          status="evaluation"
           name="Chat notifications"
           description="Sends incident and SLA-breach notifications to a configured team chat channel."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Professional Services Automation (PSA) integration"
           description="Pushes qualifying incidents to a connected PSA platform."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Cloud-managed network integration"
           description="Reads device and connectivity status from a cloud-managed network platform."
         />
         <Capability
-          status="planned"
+          status="evaluation"
           name="Browser-based remote access"
           description="Opens an authenticated remote session (RDP, SSH, or VNC) to a monitored device directly from the browser."
         />
