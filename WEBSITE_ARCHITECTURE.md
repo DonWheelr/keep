@@ -200,6 +200,31 @@ and how visitors arrive at / leave from it. This section describes the
 
 ## 3. Component Architecture
 
+### Technology Alignment
+
+The public website should stay aligned with the KEEP application's own
+technology and visual design language wherever practical, rather than
+accumulating an independent stack or a divergent look by default.
+
+**Rationale:** a second, divergent frontend stack is a second set of
+tooling, conventions, and upgrade paths for whoever maintains both, and a
+divergent visual language undercuts the point of a shared brand. That
+cost should only be paid when the website gets a specific benefit for it
+in return — alignment is the default, not something that has to justify
+itself case by case.
+
+**Rule:** the website should follow the KEEP application's visual design
+language and technology choices wherever practical, including — but not
+limited to — framework, language, styling approach, linting/formatting,
+project structure, component conventions, naming conventions, and build
+tooling.
+
+**Rule:** any divergence from the application's technology or visual
+design language must be intentional, documented in this subsection, and
+justified by a requirement specific to the website. A difference adopted
+by default, by habit, or without a stated website-specific reason does
+not meet this bar.
+
 ### Global components **[Current]**
 - `SiteHeader` (`src/components/site-header.tsx`) — logo, desktop nav,
   CTA button, separate mobile nav block.
