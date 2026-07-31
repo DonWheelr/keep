@@ -1,8 +1,8 @@
 type Status = "current" | "planned" | "unknown";
 
-const STATUS_LABEL: Record<Status, string> = {
-  current: "Current Capability",
-  planned: "Planned Capability",
+const STATUS_WORD: Record<Status, string> = {
+  current: "Current",
+  planned: "Planned",
   unknown: "Unknown",
 };
 
@@ -12,12 +12,21 @@ const STATUS_CLASSES: Record<Status, string> = {
   unknown: "text-status-unknown-fg bg-status-unknown-bg border border-dashed border-current",
 };
 
-export function CapabilityStatus({ status }: { status: Status }) {
+export function CapabilityStatus({
+  status,
+  noun = "Capability",
+}: {
+  status: Status;
+  noun?: string;
+}) {
+  const label =
+    status === "unknown" ? STATUS_WORD.unknown : `${STATUS_WORD[status]} ${noun}`;
+
   return (
     <span
       className={`inline-flex items-center rounded-sm px-2 py-0.5 font-mono text-xs uppercase tracking-wide ${STATUS_CLASSES[status]}`}
     >
-      {STATUS_LABEL[status]}
+      {label}
     </span>
   );
 }

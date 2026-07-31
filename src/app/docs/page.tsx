@@ -39,7 +39,7 @@ function DocEntry({
         ) : (
           <span className="font-medium text-ink">{name}</span>
         )}
-        <CapabilityStatus status={status} />
+        <CapabilityStatus status={status} noun="Documentation" />
       </div>
       <p className="mt-1 text-sm leading-relaxed text-ink-soft">
         {description}
