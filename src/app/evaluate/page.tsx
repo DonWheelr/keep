@@ -3,21 +3,15 @@ import Link from "next/link";
 import { Eyebrow, H1, H2, Body } from "@/components/typography";
 import { Citation } from "@/components/citation";
 import { Callout } from "@/components/callout";
+import {
+  KEEP_ARCHITECTURE,
+  KEEP_EVALUATION_PROGRAM,
+} from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Evaluate KEEP",
   description:
     "What to expect from a KEEP evaluation, start to finish: prerequisites, what gets installed, what data is collected, and how to end the evaluation.",
-};
-
-const KEEP_ARCHITECTURE = {
-  type: "internal-doc" as const,
-  label: "KEEP architecture documentation",
-};
-
-const KEEP_EVALUATION_PROGRAM = {
-  type: "internal-doc" as const,
-  label: "KEEP Evaluation Program documentation",
 };
 
 export default function EvaluatePage() {

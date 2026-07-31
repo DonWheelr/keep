@@ -3,16 +3,12 @@ import Link from "next/link";
 import { Eyebrow, H1, H2, Body } from "@/components/typography";
 import { CapabilityStatus } from "@/components/capability-status";
 import { Citation } from "@/components/citation";
+import { KEEP_ARCHITECTURE } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Capabilities",
   description:
     "What KEEP does today, grouped by area, each item labeled Current, Planned, or Unknown.",
-};
-
-const KEEP_ARCHITECTURE = {
-  type: "internal-doc" as const,
-  label: "KEEP architecture documentation",
 };
 
 function Capability({
@@ -199,6 +195,15 @@ export default function CapabilitiesPage() {
         . For the architecture behind these capabilities, see{" "}
         <Link href="/how-it-works" className="underline underline-offset-2">
           How KEEP Works
+        </Link>
+        .
+      </Body>
+
+      <H2 className="mt-12">Continue to Evaluate KEEP</H2>
+      <Body className="mt-4">
+        For what evaluating KEEP actually involves, start to finish, see{" "}
+        <Link href="/evaluate" className="underline underline-offset-2">
+          Evaluate KEEP
         </Link>
         .
       </Body>

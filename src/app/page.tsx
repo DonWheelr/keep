@@ -1,6 +1,35 @@
 import Link from "next/link";
 import { Wordmark, Tagline } from "@/components/logo";
-import { navLinks } from "@/lib/nav-links";
+import { Body, H2 } from "@/components/typography";
+
+const journey = [
+  {
+    href: "/why-keep",
+    label: "Why KEEP",
+    description: "The problem KEEP addresses, and who it's built for.",
+  },
+  {
+    href: "/how-it-works",
+    label: "How KEEP Works",
+    description:
+      "The Hub/Spoke architecture, evaluation flow, and trust boundaries.",
+  },
+  {
+    href: "/security",
+    label: "Security & Data Ownership",
+    description: "What stays on your own infrastructure, and what reaches KEEP.",
+  },
+  {
+    href: "/capabilities",
+    label: "Capabilities",
+    description: "What KEEP does today, labeled Current, Planned, or Unknown.",
+  },
+  {
+    href: "/evaluate",
+    label: "Evaluate KEEP",
+    description: "What to expect from an evaluation, start to finish.",
+  },
+];
 
 export default function Home() {
   return (
@@ -11,26 +40,45 @@ export default function Home() {
         <p className="text-ink-soft">Built for Managed Service Providers</p>
       </div>
 
-      <div className="mt-14 rounded-sm border border-dashed border-stone-300 p-6 text-left text-sm text-ink-soft">
-        Home page structure only — hero content pending review.
-      </div>
+      <Body className="mt-10">
+        This site is organized as one path for evaluating KEEP, in order: why
+        it exists, how it works, what happens to your data, what it does
+        today, and how to start — and end — an evaluation.
+      </Body>
 
-      <nav aria-label="Site sections" className="mt-10">
-        <ul className="grid grid-cols-2 gap-3 text-left sm:grid-cols-3">
-          {navLinks
-            .filter((link) => link.href !== "/")
-            .map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block rounded-sm border border-stone-200 bg-paper-raised px-4 py-3 text-sm text-ink transition-colors hover:border-accent"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-        </ul>
+      <H2 className="mt-12 text-left">Start here</H2>
+      <nav aria-label="Evaluator journey" className="mt-4">
+        <ol className="space-y-3 text-left">
+          {journey.map((step, i) => (
+            <li key={step.href}>
+              <Link
+                href={step.href}
+                className="flex gap-4 rounded-sm border border-stone-200 bg-paper-raised px-4 py-3 transition-colors hover:border-accent"
+              >
+                <span className="font-mono text-sm text-ink-soft">
+                  {i + 1}
+                </span>
+                <span>
+                  <span className="block font-medium text-ink">
+                    {step.label}
+                  </span>
+                  <span className="block text-sm text-ink-soft">
+                    {step.description}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ol>
       </nav>
+
+      <Body className="mt-8 text-left">
+        Looking for technical reference material instead? See{" "}
+        <Link href="/docs" className="underline underline-offset-2">
+          Documentation
+        </Link>
+        .
+      </Body>
     </div>
   );
 }

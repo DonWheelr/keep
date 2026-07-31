@@ -3,6 +3,13 @@ import Link from "next/link";
 import { Eyebrow, H1, H2, Body } from "@/components/typography";
 import { Citation } from "@/components/citation";
 import { Callout } from "@/components/callout";
+import {
+  KEEP_ARCHITECTURE,
+  KEEP_CONTROL_PLANE,
+  KEEP_SECURITY_ARCHITECTURE,
+  KEEP_BACKUP_DR,
+  KEEP_EVALUATION_PROGRAM,
+} from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Security & Data Ownership",
@@ -31,35 +38,20 @@ export default function SecurityPage() {
         it finds to your own Hub — the central server your organization
         runs. Nothing meaningful is retained on the client-site device
         itself between polling cycles.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_ARCHITECTURE} />
       </Body>
       <Body className="mt-4">
         Your Hub&apos;s database is the system of record for everything KEEP
         discovers about your clients&apos; networks — device inventories,
         incidents, scan results — and it runs on infrastructure you control,
         not on servers KEEP operates.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_ARCHITECTURE} />
       </Body>
       <Body className="mt-4">
         If you manage more than one client site, each site reports only to
         your own Hub — never to KEEP directly, and never to another
         organization&apos;s Hub.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_ARCHITECTURE} />
       </Body>
 
       <H2 className="mt-12">What reaches the Control Plane</H2>
@@ -69,23 +61,13 @@ export default function SecurityPage() {
         account, licensing, and deployment-identity information. It does not
         receive the operational data your network monitoring produces: no
         device inventories, no incidents, no scan results.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP Control Plane architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_CONTROL_PLANE} />
       </Body>
       <Body className="mt-4">
         Where setting up a deployment requires network configuration
         details, those details are used only to prepare your installation
         package and are not retained afterward.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP Control Plane architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_CONTROL_PLANE} />
       </Body>
 
       <H2 className="mt-12">Authentication and trust boundaries</H2>
@@ -94,24 +76,14 @@ export default function SecurityPage() {
         your own administrator before it can connect — KEEP&apos;s Control
         Plane has no ability to authorize a device on your network by
         itself.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP architecture documentation",
-          }}
-        />
+        <Citation source={KEEP_ARCHITECTURE} />
       </Body>
       <Body className="mt-4">
         Your team signs in through your own identity provider — Active
         Directory, LDAP, or single sign-on — or through a KEEP-native
         account. Multi-factor authentication is available for KEEP
         accounts.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP application security architecture",
-          }}
-        />
+        <Citation source={KEEP_SECURITY_ARCHITECTURE} />
       </Body>
 
       <H2 className="mt-12">Data storage responsibilities</H2>
@@ -120,23 +92,13 @@ export default function SecurityPage() {
         encrypted so that only you — or whoever you designate — can decrypt
         them. KEEP does not hold a copy of your backups and plays no role in
         your disaster recovery.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP backup and disaster recovery architecture",
-          }}
-        />
+        <Citation source={KEEP_BACKUP_DR} />
       </Body>
       <Body className="mt-4">
         You are responsible for securely storing your own recovery key and
         for keeping a copy of your backup somewhere other than the Hub
         itself.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP backup and disaster recovery architecture",
-          }}
-        />
+        <Citation source={KEEP_BACKUP_DR} />
       </Body>
 
       <H2 className="mt-12">Evaluation removal process</H2>
@@ -145,12 +107,7 @@ export default function SecurityPage() {
         removal procedure exists for the software and data on your own
         infrastructure, and it has been verified against a real evaluation
         installation.{" "}
-        <Citation
-          source={{
-            type: "internal-doc",
-            label: "KEEP Evaluation Program documentation",
-          }}
-        />
+        <Citation source={KEEP_EVALUATION_PROGRAM} />
       </Body>
       <Callout variant="unknown">
         What happens to your account and licensing record on KEEP&apos;s own
@@ -168,6 +125,16 @@ export default function SecurityPage() {
         </Link>
         .
       </Callout>
+
+      <H2 className="mt-12">Continue to Capabilities</H2>
+      <Body className="mt-4">
+        For what KEEP does today, grouped and labeled Current, Planned, or
+        Unknown, see{" "}
+        <Link href="/capabilities" className="underline underline-offset-2">
+          Capabilities
+        </Link>
+        .
+      </Body>
     </div>
   );
 }
