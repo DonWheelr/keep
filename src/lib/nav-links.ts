@@ -7,6 +7,7 @@ export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Why KEEP", href: "/why-keep" },
   { label: "How KEEP Works", href: "/how-it-works" },
+  { label: "Merlin", href: "/merlin" },
   { label: "Security & Data Ownership", href: "/security" },
   { label: "Capabilities", href: "/capabilities" },
   { label: "Evaluate KEEP", href: "/evaluate" },

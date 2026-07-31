@@ -5,7 +5,10 @@ import { CapabilityStatus } from "@/components/capability-status";
 import { Citation } from "@/components/citation";
 import { Callout } from "@/components/callout";
 import type { CitationSource } from "@/components/citation";
-import { KEEP_ARCHITECTURE } from "@/lib/citation-sources";
+import {
+  KEEP_ARCHITECTURE,
+  KEEP_MERLIN_ARCHITECTURE,
+} from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Documentation",
@@ -92,6 +95,13 @@ export default function DocsPage() {
           name="Evaluate KEEP"
           href="/evaluate"
           description="Evaluation prerequisites, what gets installed, what data is collected, and how to end an evaluation."
+        />
+        <DocEntry
+          status="current"
+          name="Merlin — Technical Reference"
+          href="/docs/merlin"
+          description="Merlin's capability classes, the credential boundary, and how approval works before anything executes."
+          citation={KEEP_MERLIN_ARCHITECTURE}
         />
       </ul>
 

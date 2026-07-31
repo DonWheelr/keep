@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Eyebrow, H1, H2, Body } from "@/components/typography";
 import { CapabilityStatus } from "@/components/capability-status";
-import { Citation } from "@/components/citation";
-import { KEEP_ARCHITECTURE } from "@/lib/citation-sources";
+import { Citation, type CitationSource } from "@/components/citation";
+import { KEEP_ARCHITECTURE, KEEP_MERLIN_ARCHITECTURE } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Capabilities",
@@ -15,10 +15,12 @@ function Capability({
   status,
   name,
   description,
+  source = KEEP_ARCHITECTURE,
 }: {
   status: "validated" | "evaluation" | "planned" | "unknown";
   name: string;
   description: string;
+  source?: CitationSource;
 }) {
   return (
     <li className="border-t border-stone-200 py-4 first:border-t-0">
@@ -27,7 +29,7 @@ function Capability({
         <CapabilityStatus status={status} />
       </div>
       <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-        {description} <Citation source={KEEP_ARCHITECTURE} />
+        {description} <Citation source={source} />
       </p>
     </li>
   );
@@ -96,12 +98,26 @@ export default function CapabilitiesPage() {
         />
       </ul>
 
+      <H2 className="mt-12">Connectivity & Infrastructure</H2>
+      <ul>
+        <Capability
+          status="validated"
+          name="Self-hosted secure tunnel networking"
+          description="Provides a self-hosted, encrypted tunnel connecting each Spoke to its Hub, without relying on a third-party VPN provider."
+        />
+      </ul>
+
       <H2 className="mt-12">Device Health & Power Monitoring</H2>
       <ul>
         <Capability
           status="validated"
-          name="UPS and power monitoring"
-          description="Tracks battery status, runtime, and power events for supported UPS hardware."
+          name="NUT UPS monitoring"
+          description="Tracks battery status, runtime, and power events for UPS hardware polled via Network UPS Tools (NUT)."
+        />
+        <Capability
+          status="evaluation"
+          name="APC/SNMP UPS monitoring"
+          description="Tracks APC UPS status via SNMP trap ingestion, including on-battery and low-battery events."
         />
         <Capability
           status="planned"
@@ -148,7 +164,7 @@ export default function CapabilitiesPage() {
           description="Cross-references directory and endpoint activity to surface stale accounts and related identity mismatches."
         />
         <Capability
-          status="validated"
+          status="evaluation"
           name="Vulnerability scanning"
           description="Runs network vulnerability scans and links findings to incident tracking for remediation evidence."
         />
@@ -209,6 +225,19 @@ export default function CapabilitiesPage() {
           status="evaluation"
           name="Merlin AI device diagnosis"
           description="Reviews a device's open incidents, work log, and event history to produce a plain-English diagnosis. Analysis only — it does not take action."
+          source={KEEP_MERLIN_ARCHITECTURE}
+        />
+        <Capability
+          status="evaluation"
+          name="Onboarding Scan Analysis"
+          description="Reviews a new client's onboarding vulnerability scan results and produces a prioritized remediation brief before the client is accepted."
+          source={KEEP_MERLIN_ARCHITECTURE}
+        />
+        <Capability
+          status="evaluation"
+          name="Incident Coordination"
+          description="Reads an incident's full thread and device state to suggest next steps, synthesize status for a Director, and prompt technicians who haven't logged an update."
+          source={KEEP_MERLIN_ARCHITECTURE}
         />
       </ul>
 

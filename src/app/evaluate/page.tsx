@@ -94,6 +94,20 @@ export default function EvaluatePage() {
         Normal monitoring begins
         after that review.
       </Body>
+      <Body className="mt-4">
+        Several of Merlin&apos;s AI-assisted surfaces — device diagnosis,
+        onboarding scan analysis, and incident coordination — are fully
+        implemented but still gathering real-world validation, which is
+        exactly what the Founding Evaluator Program exists to do. See{" "}
+        <Link href="/merlin" className="underline underline-offset-2">
+          Merlin
+        </Link>{" "}
+        for what it is, and{" "}
+        <Link href="/capabilities" className="underline underline-offset-2">
+          Capabilities
+        </Link>{" "}
+        for its current status.
+      </Body>
 
       <H2 className="mt-12">What data is collected</H2>
       <Body className="mt-4">

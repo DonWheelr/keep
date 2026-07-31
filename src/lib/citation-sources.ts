@@ -29,3 +29,8 @@ export const KEEP_PRODUCT_POSITIONING: CitationSource = {
   type: "internal-doc",
   label: "KEEP product positioning documentation",
 };
+
+export const KEEP_MERLIN_ARCHITECTURE: CitationSource = {
+  type: "internal-doc",
+  label: "Merlin architecture documentation",
+};
