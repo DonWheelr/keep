@@ -6,6 +6,7 @@ import {
   KEEP_ARCHITECTURE,
   KEEP_EVALUATION_PROGRAM,
   KEEP_CONTROL_PLANE,
+  KEEP_MERLIN_ARCHITECTURE,
 } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
@@ -58,6 +59,16 @@ export default function HowItWorksPage() {
         unverified evidence rather than an accepted baseline, until a
         qualified team member reviews and approves it.{" "}
         <Citation source={KEEP_ARCHITECTURE} />
+      </Body>
+      <Body className="mt-4">
+        Merlin, KEEP&apos;s single AI identity, reasons about the state this
+        architecture produces — it doesn&apos;t change how any of it works.
+        See{" "}
+        <Link href="/merlin" className="underline underline-offset-2">
+          Merlin
+        </Link>{" "}
+        for what it is and how it&apos;s governed.{" "}
+        <Citation source={KEEP_MERLIN_ARCHITECTURE} />
       </Body>
 
       <H2 className="mt-12">Evaluation flow</H2>

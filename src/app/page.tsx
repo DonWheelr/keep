@@ -15,6 +15,11 @@ const journey = [
       "The Hub/Spoke architecture, evaluation flow, and trust boundaries.",
   },
   {
+    href: "/merlin",
+    label: "Merlin",
+    description: "The single AI identity inside KEEP, and how it's governed.",
+  },
+  {
     href: "/security",
     label: "Security & Data Ownership",
     description: "What stays on your own infrastructure, and what reaches KEEP.",
@@ -22,12 +27,18 @@ const journey = [
   {
     href: "/capabilities",
     label: "Capabilities",
-    description: "What KEEP does today, labeled Current, Planned, or Unknown.",
+    description:
+      "What KEEP does today, labeled Validated, Evaluation, Planned, or Unknown.",
   },
   {
     href: "/evaluate",
     label: "Evaluate KEEP",
     description: "What to expect from an evaluation, start to finish.",
+  },
+  {
+    href: "/docs",
+    label: "Documentation",
+    description: "Technical reference material, organized by what exists today.",
   },
 ];
 
@@ -71,14 +82,6 @@ export default function Home() {
           ))}
         </ol>
       </nav>
-
-      <Body className="mt-8 text-left">
-        Looking for technical reference material instead? See{" "}
-        <Link href="/docs" className="underline underline-offset-2">
-          Documentation
-        </Link>
-        .
-      </Body>
     </div>
   );
 }

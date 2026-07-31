@@ -88,7 +88,7 @@ export default function DocsPage() {
           status="current"
           name="Capabilities"
           href="/capabilities"
-          description="What KEEP does today, grouped by area and labeled Current, Planned, or Unknown."
+          description="What KEEP does today, grouped by area and labeled Validated, Evaluation, Planned, or Unknown."
         />
         <DocEntry
           status="current"
