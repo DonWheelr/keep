@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { navLinks } from "@/lib/nav-links";
+import { NavListLink } from "@/components/nav-link";
 import { Wordmark, Tagline } from "@/components/logo";
 
 export function SiteFooter() {
@@ -15,12 +15,10 @@ export function SiteFooter() {
             </p>
           </div>
           <nav aria-label="Footer">
-            <ul className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-ink-soft sm:grid-cols-3">
+            <ul className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-3">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-ink">
-                    {link.label}
-                  </Link>
+                  <NavListLink link={link} />
                 </li>
               ))}
             </ul>

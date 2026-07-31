@@ -41,10 +41,11 @@ export default function CapabilitiesPage() {
 
       <Body className="mt-6">
         Every capability below is labeled Current, Planned, or Unknown. No
-        entry ships without a label. Current means confirmed working;
-        Planned means designed and built but not yet confirmed against
-        real-world conditions; Unknown is used only where a capability&apos;s
-        status is genuinely unresolved.
+        entry ships without a label. Current means validated against real
+        hardware or a live deployment — not just designed and built.
+        Planned means designed and built but not yet validated that way.
+        Unknown is used only where a capability&apos;s status is genuinely
+        unresolved.
       </Body>
       <div className="mt-4 flex flex-wrap gap-2">
         <CapabilityStatus status="current" />
