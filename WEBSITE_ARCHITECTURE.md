@@ -213,11 +213,7 @@ itself** (design tokens, typography, spacing, components, iconography,
 interaction patterns) — that is governed the other way around, by the
 website, per
 [KEEP Design System Authority](#keep-design-system-authority) at the top
-of Section 4. Until 2026-07-30 this subsection's original wording lumped
-"technology and visual design language" together under one
-website-follows-application rule; that was superseded by the architecture
-decision recorded in Section 4, not merely amended alongside it, since the
-two directions directly conflicted. This is the reconciled version.
+of Section 4.
 
 **Rationale:** a second, divergent engineering stack is a second set of
 tooling, conventions, and upgrade paths for whoever maintains both. That
