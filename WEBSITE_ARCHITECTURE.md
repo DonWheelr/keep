@@ -668,11 +668,14 @@ the `unknown` state already built into `CapabilityStatus`.
 - **No deployment configuration exists in this repo today** — verified:
   no `vercel.json`, no `railway.toml`, no `.github/` workflows directory.
   **[Current — verified absence]**
-- **No environment variables or secrets exist in this repo today** —
-  verified: no `.env*` files, no `process.env` reference anywhere in
-  `src/`. If a future evaluation form needs a Control Plane API base URL,
-  that will be the first env var this repo requires. **[Current —
-  verified absence]**
+- **One environment variable exists today: `NEXT_PUBLIC_SITE_URL`**
+  (`src/lib/site-url.ts`), consumed by `sitemap.ts`, `robots.ts`, and root
+  layout metadata. It fails closed — a production build throws if it's
+  unset — rather than falling back to a placeholder domain. No value has
+  been set yet; that's blocked on the hosting/domain decision below, not
+  on anything in this repo. If a future evaluation form needs a Control
+  Plane API base URL, that will be the second env var this repo requires.
+  **[Current — verified]**
 - **Hosting requirements are minimal today.** This repo has no
   server-side routes — no `middleware.ts`, no `route.ts` handlers — and
   `next build` prerenders every page as static content (confirmed in the

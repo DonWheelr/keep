@@ -15,13 +15,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_TITLE = "KEEP — Know · Evaluate · Enforce · Protect";
+const SITE_DESCRIPTION = "Built for Managed Service Providers.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "KEEP — Know · Evaluate · Enforce · Protect",
+    default: SITE_TITLE,
     template: "%s — KEEP",
   },
-  description: "Built for Managed Service Providers.",
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: "KEEP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
