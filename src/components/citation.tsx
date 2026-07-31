@@ -24,7 +24,7 @@ export function Citation({ source }: { source: CitationSource }) {
           {source.label}
         </a>
       )}
-      {")"}
+      {") "}
     </span>
   );
 }

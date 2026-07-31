@@ -92,3 +92,28 @@ describe("Citation — accessibility", () => {
     expect(code).toHaveTextContent("src/app/globals.css");
   });
 });
+
+describe("Citation — whitespace when inline prose continues after it", () => {
+  it("keeps a real space before prose that immediately follows it, with no explicit separator in the JSX", () => {
+    // Regression test. JSX strips the leading whitespace of every line of a
+    // text node that follows an element — even a line that had a literal
+    // space in the source — unless an explicit `{" "}` expression sits
+    // between them. Relying on page authors to remember that separator
+    // shipped this exact bug twice (footer copy, then five spots on the
+    // Evaluate KEEP page). Citation now supplies its own trailing space so
+    // the correct spacing holds regardless of how the surrounding JSX is
+    // written. Deliberately no `{" "}` between the two elements below —
+    // that's the point of the test.
+    render(
+      <p>
+        Some claim ends here.
+        <Citation source={{ type: "internal-doc", label: "Test Source" }} />
+        Continuing sentence starts right after it.
+      </p>
+    );
+
+    expect(document.body.textContent).toContain(
+      "Test Source) Continuing sentence starts right after it."
+    );
+  });
+});
