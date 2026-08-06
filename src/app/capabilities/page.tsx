@@ -230,7 +230,7 @@ export default function CapabilitiesPage() {
         <Capability
           status="evaluation"
           name="Onboarding Scan Analysis"
-          description="Reviews a new client's onboarding vulnerability scan results and produces a prioritized remediation brief before the client is accepted."
+          description="Reads every completed onboarding scan for a new client — the firewall and every discovered device — and correlates the findings into a four-part brief: Must Fix Before Onboarding, Defer Post-Onboarding, Investigate Further, and Overall Assessment. Built and available today; deprioritized relative to Device Diagnosis and Incident Coordination for the current evaluation focus."
           source={KEEP_MERLIN_ARCHITECTURE}
         />
         <Capability

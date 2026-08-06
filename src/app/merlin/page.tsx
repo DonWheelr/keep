@@ -71,12 +71,15 @@ export default function MerlinPage() {
 
       <H2 className="mt-12">Where Merlin Shows Up</H2>
       <Body className="mt-4">
-        Merlin currently appears on three surfaces: reviewing a device&apos;s
-        incident and event history to produce a plain-English diagnosis;
-        reviewing a new client&apos;s onboarding scan results to produce a
-        prioritized remediation brief; and reading an incident&apos;s full
-        thread to suggest next steps and keep a Director informed. For
-        current status and how each has been validated, see{" "}
+        Merlin&apos;s current focus is two surfaces: reviewing a
+        device&apos;s incident and event history to produce a plain-English
+        diagnosis, and reading an incident&apos;s full thread to suggest next
+        steps and keep a Director informed. A third surface — reviewing
+        every completed onboarding scan for a new client (the firewall and
+        every discovered device) to produce a prioritized remediation brief
+        — is also built and available, but is deprioritized relative to the
+        other two for the current evaluation focus. For current status and
+        how each has been validated, see{" "}
         <Link href="/capabilities" className="underline underline-offset-2">
           Capabilities
         </Link>
