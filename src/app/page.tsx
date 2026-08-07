@@ -166,10 +166,13 @@ export default function Home() {
                 and explains it in plain language. Today that means a ranked
                 device diagnosis and coordination guidance on an active
                 incident — both fully built, still gathering real-world
-                validation. A prioritized brief after an onboarding scan is
-                also built, though it&apos;s not part of the current
-                evaluation focus. On every surface, Merlin proposes; a person
-                decides. <Citation source={KEEP_MERLIN_ARCHITECTURE} />
+                validation.
+              </Body>
+              <Body className="mt-3 text-ink-soft">
+                A prioritized brief after an onboarding scan is also built,
+                though it&apos;s not part of the current evaluation focus. On
+                every surface, Merlin proposes; a person decides.{" "}
+                <Citation source={KEEP_MERLIN_ARCHITECTURE} />
               </Body>
             </div>
           </div>

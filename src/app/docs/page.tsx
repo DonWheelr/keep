@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "An index of the technical material available today, and a clear list of documentation that does not exist yet.",
 };
 
-function DocEntry({
+function DocCard({
   status,
   name,
   description,
@@ -29,22 +29,13 @@ function DocEntry({
   href?: string;
   citation?: CitationSource;
 }) {
-  return (
-    <li className="border-t border-stone-200 py-4 first:border-t-0">
+  const content = (
+    <>
       <div className="flex flex-wrap items-center gap-2">
-        {href ? (
-          <Link
-            href={href}
-            className="font-medium text-ink underline underline-offset-2"
-          >
-            {name}
-          </Link>
-        ) : (
-          <span className="font-medium text-ink">{name}</span>
-        )}
+        <span className="font-medium text-ink">{name}</span>
         <CapabilityStatus status={status} noun="Documentation" />
       </div>
-      <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+      <p className="mt-2 text-sm leading-relaxed text-ink-soft">
         {description}
         {citation && (
           <>
@@ -53,85 +44,131 @@ function DocEntry({
           </>
         )}
       </p>
-    </li>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="rounded-sm border border-stone-200 bg-paper-raised p-6 transition-colors hover:border-accent"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+      {content}
+    </div>
   );
 }
 
 export default function DocsPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      <Eyebrow>Documentation</Eyebrow>
-      <H1 className="mt-2">Documentation</H1>
+    <div>
+      {/* ---------- Intro ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Documentation</Eyebrow>
+          <H1 className="mt-3">Documentation</H1>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            This page organizes the technical material available today and
+            lists what doesn&apos;t exist yet. It does not pretend an
+            installation guide, configuration reference, or troubleshooting
+            guide already exists — none of them do.
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Every page below traces back to KEEP&apos;s implemented product
+            and its approved architecture — the same evidence standard
+            applied everywhere on this site, not a separate marketing track.
+            For what&apos;s actually built and how thoroughly it&apos;s been
+            validated, start at{" "}
+            <Link href="/capabilities" className="underline underline-offset-2">
+              Capabilities
+            </Link>
+            .
+          </Body>
+        </div>
+      </section>
 
-      <Body className="mt-6">
-        This page organizes the technical material available today and lists
-        what doesn&apos;t exist yet. It does not pretend an installation
-        guide, configuration reference, or troubleshooting guide already
-        exists — none of them do.
-      </Body>
+      {/* ---------- Available now ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Available Now</Eyebrow>
+          <H2 className="mt-3">Available now</H2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <DocCard
+              status="current"
+              name="How KEEP Works"
+              href="/how-it-works"
+              description="The Hub/Spoke architecture, evaluation flow, data flow, and trust boundaries."
+            />
+            <DocCard
+              status="current"
+              name="Security & Data Ownership"
+              href="/security"
+              description="What stays local, what reaches the Control Plane, authentication, backup responsibilities, and evaluation removal."
+            />
+            <DocCard
+              status="current"
+              name="Capabilities"
+              href="/capabilities"
+              description="What KEEP does today, grouped by area and labeled Validated, Evaluation, Planned, or Unknown."
+            />
+            <DocCard
+              status="current"
+              name="Evaluate KEEP"
+              href="/evaluate"
+              description="Evaluation prerequisites, what gets installed, what data is collected, and how to end an evaluation."
+            />
+            <DocCard
+              status="current"
+              name="Merlin — Technical Reference"
+              href="/docs/merlin"
+              description="Merlin's capability classes, the credential boundary, and how approval works before anything executes."
+              citation={KEEP_MERLIN_ARCHITECTURE}
+            />
+          </div>
+        </div>
+      </section>
 
-      <H2 className="mt-12">Available now</H2>
-      <ul>
-        <DocEntry
-          status="current"
-          name="How KEEP Works"
-          href="/how-it-works"
-          description="The Hub/Spoke architecture, evaluation flow, data flow, and trust boundaries."
-        />
-        <DocEntry
-          status="current"
-          name="Security & Data Ownership"
-          href="/security"
-          description="What stays local, what reaches the Control Plane, authentication, backup responsibilities, and evaluation removal."
-        />
-        <DocEntry
-          status="current"
-          name="Capabilities"
-          href="/capabilities"
-          description="What KEEP does today, grouped by area and labeled Validated, Evaluation, Planned, or Unknown."
-        />
-        <DocEntry
-          status="current"
-          name="Evaluate KEEP"
-          href="/evaluate"
-          description="Evaluation prerequisites, what gets installed, what data is collected, and how to end an evaluation."
-        />
-        <DocEntry
-          status="current"
-          name="Merlin — Technical Reference"
-          href="/docs/merlin"
-          description="Merlin's capability classes, the credential boundary, and how approval works before anything executes."
-          citation={KEEP_MERLIN_ARCHITECTURE}
-        />
-      </ul>
+      {/* ---------- Planned Documentation ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Planned</Eyebrow>
+          <H2 className="mt-3">Planned documentation</H2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <DocCard
+              status="planned"
+              name="Installation & Deployment Guide"
+              description="Step-by-step setup for Hub and Spoke deployments, beyond the prerequisites already summarized on Evaluate KEEP."
+              citation={KEEP_ARCHITECTURE}
+            />
+            <DocCard
+              status="planned"
+              name="Configuration Reference"
+              description="How to configure SLA targets, alerting, and integrations once a deployment is running."
+              citation={KEEP_ARCHITECTURE}
+            />
+            <DocCard
+              status="planned"
+              name="Troubleshooting & Operations Guide"
+              description="How to diagnose and resolve common operational issues after deployment."
+            />
+          </div>
 
-      <H2 className="mt-12">Planned Documentation</H2>
-      <ul>
-        <DocEntry
-          status="planned"
-          name="Installation & Deployment Guide"
-          description="Step-by-step setup for Hub and Spoke deployments, beyond the prerequisites already summarized on Evaluate KEEP."
-          citation={KEEP_ARCHITECTURE}
-        />
-        <DocEntry
-          status="planned"
-          name="Configuration Reference"
-          description="How to configure SLA targets, alerting, and integrations once a deployment is running."
-          citation={KEEP_ARCHITECTURE}
-        />
-        <DocEntry
-          status="planned"
-          name="Troubleshooting & Operations Guide"
-          description="How to diagnose and resolve common operational issues after deployment."
-        />
-      </ul>
-
-      <Callout variant="unknown">
-        Whether future documentation will be organized as individual pages,
-        a searchable reference, or something else has not been decided.
-        This page will be restructured if and when that decision is made —
-        it isn&apos;t assumed here.
-      </Callout>
+          <div className="mt-8">
+            <Callout variant="unknown">
+              Whether future documentation will be organized as individual
+              pages, a searchable reference, or something else has not been
+              decided. This page will be restructured if and when that
+              decision is made — it isn&apos;t assumed here.
+            </Callout>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
