@@ -16,13 +16,13 @@ with no recommendation locked yet.
 
 | Page | URL | Nav placement | Status |
 |---|---|---|---|
-| Home | `/` | Logo-only on desktop; text link on mobile/footer (see note below) | [Current] shell |
-| Why KEEP | `/why-keep` | Primary nav | [Current] shell |
-| How KEEP Works | `/how-it-works` | Primary nav | [Current] shell |
-| Security & Data Ownership | `/security` | Primary nav | [Current] shell |
-| Capabilities | `/capabilities` | Primary nav | [Current] shell |
-| Evaluate KEEP | `/evaluate` | Primary nav + header CTA | [Current] shell |
-| Documentation | `/docs` | Primary nav | [Current] shell |
+| Home | `/` | Logo-only on desktop; text link on mobile/footer (see note below) | [Current] |
+| Why KEEP | `/why-keep` | Primary nav | [Current] |
+| How KEEP Works | `/how-it-works` | Primary nav | [Current] |
+| Security & Data Ownership | `/security` | Primary nav | [Current] |
+| Capabilities | `/capabilities` | Primary nav | [Current] |
+| Evaluate KEEP | `/evaluate` | Primary nav + header CTA | [Current] |
+| Documentation | `/docs` | Primary nav | [Current] |
 | Not Found (404) | *(any unmatched route)* | Not in nav — error boundary only | [Current] default |
 
 **[Current]** `src/app/not-found.tsx` exists with real, tailored content —
@@ -84,16 +84,17 @@ header/footer/nav as everywhere else on the site.
 
 ## 2. Information Architecture
 
-> **Everything in this section is architectural intent, not implemented
-> or validated content.** Every page listed here is still a [Current]
-> shell with no real copy (see the Site Map table above) — "Purpose,"
-> "Questions answered," "Audience," and "Entry/exit paths" below are
-> proposed IA, not a description of how the site currently behaves or
-> performs. None of it has been validated against actual visitor
-> behavior, and none of it should be read as a Verified Fact under
-> [Content Governance](#5-content-governance). Treat this whole section
-> as a design hypothesis to build toward and revisit once real content
-> and real traffic exist.
+> **This section describes each page's intended purpose and audience,
+> matched against real, implemented content.** Every page listed here is
+> now built with real copy, not a placeholder (see the Site Map table
+> above), so "Purpose," "Questions answered," "Audience," and "Entry/exit
+> paths" below describe pages that exist and function as written — not a
+> hypothesis. What remains genuinely unvalidated, and worth keeping
+> distinct from that: none of this has been confirmed against actual
+> visitor behavior — real traffic, real conversion, real drop-off points.
+> Treat the content described here as current and real; treat its
+> effectiveness as still unproven, and revisit this section once real
+> traffic exists.
 
 For each page: purpose, the question(s) it answers, its primary audience,
 and how visitors arrive at / leave from it. This section describes the
