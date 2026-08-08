@@ -277,8 +277,8 @@ export default function Home() {
                   <span>
                     <strong className="text-ink">Provider-independent.</strong>{" "}
                     Which AI model answers is a configuration choice, not
-                    part of what Merlin is. Bring your own provider, or use
-                    KEEP&apos;s, at the same price either way.
+                    part of what Merlin is. Bring your own provider account,
+                    or use KEEP&apos;s, at the same price either way.
                   </span>
                 </li>
               </ul>

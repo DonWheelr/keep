@@ -261,7 +261,7 @@ export default function CapabilitiesPage() {
         <Capability
           status="evaluation"
           name="Browser-based remote access"
-          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a monitored device directly from the browser."
+          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a device on the same network as your Hub, directly from the browser. A device at a remote client site behind a Spoke isn't reachable this way yet."
         />
       </ul>
 

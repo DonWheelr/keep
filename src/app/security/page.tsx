@@ -107,6 +107,43 @@ export default function SecurityPage() {
         </div>
       </section>
 
+      {/* ---------- Network footprint ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Network Footprint</Eyebrow>
+          <H2 className="mt-3">What touches your firewall, and what doesn&apos;t</H2>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+              <h3 className="font-medium text-ink">Spoke connections — outbound only</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                A Spoke always initiates its own connection outward to reach
+                your Hub. There is nothing to open on a client site&apos;s
+                firewall for this — outbound traffic is already permitted by
+                default on virtually any network.
+              </p>
+            </div>
+            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+              <h3 className="font-medium text-ink">Hub enrollment — one scoped exception</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                If your Hub runs on-premises behind NAT and you&apos;re
+                enrolling a Spoke at a different physical site, one specific
+                port must be forwarded so that new Spoke can reach it and
+                enroll using a single-use key issued only for it. The port
+                itself isn&apos;t yet IP-restricted to that Spoke — that&apos;s
+                a planned hardening step, not shipped today. Leaving that port
+                open between onboardings, or closing and reopening it each
+                time, is your call. Without it forwarded, the Spoke still
+                works — it falls back to a direct connection instead of
+                joining the mesh.
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-ink-soft">
+            <Citation source={KEEP_ARCHITECTURE} />
+          </p>
+        </div>
+      </section>
+
       {/* ---------- Data storage responsibilities ---------- */}
       <section className="border-b border-stone-200">
         <div className="mx-auto max-w-5xl px-6 py-16">

@@ -134,6 +134,13 @@ export default function MerlinPage() {
             fact that every action it takes is logged.{" "}
             <Citation source={KEEP_MERLIN_ARCHITECTURE} />
           </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            That independence extends to how it&apos;s purchased: bring your
+            own provider account, or use KEEP-managed AI, at the same
+            price either way. The provider is a configuration choice, not a
+            product dependency.{" "}
+            <Citation source={KEEP_MERLIN_ARCHITECTURE} />
+          </Body>
         </div>
       </section>
 
