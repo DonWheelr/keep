@@ -63,7 +63,7 @@ export default function Home() {
           <div className="mt-12 max-w-2xl rounded-sm border border-stone-200 bg-paper-raised">
             <div className="flex items-center justify-between border-b border-stone-200 px-5 py-3">
               <span className="font-mono text-xs text-ink-soft">
-                WESTLAKE — DOMAIN CONTROLLER
+                NORTHGATE LOGISTICS — DOMAIN CONTROLLER
               </span>
               <CapabilityStatus status="evaluation" />
             </div>
@@ -137,7 +137,7 @@ export default function Home() {
             <div className="grid gap-4 rounded-sm border border-stone-200 bg-paper-raised p-6 sm:grid-cols-[160px_1fr]">
               <div>
                 <div className="text-lg font-semibold text-ink">
-                  Merlin (Core)
+                  Merlin Governance
                 </div>
                 <span className="mt-2 inline-block rounded-sm bg-status-validated-bg px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wide text-status-validated-fg">
                   Included
@@ -155,7 +155,7 @@ export default function Home() {
             <div className="grid gap-4 rounded-sm border border-stone-200 bg-paper-raised p-6 sm:grid-cols-[160px_1fr]">
               <div>
                 <div className="text-lg font-semibold text-ink">
-                  Merlin (Intelligence)
+                  Merlin Narrative Layer
                 </div>
                 <span className="mt-2 inline-block rounded-sm bg-status-evaluation-bg px-2 py-0.5 font-mono text-[0.7rem] uppercase tracking-wide text-status-evaluation-fg">
                   AI-assisted
@@ -372,8 +372,8 @@ export default function Home() {
               </div>
               <p className="mt-2 text-ink">
                 Device inventory, incidents, and credentials stay on your own
-                Hub, always. When Merlin (Intelligence) is on, it sees only
-                the descriptive context one request needs —{" "}
+                Hub, always. When Merlin&apos;s narrative layer is on, it
+                sees only the descriptive context one request needs —{" "}
                 <strong>never a credential, key, or token</strong>, by
                 construction. <Citation source={KEEP_MERLIN_ARCHITECTURE} />
               </p>

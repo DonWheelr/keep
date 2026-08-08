@@ -76,7 +76,14 @@ export default function HowItWorksPage() {
             the network it&apos;s deployed to. The one deliberate exception:
             a technician can explicitly request a switch port be shut down
             or re-enabled, the platform&apos;s only write operation to
-            network hardware. Every other interaction is read-only.{" "}
+            network hardware. Every other Spoke-initiated interaction is
+            read-only — a technician&apos;s own browser-based remote-access
+            session to a device (see{" "}
+            <Link href="/capabilities" className="underline underline-offset-2">
+              Capabilities
+            </Link>
+            ) is the technician directly operating that device, not KEEP
+            acting on your network on its own.{" "}
             <Citation source={KEEP_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">

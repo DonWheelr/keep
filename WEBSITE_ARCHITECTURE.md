@@ -25,15 +25,12 @@ with no recommendation locked yet.
 | Documentation | `/docs` | Primary nav | [Current] shell |
 | Not Found (404) | *(any unmatched route)* | Not in nav — error boundary only | [Current] default |
 
-Not Found uses Next.js's built-in fallback (no custom `app/not-found.tsx`
-exists). Verified by requesting an unmatched route against the dev
-server: the response is a real 404 status, and it *is* wrapped in the
-root layout — `SiteHeader` and `SiteFooter` both render around it — so a
-lost visitor isn't dropped into an unstyled page. It carries no tailored
-message or "back to Home" content beyond what the header/footer already
-provide. **[Planned]** author a custom `not-found.tsx` once real page
-content exists, so the error state can point somewhere more specific
-than "here's the nav, figure it out."
+**[Current]** `src/app/not-found.tsx` exists with real, tailored content —
+a 404 heading, a short explanation, and direct links to Home,
+Capabilities, and Documentation, rather than Next's bare built-in
+fallback. Still wrapped by the root layout — `SiteHeader` and
+`SiteFooter` both render around it — so a lost visitor sees the same
+header/footer/nav as everywhere else on the site.
 
 ### Navigation hierarchy
 
@@ -250,17 +247,15 @@ bar.
 - Root layout (`src/app/layout.tsx`) — fonts (Geist Sans/Mono), default
   metadata (title template `"%s — KEEP"`), wraps every route — including
   the default not-found page — in `SiteHeader` / `<main>` / `SiteFooter`.
-- `PageShell` (`src/components/page-shell.tsx`) — the placeholder layout
-  used by the six non-Home pages today (eyebrow label + title + dashed
-  placeholder box). This is scaffolding, not a permanent content layout —
-  expect it to be replaced or extended per page once real content design
-  begins, since Why KEEP's narrative layout and Documentation's reference
-  layout have different needs. **[Planned replacement]**
-- Not-found (404) has no dedicated layout or component of its own — it's
-  Next's built-in fallback, only wrapped by the root layout above. See
-  [Site Map](#1-site-map) for what that means in practice. **[Planned]**
-  give it a real `not-found.tsx` once there's real content to route back
-  to.
+- `PageShell` no longer exists. **[Current]** Every non-Home page now
+  composes its own real content directly (section-by-section, in its own
+  `page.tsx`) rather than through a shared placeholder layout — the
+  per-page divergence anticipated below (Why KEEP's narrative layout vs.
+  Documentation's reference layout) is already true in practice, so no
+  single shared shell component remained a good fit and none is used
+  today.
+- Not-found (404) has its own dedicated component, `src/app/not-found.tsx`.
+  **[Current]** See [Site Map](#1-site-map) for its content.
 
 ### Content components
 - `CapabilityStatus` (`src/components/capability-status.tsx`) —
@@ -573,10 +568,9 @@ the `unknown` state already built into `CapabilityStatus`.
   Every page other than Home sets its own `title` via a page-level
   `metadata` export; Home relies on the root default as-is, since that
   default already states the full brand identity.
-- **[Planned]** per-page `description` strings are not yet written (the
-  shells only set titles) — these should be authored alongside real page
-  content, not before, since a placeholder description risks becoming an
-  unreviewed claim indexed by search engines.
+- **[Current]** Every page's `metadata` export now sets its own real
+  `description` string alongside its `title`, authored with its actual
+  content rather than as a placeholder.
 - **[Planned]** canonical URLs (`metadata.alternates.canonical`) should
   be set once the production domain is finalized, to avoid duplicate-
   content issues between `keepmsp.io` and any preview/staging deployment

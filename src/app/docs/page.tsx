@@ -90,6 +90,14 @@ export default function DocsPage() {
             </Link>
             .
           </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            A note on the &quot;(Source: …)&quot; markers throughout this
+            site: each names the specific internal KEEP document a claim was
+            checked against at the time it was written. That documentation
+            isn&apos;t published externally yet, so the marker states what
+            was verified rather than linking to it — if you need a claim
+            confirmed directly, ask us.
+          </Body>
         </div>
       </section>
 
