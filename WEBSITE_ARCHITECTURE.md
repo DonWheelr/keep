@@ -19,11 +19,21 @@ with no recommendation locked yet.
 | Home | `/` | Logo-only on desktop; text link on mobile/footer (see note below) | [Current] |
 | Why KEEP | `/why-keep` | Primary nav | [Current] |
 | How KEEP Works | `/how-it-works` | Primary nav | [Current] |
+| Merlin | `/merlin` | Primary nav | [Current] |
 | Security & Data Ownership | `/security` | Primary nav | [Current] |
 | Capabilities | `/capabilities` | Primary nav | [Current] |
 | Evaluate KEEP | `/evaluate` | Primary nav + header CTA | [Current] |
 | Documentation | `/docs` | Primary nav | [Current] |
+| Merlin (doc) | `/docs/merlin` | Not in primary nav — linked from Documentation and from `/merlin` itself; listed in `sitemap.ts`'s `additionalRoutes` | [Current] |
 | Not Found (404) | *(any unmatched route)* | Not in nav — error boundary only | [Current] default |
+
+**Corrected 2026-08-14** — this table previously omitted Merlin and
+`/docs/merlin` despite both existing in `src/lib/nav-links.ts` (the single
+source header/footer/sitemap all read from) since commit `c2a2f90`, and
+despite the most recent commit touching this file being titled "synchronize
+website architecture with implemented site." Verified directly against
+`src/lib/nav-links.ts` and a grep for every `/merlin`/`/docs/merlin`
+reference in `src/` — not re-derived from this document's own prior claims.
 
 **[Current]** `src/app/not-found.tsx` exists with real, tailored content —
 a 404 heading, a short explanation, and direct links to Home,
@@ -52,22 +62,26 @@ header/footer/nav as everywhere else on the site.
   two above: a card-grid `<nav aria-label="Site sections">` inlined in
   `src/app/page.tsx` itself (not a shared component — see
   [Component Architecture](#3-component-architecture)), linking to the
-  other six pages. Practically, a Home visitor is looking at up to three
+  other seven pages (corrected 2026-08-14 — was six before Merlin was
+  added to the count). Practically, a Home visitor is looking at up to three
   overlapping link groups to the same destinations — header nav, this
   grid, and footer nav — depending on viewport. This redundancy exists
   today as a byproduct of the shell build, not as a deliberated design
   decision; it's documented here as a known duplication rather than a
   recommended pattern. **[Current, undocumented until this revision]**
-- The nav is intentionally flat — one level, seven entries. No dropdown
-  or mega-menu exists or is currently planned; if Documentation grows
-  nested sub-pages (see [Future Expansion](#7-future-expansion)), the
-  primary nav entry continues to point at `/docs` as a landing/index page
-  rather than exposing a submenu. **[Planned decision, low complexity]**
-  Note this doesn't yet address what happens if Blog/Updates, Release
-  Notes, and Changelog (also [Future Expansion](#7-future-expansion))
-  each want their own top-level nav slot — at 7 entries the header already
-  wraps on narrow viewports; 2–3 more is an open scalability question, not
-  a solved one. **[Unknown]**
+- The nav is intentionally flat — one level, eight entries (corrected
+  2026-08-14 — was seven before Merlin was added to `nav-links.ts`; the
+  entry itself, `/docs/merlin`, stays out of the primary nav, linked
+  contextually instead). No dropdown or mega-menu exists or is currently
+  planned; if Documentation grows nested sub-pages (see [Future
+  Expansion](#7-future-expansion)), the primary nav entry continues to
+  point at `/docs` as a landing/index page rather than exposing a
+  submenu. **[Planned decision, low complexity]** Note this doesn't yet
+  address what happens if Blog/Updates, Release Notes, and Changelog
+  (also [Future Expansion](#7-future-expansion)) each want their own
+  top-level nav slot — at 8 entries the header already wraps on narrow
+  viewports; 2–3 more is an open scalability question, not a solved one.
+  **[Unknown]**
 
 ### URL structure
 
@@ -137,6 +151,27 @@ and how visitors arrive at / leave from it. This section describes the
 - **Exit paths:** Security & Data Ownership (the boundary questions this
   page will raise), Capabilities (concrete feature list), Documentation
   (implementation depth).
+
+### Merlin (`/merlin`) — added 2026-08-14, page existed since `c2a2f90`, previously undocumented here
+- **Purpose:** explain Merlin as KEEP's single AI identity — what it is,
+  the governing philosophy (credentials never reach its reasoning, no
+  standing authority of its own, some actions never permitted, every
+  action logged), and how it's kept accountable to a human decision-maker.
+  Positioned as part of KEEP's capability, not the whole product — matches
+  `CLAUDE.md`'s "do not lead with AI" positioning rule.
+- **Questions answered:** "What is Merlin, actually?" "What can it do
+  without a human?" "How is it kept from becoming a liability?"
+- **Audience:** technical evaluator wanting the AI-governance answer before
+  trusting any AI-assisted feature; security/compliance reviewer.
+- **Entry paths:** primary nav, How KEEP Works, Evaluate KEEP, Documentation
+  (`/docs/merlin`) — all four link here directly.
+- **Exit paths:** `/docs/merlin` (implementation-level detail), Evaluate
+  KEEP.
+
+Has a companion documentation-tier page, `/docs/merlin` (linked from here
+and from `/docs`, not in the primary nav) — the one existing example of the
+nested-doc-page pattern named as "Planned" in [URL structure](#url-structure)
+above; it's already real, not merely planned.
 
 ### Security & Data Ownership (`/security`)
 - **Purpose:** state the trust boundary explicitly — what KEEP can see,
