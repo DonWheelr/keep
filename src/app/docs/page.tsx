@@ -8,6 +8,7 @@ import type { CitationSource } from "@/components/citation";
 import {
   KEEP_ARCHITECTURE,
   KEEP_MERLIN_ARCHITECTURE,
+  KEEP_CONTROL_PLANE,
 } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
@@ -133,10 +134,24 @@ export default function DocsPage() {
             />
             <DocCard
               status="current"
+              name="Sign Up"
+              href="/sign-up"
+              description="What creating a KEEP account actually does — and the distinction between an account and Evaluation access."
+              citation={KEEP_CONTROL_PLANE}
+            />
+            <DocCard
+              status="current"
               name="Merlin — Technical Reference"
               href="/docs/merlin"
               description="Merlin's capability classes, the credential boundary, and how approval works before anything executes."
               citation={KEEP_MERLIN_ARCHITECTURE}
+            />
+            <DocCard
+              status="current"
+              name="Schematics"
+              href="/schematics"
+              description="Eight diagrams of how KEEP is actually built — boxes, arrows, and trust boundaries, not narrative — with an explicit findings section for where a claim didn't hold up under code inspection."
+              citation={KEEP_ARCHITECTURE}
             />
           </div>
         </div>

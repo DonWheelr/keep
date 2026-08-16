@@ -50,9 +50,11 @@ export default function SignUpPage() {
             <Citation source={KEEP_CONTROL_PLANE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            Once your account exists, you land on an account dashboard where
-            a paid tier can be selected directly, sized to how many client
-            networks you expect to manage.{" "}
+            Signing up doesn&apos;t sign you in — you&apos;ll get a
+            verification email first. Once you verify your email and sign
+            in, you land on an account dashboard where a paid tier can be
+            selected directly, sized to how many client networks you expect
+            to manage.{" "}
             <Citation source={KEEP_CONTROL_PLANE} />
           </Body>
         </div>
@@ -80,8 +82,10 @@ export default function SignUpPage() {
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
             The sign-up form includes an optional checkbox — &quot;I&apos;m
-            interested in evaluating KEEP&quot; — that flags this directly
-            to KEEP staff at the moment you create your account.{" "}
+            interested in evaluating KEEP&quot; — that records this on your
+            account, visible to KEEP staff in their own account list.
+            There&apos;s no active notification triggered by it — it&apos;s
+            a passive signal, not an alert.{" "}
             <Citation source={KEEP_CONTROL_PLANE} />
           </Body>
           <div className="mt-4">

@@ -58,9 +58,16 @@ export default function SecurityPage() {
             </Body>
           </div>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            If you manage more than one client site, each site reports only
-            to your own Hub — never to KEEP directly, and never to another
-            organization&apos;s Hub. <Citation source={KEEP_ARCHITECTURE} />
+            If you manage more than one client site, what a Spoke discovers
+            about that client&apos;s network — device inventories,
+            incidents, scan results — is reported only to your own Hub,
+            never to KEEP directly, and never to another organization&apos;s
+            Hub. Separately, each Hub and each Spoke also keeps its own
+            direct connection to KEEP&apos;s Control Plane for license and
+            entitlement enforcement — a different channel, carrying none of
+            that operational network data. See{" "}
+            <span className="italic">What reaches the Control Plane</span>,
+            below. <Citation source={KEEP_ARCHITECTURE} />
           </Body>
         </div>
       </section>
@@ -73,10 +80,22 @@ export default function SecurityPage() {
           <Body className="mt-3 max-w-[62ch] text-ink-soft">
             KEEP&apos;s Control Plane — the service that handles evaluation
             access, accounts, and licensing — is designed to receive only
-            account, licensing, and deployment-identity information. It does
-            not receive the operational data your network monitoring
-            produces: no device inventories, no incidents, no scan results.{" "}
+            account, licensing, deployment-identity, and device-enforcement
+            information. It does not receive the operational data your
+            network monitoring produces: no device inventories, no
+            incidents, no scan results.{" "}
             <Citation source={KEEP_CONTROL_PLANE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            The device-enforcement piece: each Hub and each Spoke
+            periodically checks in with the Control Plane directly — not
+            relayed through each other — confirming license/entitlement
+            status and, once per boot, a network fingerprint (the gateway
+            device&apos;s MAC address and the MAC addresses of neighboring
+            devices on that segment) used only to detect a cloned or
+            duplicated device. Nothing about what those neighboring devices
+            are or do is included — just their MAC addresses.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
             Where setting up a deployment requires network configuration
@@ -117,9 +136,11 @@ export default function SecurityPage() {
               <h3 className="font-medium text-ink">Spoke connections — outbound only</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 A Spoke always initiates its own connection outward to reach
-                your Hub. There is nothing to open on a client site&apos;s
-                firewall for this — outbound traffic is already permitted by
-                default on virtually any network.
+                your Hub, and separately initiates its own outward
+                connection directly to KEEP&apos;s Control Plane for its
+                device-enforcement heartbeat. There is nothing to open on a
+                client site&apos;s firewall for either — outbound traffic is
+                already permitted by default on virtually any network.
               </p>
             </div>
             <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">

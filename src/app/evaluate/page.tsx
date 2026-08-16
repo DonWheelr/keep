@@ -276,10 +276,21 @@ export default function EvaluatePage() {
             than requesting one through a form.{" "}
             <Citation source={KEEP_EVALUATION_PROGRAM} />
           </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            A public{" "}
+            <Link href="/sign-up" className="underline underline-offset-2">
+              Sign Up
+            </Link>{" "}
+            now exists, where you can create a KEEP account and optionally
+            flag interest in evaluating. Creating that account does not by
+            itself grant Evaluation access — see Sign Up for exactly what it
+            does and doesn&apos;t do.
+          </Body>
           <div className="mt-4">
             <Callout variant="unknown">
-              There is no public-facing request channel on this site yet.
-              This page will be updated once one exists.
+              There is no published turnaround time for staff to act on that
+              interest yet. Treat it as a deliberate, staff-mediated step
+              rather than an instant unlock.
             </Callout>
           </div>
         </div>

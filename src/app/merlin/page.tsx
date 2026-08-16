@@ -32,8 +32,8 @@ const principles = [
   },
   {
     num: "04",
-    title: "Every action is logged, no exception.",
-    body: "Every action Merlin performs is recorded as part of KEEP's permanent record.",
+    title: "Changing anything is logged, no exception.",
+    body: "Any action that changes something outside KEEP's own logs — shutting down a port, for example — is recorded as part of KEEP's permanent record. Producing information, like a diagnosis or a brief, doesn't carry that same requirement, since nothing on the network changed.",
   },
 ];
 
@@ -130,8 +130,9 @@ export default function MerlinPage() {
             not the underlying language model. The AI provider behind
             Merlin&apos;s reasoning is a replaceable implementation detail,
             not part of Merlin&apos;s identity. Replacing that provider never
-            changes Merlin&apos;s identity, governance, authority, or the
-            fact that every action it takes is logged.{" "}
+            changes Merlin&apos;s identity, governance, authority, or its
+            audit requirements — a provider swap is an implementation
+            update, not a governance event.{" "}
             <Citation source={KEEP_MERLIN_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">

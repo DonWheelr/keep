@@ -259,9 +259,9 @@ export default function CapabilitiesPage() {
           description="Reads device and connectivity status from a cloud-managed network platform."
         />
         <Capability
-          status="evaluation"
+          status="validated"
           name="Browser-based remote access"
-          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a device on the same network as your Hub, directly from the browser. A device at a remote client site behind a Spoke isn't reachable this way yet."
+          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a device directly from the browser — including a device at a remote client site behind a Spoke, relayed back through the Hub. Live-verified end-to-end against real hardware, including a real browser session over a real Spoke-relayed connection."
         />
       </ul>
 

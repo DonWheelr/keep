@@ -404,8 +404,12 @@ export default function Home() {
               <div className="font-mono text-xs text-accent">01</div>
               <h4 className="mt-2 font-medium text-ink">Request</h4>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Tell us about your book of business. Evaluation accounts are
-                provisioned directly, not self-serve.
+                Tell us about your book of business. Evaluation access is
+                still provisioned directly, not self-serve — though you can{" "}
+                <Link href="/sign-up" className="underline underline-offset-2">
+                  create a KEEP account
+                </Link>{" "}
+                yourself any time.
               </p>
             </li>
             <li>

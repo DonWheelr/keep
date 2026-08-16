@@ -148,10 +148,18 @@ export default function HowItWorksPage() {
             licensing. <Citation source={KEEP_CONTROL_PLANE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            These are two separate channels. Nothing your Spokes discover
-            about a client&apos;s network passes through the second one.
-            For the detailed account of exactly what stays local and what
-            reaches the Control Plane, see{" "}
+            A Spoke also keeps its own third channel: a direct connection to
+            the Control Plane, separate from and not relayed through the
+            Hub, confirming its own license/entitlement status and sending a
+            network fingerprint used only to detect a cloned or duplicated
+            device.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Across all three channels, nothing your Spokes discover about a
+            client&apos;s network — device inventories, incidents, scan
+            results — ever reaches the Control Plane. For the detailed
+            account of exactly what stays local and what reaches it, see{" "}
             <Link href="/security" className="underline underline-offset-2">
               Security &amp; Data Ownership
             </Link>
