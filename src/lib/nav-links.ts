@@ -11,6 +11,7 @@ export const navLinks: NavLink[] = [
   { label: "Security & Data Ownership", href: "/security" },
   { label: "Capabilities", href: "/capabilities" },
   { label: "Evaluate KEEP", href: "/evaluate" },
+  { label: "Schematics", href: "/schematics" },
   { label: "Documentation", href: "/docs" },
   { label: "Sign Up", href: "/sign-up" },
 ];

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Eyebrow, H1, H2, Body } from "@/components/typography";
 import { CapabilityStatus } from "@/components/capability-status";
 import { Citation, type CitationSource } from "@/components/citation";
-import { KEEP_ARCHITECTURE, KEEP_MERLIN_ARCHITECTURE } from "@/lib/citation-sources";
+import { KEEP_ARCHITECTURE, KEEP_MERLIN_ARCHITECTURE, KEEP_SECURITY_ARCHITECTURE } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Capabilities",
@@ -168,6 +168,12 @@ export default function CapabilitiesPage() {
           name="Vulnerability scanning"
           description="Runs network vulnerability scans and links findings to incident tracking for remediation evidence."
         />
+        <Capability
+          status="evaluation"
+          name="Encrypted credential vault"
+          description="Stores client-infrastructure credentials (e.g. network device logins), shared within that client's authorized technician team, AES-256-GCM encrypted at rest. Requires a configured encryption key in production. Separate from each technician's own personal remote-access credentials."
+          source={KEEP_SECURITY_ARCHITECTURE}
+        />
       </ul>
 
       <H2 className="mt-12">Asset & License Management</H2>
@@ -261,7 +267,7 @@ export default function CapabilitiesPage() {
         <Capability
           status="validated"
           name="Browser-based remote access"
-          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a device directly from the browser — including a device at a remote client site behind a Spoke, relayed back through the Hub. Live-verified end-to-end against real hardware, including a real browser session over a real Spoke-relayed connection."
+          description="Opens an authenticated remote session (RDP, SSH, or VNC) to a device directly from the browser — including a device at a remote client site behind a Spoke, relayed back through the Hub. Live-verified end-to-end against real hardware, including a real browser session over a real Spoke-relayed connection. Every request, authorization, denial, and session outcome is durably recorded in an append-only audit trail."
         />
       </ul>
 
