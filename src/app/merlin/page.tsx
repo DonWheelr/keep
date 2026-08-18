@@ -48,7 +48,7 @@ const faqs = [
   },
   {
     q: "Can Merlin take action on my network without my approval?",
-    a: "No. Merlin is an advisor by default and only ever executes an action when a human has authorized it, in the moment, every time.",
+    a: "No. Merlin is an advisor by default and only ever executes an action when a human has authorized it, in the moment — the one named exception is a duress-PIN trigger, which is immediate and automatic by design.",
   },
   {
     q: "Does Merlin ever see my passwords or keys?",
@@ -113,8 +113,10 @@ export default function MerlinPage() {
             </p>
             <Body className="mt-4 text-ink-soft">
               True on every surface Merlin appears on. The corollary governs
-              every interaction without exception: Merlin is an advisor by
-              default, and an executor only when a human authorizes it.{" "}
+              every interaction, with one named exception: Merlin is an
+              advisor by default, and an executor only when a human
+              authorizes it — except for a duress-PIN trigger, which is
+              immediate and automatic by design.{" "}
               <Citation source={KEEP_MERLIN_ARCHITECTURE} />
             </Body>
           </div>

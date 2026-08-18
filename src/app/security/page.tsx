@@ -42,11 +42,13 @@ export default function SecurityPage() {
           <H2 className="mt-3">What data remains local</H2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Body className="text-ink-soft">
-              The software KEEP installs at a client site keeps no database
-              of its own. It discovers and polls devices on that network,
-              then sends what it finds to your own Hub — the central server
-              your organization runs. Nothing meaningful is retained on the
-              client-site device itself between polling cycles.{" "}
+              The software KEEP installs at a client site keeps a local
+              working cache of what it discovers — not a system of record.
+              It discovers and polls devices on that network, then sends
+              what it finds to your own Hub — the central server your
+              organization runs. That local cache is fully re-derivable
+              from a fresh scan; the authoritative copy always lives on
+              your Hub.{" "}
               <Citation source={KEEP_ARCHITECTURE} />
             </Body>
             <Body className="text-ink-soft">
@@ -118,10 +120,18 @@ export default function SecurityPage() {
             network by itself. <Citation source={KEEP_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            Your team signs in through your own identity provider — Active
-            Directory, LDAP, or single sign-on — or through a KEEP-native
-            account. Multi-factor authentication is available for KEEP
-            accounts. <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+            Your team signs in one of three ways: through your own Active
+            Directory or LDAP-speaking directory, through your
+            organization&apos;s OIDC/SSO identity provider (Microsoft Entra
+            ID, Google Workspace, Okta, and similar), or through a
+            KEEP-native local account.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Multi-factor authentication applies to KEEP-native local
+            accounts. Active Directory/LDAP and OIDC/SSO sign-ins are
+            governed by your own identity provider&apos;s security policy,
+            not KEEP&apos;s. <Citation source={KEEP_SECURITY_ARCHITECTURE} />
           </Body>
         </div>
       </section>

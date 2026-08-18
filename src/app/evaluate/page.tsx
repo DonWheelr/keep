@@ -71,9 +71,16 @@ export default function EvaluatePage() {
             . <Citation source={KEEP_EVALUATION_PROGRAM} />
           </Body>
           <Body className="mt-3 max-w-[62ch] text-ink-soft">
-            Moving to a paid subscription is a deliberate, separate step you
-            take when you&apos;re ready — it reuses the same deployment
-            rather than starting over, but it does not happen automatically.{" "}
+            Moving to a paid subscription is a deliberate, separate step —
+            it reuses the same deployment rather than starting over, but
+            it does not happen automatically, and it isn&apos;t available
+            until your evaluation term ends.{" "}
+            <Citation source={KEEP_EVALUATION_PROGRAM} />
+          </Body>
+          <Body className="mt-3 max-w-[62ch] text-ink-soft">
+            If your evaluation term ends before you convert, the
+            monitoring screens become unavailable until you do — you can
+            still sign in to upgrade.{" "}
             <Citation source={KEEP_EVALUATION_PROGRAM} />
           </Body>
         </div>

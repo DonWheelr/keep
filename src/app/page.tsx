@@ -424,17 +424,19 @@ export default function Home() {
               <div className="font-mono text-xs text-accent">03</div>
               <h4 className="mt-2 font-medium text-ink">Evaluate</h4>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Full platform access, Merlin included from the start — no
-                separate setup step to see what KEEP actually does.
+                Full platform access from the start. Merlin&apos;s
+                AI-dependent features need a provider key configured
+                before they&apos;ll respond — everything else needs no
+                separate setup step.
               </p>
             </li>
             <li>
               <div className="font-mono text-xs text-accent">04</div>
               <h4 className="mt-2 font-medium text-ink">Decide</h4>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Move to a paid subscription when you&apos;re ready. No
-                pressure while you&apos;re still finding out if it&apos;s a
-                fit.
+                Move to a paid subscription once your evaluation term
+                ends. No pressure while you&apos;re still finding out if
+                it&apos;s a fit.
               </p>
             </li>
           </ol>
