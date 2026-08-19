@@ -7,14 +7,13 @@ import {
   KEEP_ARCHITECTURE,
   KEEP_CONTROL_PLANE,
   KEEP_SECURITY_ARCHITECTURE,
-  KEEP_BACKUP_DR,
   KEEP_EVALUATION_PROGRAM,
 } from "@/lib/citation-sources";
 
 export const metadata: Metadata = {
   title: "Security & Data Ownership",
   description:
-    "What data KEEP keeps local, what reaches the Control Plane, how authentication and trust boundaries work, who is responsible for backups, and how to remove an evaluation deployment.",
+    "What data KEEP keeps local, what reaches the Control Plane, how authentication and trust boundaries work, and how to remove an evaluation deployment.",
 };
 
 export default function SecurityPage() {
@@ -28,9 +27,9 @@ export default function SecurityPage() {
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
             This page answers the questions a technical evaluator asks
             before installing KEEP on a live network: what data stays on
-            your own infrastructure, what KEEP as a vendor ever sees, who is
-            responsible for backups, and how to remove an evaluation
-            deployment if you decide not to continue.
+            your own infrastructure, what KEEP as a vendor ever sees, and
+            how to remove an evaluation deployment if you decide not to
+            continue.
           </Body>
         </div>
       </section>
@@ -171,36 +170,6 @@ export default function SecurityPage() {
           </div>
           <p className="mt-3 text-xs text-ink-soft">
             <Citation source={KEEP_ARCHITECTURE} />
-          </p>
-        </div>
-      </section>
-
-      {/* ---------- Data storage responsibilities ---------- */}
-      <section className="border-b border-stone-200">
-        <div className="mx-auto max-w-5xl px-6 py-16">
-          <Eyebrow>Backups</Eyebrow>
-          <H2 className="mt-3">Data storage responsibilities</H2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
-              <h3 className="font-medium text-ink">Encrypted, owner-held</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Your Hub&apos;s database is backed up automatically, and
-                backups are encrypted so that only you — or whoever you
-                designate — can decrypt them. KEEP does not hold a copy of
-                your backups and plays no role in your disaster recovery.
-              </p>
-            </div>
-            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
-              <h3 className="font-medium text-ink">Your responsibility</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                You are responsible for securely storing your own recovery
-                key and for keeping a copy of your backup somewhere other
-                than the Hub itself.
-              </p>
-            </div>
-          </div>
-          <p className="mt-3 text-xs text-ink-soft">
-            <Citation source={KEEP_BACKUP_DR} />
           </p>
         </div>
       </section>

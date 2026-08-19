@@ -28,7 +28,7 @@ export default function HowItWorksPage() {
             deployment is structured, how an evaluation gets set up, how
             data moves between the parts of the system, and who is
             responsible for authorizing what. For the specific claims about
-            data ownership and backups, see{" "}
+            data ownership, see{" "}
             <Link href="/security" className="underline underline-offset-2">
               Security &amp; Data Ownership
             </Link>
@@ -209,7 +209,7 @@ export default function HowItWorksPage() {
               </span>
               <p className="mt-1 text-sm text-ink-soft">
                 What stays local, what reaches the Control Plane,
-                authentication, backups, and evaluation removal.
+                authentication, and evaluation removal.
               </p>
             </Link>
             <Link

@@ -118,7 +118,7 @@ export default function DocsPage() {
               status="current"
               name="Security & Data Ownership"
               href="/security"
-              description="What stays local, what reaches the Control Plane, authentication, backup responsibilities, and evaluation removal."
+              description="What stays local, what reaches the Control Plane, authentication, and evaluation removal."
             />
             <DocCard
               status="current"

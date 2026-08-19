@@ -6,7 +6,7 @@ import { KEEP_ARCHITECTURE, KEEP_MERLIN_ARCHITECTURE } from "@/lib/citation-sour
 export const metadata: Metadata = {
   title: "Schematics",
   description:
-    "Technical diagrams of how KEEP is actually built — Hub/Spoke topology, authentication and sign-in, Merlin's governance and decision model, signal intelligence, backup/DR, and Spoke trust — sourced from KEEP's own approved architecture documentation.",
+    "Technical diagrams of how KEEP is actually built — Hub/Spoke topology, authentication and sign-in, Merlin's governance and decision model, signal intelligence, and Spoke trust — sourced from KEEP's own approved architecture documentation.",
 };
 
 function SchematicCard({
@@ -71,13 +71,13 @@ export default function SchematicsPage() {
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
           <Eyebrow>Diagram Sets</Eyebrow>
-          <H2 className="mt-3">Two schematic sets, nine diagrams total</H2>
+          <H2 className="mt-3">Two schematic sets, eight diagrams total</H2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <SchematicCard
               name="How KEEP Is Built"
               href="/schematics/how-keep-is-built.html"
-              diagramCount={7}
-              description="Merlin's governance and decision model, Hub/Spoke system architecture, the Merlin layer stack, incident and signal intelligence, backup and disaster recovery, Spoke enrollment's root of trust, and authentication and sign-in."
+              diagramCount={6}
+              description="Merlin's governance and decision model, Hub/Spoke system architecture, the Merlin layer stack, incident and signal intelligence, Spoke enrollment's root of trust, and authentication and sign-in."
             />
             <SchematicCard
               name="Merlin Architecture — Current State & Proposed Direction"

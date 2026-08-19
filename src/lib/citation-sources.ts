@@ -20,11 +20,6 @@ export const KEEP_SECURITY_ARCHITECTURE: CitationSource = {
   label: "KEEP application security architecture",
 };
 
-export const KEEP_BACKUP_DR: CitationSource = {
-  type: "internal-doc",
-  label: "KEEP backup and disaster recovery architecture",
-};
-
 export const KEEP_PRODUCT_POSITIONING: CitationSource = {
   type: "internal-doc",
   label: "KEEP product positioning documentation",

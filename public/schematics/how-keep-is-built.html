@@ -135,7 +135,7 @@
   <header class="page">
     <p class="eyebrow">Engineering Diagram Library — v1</p>
     <h1>How KEEP Is Built</h1>
-    <p class="dek">Seven diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, and three concrete proofs of engineering discipline (signal intelligence, backup/DR, and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
+    <p class="dek">Six diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
     <div class="meta-row">
       <span><strong>Source</strong> documentation/architecture/*, merlin.md, merlin-onboarding.md, KEEP_PRODUCT_STRATEGY_V1.md</span>
       <span><strong>Date</strong> 2026-08-07</span>
@@ -149,14 +149,13 @@
     <a href="#d2">2. Hub / Spoke Architecture</a>
     <a href="#d3">3. Merlin Architecture</a>
     <a href="#d4">4. Incident &amp; Signal Intelligence</a>
-    <a href="#d5">5. Backup &amp; Disaster Recovery</a>
-    <a href="#d6">6. Root of Trust</a>
-    <a href="#d7">7. Authentication &amp; Sign-In</a>
+    <a href="#d5">5. Root of Trust</a>
+    <a href="#d6">6. Authentication &amp; Sign-In</a>
   </nav>
 
   <section id="legend">
     <h2><span class="num">§0</span> Legend</h2>
-    <p class="section-note">One shared encoding across all seven diagrams.</p>
+    <p class="section-note">One shared encoding across all six diagrams.</p>
     <div class="legend">
       <div class="legend-item">
         <svg class="legend-swatch" viewBox="0 0 34 20"><rect x="1" y="1" width="32" height="18" rx="2" class="box-current"/></svg>
@@ -590,85 +589,13 @@
 
   <!-- ================= DIAGRAM 5 ================= -->
   <section id="d5">
-    <h2><span class="num">§5</span> Backup &amp; Disaster Recovery</h2>
-
-    <figure class="diagram">
-      <div class="svg-scroll">
-      <svg viewBox="0 0 1180 620" role="img" aria-label="Backup and disaster recovery data flow: a daily pg_dump of Undercroft is first restore-tested into a disposable container before anything is encrypted; the verified dump is then encrypted with age to a single recipient, the owner's own offline key, with no second or Hub-resident key of any kind; the encrypted artifact and a plaintext checksum sidecar are transferred off-host; a weekly automated integrity check recomputes the checksum without ever needing a decryption key; a separate manual verify path lets the operator decrypt and restore a spot check on demand using their own offline key.">
-        <defs>
-          <marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
-        </defs>
-
-        <rect x="60" y="30" width="260" height="70" rx="4" class="box-current"/>
-        <text x="190" y="58" text-anchor="middle" class="label-title">Undercroft (live)</text>
-        <text x="190" y="76" text-anchor="middle" class="label-sub">pg_dump -Fc, inside the container</text>
-
-        <path d="M320,65 L360,65" class="arrow" marker-end="url(#a5)"/>
-        <rect x="360" y="30" width="290" height="70" rx="4" class="box-current"/>
-        <text x="505" y="55" text-anchor="middle" class="label-title">Disposable-Container Restore Check</text>
-        <text x="505" y="73" text-anchor="middle" class="label-sub">before anything is encrypted — a bad dump</text>
-        <text x="505" y="86" text-anchor="middle" class="label-sub">aborts here; nothing is ever shipped</text>
-
-        <path d="M505,100 L505,130" class="arrow" marker-end="url(#a5)"/>
-        <rect x="360" y="133" width="290" height="80" rx="4" class="box-current"/>
-        <text x="505" y="159" text-anchor="middle" class="label-title">age Encryption</text>
-        <text x="505" y="177" text-anchor="middle" class="label-sub">one recipient only — the owner's</text>
-        <text x="505" y="191" text-anchor="middle" class="label-sub">offline key. No Hub-resident key, ever.</text>
-        <text x="505" y="205" text-anchor="middle" class="status-tag status-current">CURRENT</text>
-
-        <path d="M505,213 L505,243" class="arrow" marker-end="url(#a5)"/>
-        <rect x="360" y="246" width="290" height="70" rx="4" class="box-current"/>
-        <text x="505" y="271" text-anchor="middle" class="label-title">Off-Host Transfer</text>
-        <text x="505" y="289" text-anchor="middle" class="label-sub">rsync/SSH — encrypted artifact +</text>
-        <text x="505" y="303" text-anchor="middle" class="label-sub">plaintext checksum sidecar</text>
-
-        <path d="M650,281 L690,281" class="arrow" marker-end="url(#a5)"/>
-        <rect x="690" y="246" width="280" height="70" rx="4" class="box-external"/>
-        <text x="830" y="271" text-anchor="middle" class="label-title">Off-host storage</text>
-        <text x="830" y="289" text-anchor="middle" class="label-sub">customer-owned NAS / host — never KEEPMSP.io</text>
-        <text x="830" y="303" text-anchor="middle" class="label-sub" font-size="10"></text>
-
-        <path d="M830,316 L830,350 L690,350 L690,375" class="arrow" marker-end="url(#a5)"/>
-        <rect x="510" y="378" width="280" height="80" rx="4" class="box-current"/>
-        <text x="650" y="404" text-anchor="middle" class="label-title">Weekly Integrity Check</text>
-        <text x="650" y="422" text-anchor="middle" class="label-sub">checksum comparison only —</text>
-        <text x="650" y="436" text-anchor="middle" class="label-sub">no decryption key required, ever</text>
-        <text x="650" y="450" text-anchor="middle" class="status-tag status-current">CURRENT — automated, unattended</text>
-
-        <path d="M830,316 L830,350 L930,350 L930,375" class="arrow" marker-end="url(#a5)"/>
-        <rect x="800" y="378" width="280" height="80" rx="4" class="box-planned"/>
-        <text x="940" y="404" text-anchor="middle" class="label-title">Manual Verify / Restore</text>
-        <text x="940" y="422" text-anchor="middle" class="label-sub">operator's own offline key,</text>
-        <text x="940" y="436" text-anchor="middle" class="label-sub">on-demand, into a disposable container</text>
-        <text x="940" y="450" text-anchor="middle" class="status-tag status-current">CURRENT — manual, never automated</text>
-
-        <rect x="60" y="500" width="1030" height="90" rx="4" class="box-warn"/>
-        <text x="575" y="527" text-anchor="middle" class="label-title" fill="var(--bad)">Key-loss warning</text>
-        <text x="575" y="547" text-anchor="middle" class="label-sub">If the operator's offline private key is lost, every backup this Hub has ever produced becomes permanently unrecoverable.</text>
-        <text x="575" y="563" text-anchor="middle" class="label-sub">No reset mechanism, no support-ticket recovery, no master key, no second key of any kind. Stated plainly, not softened.</text>
-
-      </svg>
-      </div>
-      <figcaption><strong>Figure 5.</strong> Every day's dump is proven restorable before it's ever encrypted; the stored artifact's integrity is checked weekly without needing a key. Only a real DR event ever needs the operator's own offline key.</figcaption>
-    </figure>
-
-    <dl class="fields">
-      <dt>Purpose</dt><dd>Show KEEP's security engineering discipline applied to its own most sensitive data path — including a real, caught-and-corrected design defect.</dd>
-      <dt>Major components</dt><dd>`pg_dump` (logical backup), disposable-container restore check (pre-encryption), `age` single-recipient encryption, off-host transfer, weekly key-free integrity check, manual operator-invoked verify/restore.</dd>
-      <dt>Relationships</dt><dd>The Hub can prove a backup is restorable and uncorrupted without ever holding a key capable of decrypting it — daily verification and weekly integrity checking are both key-free by design; only a genuine DR event requires the operator's offline key.</dd>
-      <dt>Why the site</dt><dd>A rare, concrete story of engineering rigor made public — the original design briefly held a second, Hub-resident "verify-only" key, which was caught as a real defect and removed before shipping. Showing that discipline is more persuasive than asserting security in the abstract.</dd>
-    </dl>
-  </section>
-
-  <!-- ================= DIAGRAM 6 ================= -->
-  <section id="d6">
-    <h2><span class="num">§6</span> Root of Trust / Enrollment</h2>
+    <h2><span class="num">§5</span> Root of Trust / Enrollment</h2>
 
     <figure class="diagram">
       <div class="svg-scroll">
       <svg viewBox="0 0 1180 480" role="img" aria-label="Root of trust for Spoke enrollment: three independent trust decisions must all be satisfied before a Hub admits a Spoke and issues operational credentials. KEEP Trust verifies the joining device is genuine KEEP hardware or software and is a future, unbuilt mechanism. Network Trust is the director's own access to the customer's network and is current. Enrollment Authorization is the director deliberately opening the admission window, currently satisfied by the act of issuing a deployment token. All three converge before any credential is issued.">
         <defs>
-          <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+          <marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
 
         <rect x="40" y="30" width="330" height="130" rx="4" class="box-future"/>
@@ -695,8 +622,8 @@
         <text x="975" y="126" text-anchor="middle" class="label-sub">is itself the authorization act</text>
         <text x="975" y="147" text-anchor="middle" class="status-tag status-current">CURRENT, in substance</text>
 
-        <path d="M205,160 L205,220 L590,220 L590,250" class="arrow" marker-end="url(#a6)"/>
-        <path d="M590,160 L590,250" class="arrow" marker-end="url(#a6)"/>
+        <path d="M205,160 L205,220 L590,220 L590,250" class="arrow" marker-end="url(#a5)"/>
+        <path d="M590,160 L590,250" class="arrow" marker-end="url(#a5)"/>
         <path d="M975,160 L975,220 L590,220" class="arrow"/>
 
         <text x="600" y="235" class="label-flow" fill="var(--ink-soft)">all three independently required — none substitutes for another</text>
@@ -713,7 +640,7 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 6.</strong> Three independently-answered questions, not one. Naming KEEP Trust as unbuilt is deliberate — the honesty is more credible than implying a finished mechanism.</figcaption>
+      <figcaption><strong>Figure 5.</strong> Three independently-answered questions, not one. Naming KEEP Trust as unbuilt is deliberate — the honesty is more credible than implying a finished mechanism.</figcaption>
     </figure>
 
     <dl class="fields">
@@ -724,25 +651,25 @@
     </dl>
   </section>
 
-  <section id="d7">
-    <h2><span class="num">§7</span> Authentication &amp; Sign-In</h2>
+  <section id="d6">
+    <h2><span class="num">§6</span> Authentication &amp; Sign-In</h2>
     <p class="section-note">How a tech's sign-in request resolves to one of three built-in paths, plus an independent SSO path — and exactly where multi-factor authentication does and doesn't apply.</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
       <svg viewBox="0 0 1180 540" role="img" aria-label="Authentication and sign-in: a tech's sign-in is evaluated per tech, not per deployment. Local Account (bcrypt) is checked first if a password hash is set for that tech. Active Directory or LDAP is checked next if a directory server is configured. Dev-Mode Fallback, an insecure default, applies only if neither of the above does. OIDC/SSO is a separate, parallel path reached only through its own sign-in button, not part of this fallback chain. All four paths converge on the same session, but only the Local Account path passes through a multi-factor authentication gate — Active Directory/LDAP and OIDC/SSO are identity-provider-owned and are not gated by KEEP's own MFA.">
         <defs>
-          <marker id="a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+          <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
 
         <rect x="430" y="20" width="320" height="60" rx="4" class="box-current"/>
         <text x="590" y="48" text-anchor="middle" class="label-title">Tech Attempts Sign-In</text>
         <text x="590" y="66" text-anchor="middle" class="label-sub">evaluated per tech, not per deployment</text>
 
-        <path d="M590,80 L590,105 L145,105 L145,140" class="arrow" marker-end="url(#a7)"/>
-        <path d="M590,80 L590,105 L425,105 L425,140" class="arrow" marker-end="url(#a7)"/>
-        <path d="M590,80 L590,105 L705,105 L705,140" class="arrow" marker-end="url(#a7)"/>
-        <path d="M590,80 L590,105 L1025,105 L1025,140" class="arrow" marker-end="url(#a7)"/>
+        <path d="M590,80 L590,105 L145,105 L145,140" class="arrow" marker-end="url(#a6)"/>
+        <path d="M590,80 L590,105 L425,105 L425,140" class="arrow" marker-end="url(#a6)"/>
+        <path d="M590,80 L590,105 L705,105 L705,140" class="arrow" marker-end="url(#a6)"/>
+        <path d="M590,80 L590,105 L1025,105 L1025,140" class="arrow" marker-end="url(#a6)"/>
         <text x="760" y="125" class="label-flow" fill="var(--ink-soft)">OIDC/SSO is a separate, parallel path — reached only via its own sign-in button</text>
 
         <rect x="20" y="140" width="250" height="120" rx="4" class="box-current"/>
@@ -769,7 +696,7 @@
         <text x="1025" y="198" text-anchor="middle" class="label-sub">separate NextAuth provider</text>
         <text x="1025" y="220" text-anchor="middle" class="status-tag status-current">CURRENT — Sessions 94-95</text>
 
-        <path d="M145,260 L145,300" class="arrow" marker-end="url(#a7)"/>
+        <path d="M145,260 L145,300" class="arrow" marker-end="url(#a6)"/>
 
         <rect x="20" y="300" width="250" height="100" rx="4" class="box-current"/>
         <text x="145" y="324" text-anchor="middle" class="label-title">MFA Gate</text>
@@ -781,7 +708,7 @@
         <path d="M425,260 L425,430 L590,430" class="arrow"/>
         <path d="M705,260 L705,430 L590,430" class="arrow"/>
         <path d="M1025,260 L1025,430 L590,430" class="arrow"/>
-        <path d="M590,430 L590,450" class="arrow" marker-end="url(#a7)"/>
+        <path d="M590,430 L590,450" class="arrow" marker-end="url(#a6)"/>
         <text x="605" y="420" class="label-flow" fill="var(--amber)">every path reaches the same session — MFA is the only difference between them</text>
 
         <rect x="390" y="450" width="400" height="70" rx="4" class="box-current"/>
@@ -790,7 +717,7 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 7.</strong> Three built-in paths, checked in priority order, plus an independent SSO path — and multi-factor authentication applies to exactly one of the four.</figcaption>
+      <figcaption><strong>Figure 6.</strong> Three built-in paths, checked in priority order, plus an independent SSO path — and multi-factor authentication applies to exactly one of the four.</figcaption>
     </figure>
 
     <dl class="fields">
