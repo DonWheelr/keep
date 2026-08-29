@@ -135,7 +135,7 @@
   <header class="page">
     <p class="eyebrow">Engineering Diagram Library — v1</p>
     <h1>How KEEP Is Built</h1>
-    <p class="dek">Six diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
+    <p class="dek">Seven diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, how technician authorization works once someone is signed in, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
     <div class="meta-row">
       <span><strong>Source</strong> documentation/architecture/*, merlin.md, merlin-onboarding.md, KEEP_PRODUCT_STRATEGY_V1.md</span>
       <span><strong>Date</strong> 2026-08-07</span>
@@ -151,6 +151,7 @@
     <a href="#d4">4. Incident &amp; Signal Intelligence</a>
     <a href="#d5">5. Root of Trust</a>
     <a href="#d6">6. Authentication &amp; Sign-In</a>
+    <a href="#d7">7. Authorization: Roles &amp; Permissions</a>
   </nav>
 
   <section id="legend">
@@ -653,13 +654,14 @@
 
   <section id="d6">
     <h2><span class="num">§6</span> Authentication &amp; Sign-In</h2>
-    <p class="section-note">How a tech's sign-in request resolves to one of three built-in paths, plus an independent SSO path — and exactly where multi-factor authentication does and doesn't apply.</p>
+    <p class="section-note">KEEP supports three deployment authentication methods — a KEEP-native local account, Active Directory/LDAP, and generic OIDC/SSO — plus exactly where multi-factor authentication does and doesn't apply. A fourth, non-customer-facing development fallback exists in the code and is shown here for completeness, clearly separated from the three real options.</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 540" role="img" aria-label="Authentication and sign-in: a tech's sign-in is evaluated per tech, not per deployment. Local Account (bcrypt) is checked first if a password hash is set for that tech. Active Directory or LDAP is checked next if a directory server is configured. Dev-Mode Fallback, an insecure default, applies only if neither of the above does. OIDC/SSO is a separate, parallel path reached only through its own sign-in button, not part of this fallback chain. All four paths converge on the same session, but only the Local Account path passes through a multi-factor authentication gate — Active Directory/LDAP and OIDC/SSO are identity-provider-owned and are not gated by KEEP's own MFA.">
+      <svg viewBox="0 0 1180 560" role="img" aria-label="Authentication and sign-in: KEEP supports three deployment authentication methods, evaluated per tech, not per deployment. Local Account (bcrypt) is checked first if a password hash is set for that tech. Active Directory or LDAP is checked next if a directory server is configured. OIDC/SSO is a separate, parallel path reached only through its own sign-in button, and is the only path with its own denial branch: an unrecognized or not-yet-approved email is refused, creating a pending record rather than a session. A fourth path, a development-only fallback that accepts any password when neither a local password hash nor a directory server is configured, is not a supported deployment authentication method — it is drawn small, dashed, and visually separated from the three real options, shown only because it exists in the code and an existing finding on this page depends on it being visible. Every successful path converges on the same session, but only the Local Account path passes through a multi-factor authentication gate — Active Directory/LDAP and OIDC/SSO are identity-provider-owned and are not gated by KEEP's own MFA. Session establishment is authentication only; what that session can actually do inside KEEP is a separate authorization question, covered in Figure 7.">
         <defs>
           <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+          <marker id="a6-refuse" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--bad)"/></marker>
         </defs>
 
         <rect x="430" y="20" width="320" height="60" rx="4" class="box-current"/>
@@ -668,9 +670,8 @@
 
         <path d="M590,80 L590,105 L145,105 L145,140" class="arrow" marker-end="url(#a6)"/>
         <path d="M590,80 L590,105 L425,105 L425,140" class="arrow" marker-end="url(#a6)"/>
-        <path d="M590,80 L590,105 L705,105 L705,140" class="arrow" marker-end="url(#a6)"/>
         <path d="M590,80 L590,105 L1025,105 L1025,140" class="arrow" marker-end="url(#a6)"/>
-        <text x="760" y="125" class="label-flow" fill="var(--ink-soft)">OIDC/SSO is a separate, parallel path — reached only via its own sign-in button</text>
+        <text x="760" y="125" class="label-flow" fill="var(--ink-soft)">the three supported deployment methods — OIDC/SSO is a separate, parallel path, reached only via its own sign-in button</text>
 
         <rect x="20" y="140" width="250" height="120" rx="4" class="box-current"/>
         <text x="145" y="164" text-anchor="middle" class="label-title">Local Account</text>
@@ -684,17 +685,24 @@
         <text x="425" y="198" text-anchor="middle" class="label-sub">② checked next, if a directory server is set</text>
         <text x="425" y="220" text-anchor="middle" class="status-tag status-current">CURRENT — Session 95</text>
 
-        <rect x="580" y="140" width="250" height="120" rx="4" class="box-warn"/>
-        <text x="705" y="164" text-anchor="middle" class="label-title">Dev-Mode Fallback</text>
-        <text x="705" y="182" text-anchor="middle" class="label-sub">accepts any password</text>
-        <text x="705" y="198" text-anchor="middle" class="label-sub">③ last resort — neither above applies</text>
-        <text x="705" y="220" text-anchor="middle" class="label-sub" fill="var(--bad)">insecure — loud console warning</text>
+        <path d="M500,260 L500,300 L610,300" class="arrow" stroke-dasharray="4 3" marker-end="url(#a6)"/>
+        <rect x="610" y="280" width="200" height="65" rx="4" class="box-warn"/>
+        <text x="710" y="298" text-anchor="middle" class="label-sub" font-weight="700">Development/Test Only</text>
+        <text x="710" y="314" text-anchor="middle" class="label-sub" font-size="10">no password hash set, no directory configured</text>
+        <text x="710" y="330" text-anchor="middle" class="label-sub" font-size="10" fill="var(--bad)">not a deployment authentication option</text>
 
         <rect x="900" y="140" width="250" height="120" rx="4" class="box-current"/>
         <text x="1025" y="164" text-anchor="middle" class="label-title">OIDC / SSO</text>
-        <text x="1025" y="182" text-anchor="middle" class="label-sub">Entra ID, Google Workspace, Okta, and similar</text>
+        <text x="1025" y="182" text-anchor="middle" class="label-sub">Entra ID, Google Workspace, Okta, JumpCloud, and similar</text>
         <text x="1025" y="198" text-anchor="middle" class="label-sub">separate NextAuth provider</text>
         <text x="1025" y="220" text-anchor="middle" class="status-tag status-current">CURRENT — Sessions 94-95</text>
+
+        <path d="M1100,260 L1100,275 L1025,275 L1025,290" class="arrow-refuse" marker-end="url(#a6-refuse)"/>
+        <rect x="900" y="290" width="250" height="85" rx="4" class="box-current"/>
+        <text x="1025" y="312" text-anchor="middle" class="label-title">Unrecognized/Inactive → Pending</text>
+        <text x="1025" y="330" text-anchor="middle" class="label-sub">authentication alone never activates the account</text>
+        <text x="1025" y="346" text-anchor="middle" class="label-sub">Director/Senior Technician approval required</text>
+        <text x="1025" y="365" text-anchor="middle" class="status-tag status-current">CURRENT — Session 94</text>
 
         <path d="M145,260 L145,300" class="arrow" marker-end="url(#a6)"/>
 
@@ -706,24 +714,28 @@
 
         <path d="M145,400 L145,430 L590,430" class="arrow"/>
         <path d="M425,260 L425,430 L590,430" class="arrow"/>
-        <path d="M705,260 L705,430 L590,430" class="arrow"/>
-        <path d="M1025,260 L1025,430 L590,430" class="arrow"/>
+        <path d="M710,345 L710,430 L590,430" class="arrow" stroke-dasharray="4 3"/>
+        <path d="M950,260 L950,275 L870,275 L870,430 L590,430" class="arrow" marker-end="url(#a6)"/>
+        <text x="878" y="266" class="label-flow" fill="var(--ink-soft)">known, active account</text>
         <path d="M590,430 L590,450" class="arrow" marker-end="url(#a6)"/>
-        <text x="605" y="420" class="label-flow" fill="var(--amber)">every path reaches the same session — MFA is the only difference between them</text>
+        <text x="605" y="420" class="label-flow" fill="var(--amber)">the three supported paths, plus the dev-only fallback, reach the same session — MFA is the only difference between them</text>
 
         <rect x="390" y="450" width="400" height="70" rx="4" class="box-current"/>
         <text x="590" y="478" text-anchor="middle" class="label-title">Session Established</text>
-        <text x="590" y="496" text-anchor="middle" class="label-sub">same session shape regardless of path taken</text>
+        <text x="590" y="496" text-anchor="middle" class="label-sub">authentication only — see Figure 7 for authorization</text>
+
+        <path d="M590,520 L590,545" class="arrow" marker-end="url(#a6)"/>
+        <text x="605" y="538" class="label-flow" fill="var(--slate)">continues to Figure 7 — a session alone grants no KEEP authority</text>
 
       </svg>
       </div>
-      <figcaption><strong>Figure 6.</strong> Three built-in paths, checked in priority order, plus an independent SSO path — and multi-factor authentication applies to exactly one of the four.</figcaption>
+      <figcaption><strong>Figure 6.</strong> Three supported deployment methods, plus the OIDC/SSO pending-approval gate — and multi-factor authentication applies to exactly one of the three. The dashed, visually separated fourth box is a development-only fallback, not a deployment authentication option. Ends at session establishment; what a signed-in session can actually do is a separate question, answered in Figure 7.</figcaption>
     </figure>
 
     <dl class="fields">
-      <dt>Purpose</dt><dd>Make KEEP's own sign-in mechanics legible — which of three built-in paths a tech actually authenticates through, and exactly where MFA does and doesn't apply.</dd>
-      <dt>Major components</dt><dd>Local Account (bcrypt), Active Directory/LDAP (via ldapts), Dev-Mode Fallback (insecure, evaluated only when neither above applies), OIDC/SSO (a separate NextAuth provider); the MFA Gate hung only off the Local Account path.</dd>
-      <dt>Relationships</dt><dd>Local, LDAP, and Dev-Mode Fallback are evaluated in that priority order for a given tech — the first that applies wins. OIDC sits outside this chain entirely, reached only via its own sign-in button. All four paths converge on the same session; MFA is the only structural difference, and it applies to Local accounts alone.</dd>
+      <dt>Purpose</dt><dd>Make KEEP's own sign-in mechanics legible — which of the three supported methods a tech actually authenticates through, exactly where MFA does and doesn't apply, and where OIDC/SSO's pending-approval gate sits in that flow.</dd>
+      <dt>Major components</dt><dd>Local Account (bcrypt), Active Directory/LDAP (via ldapts), OIDC/SSO (a separate NextAuth provider) with its own pending/inactive gate for an unrecognized or not-yet-approved email; the MFA Gate hung only off the Local Account path. A development-only fallback also exists in the code (accepts any password when neither Local nor AD/LDAP applies) — drawn small, dashed, and visually separated from the three supported methods, never presented as a customer-facing deployment option.</dd>
+      <dt>Relationships</dt><dd>Local and LDAP are evaluated in that priority order for a given tech — the first that applies wins; the development-only fallback is what happens if neither does, shown here only because an existing finding on this page (below) depends on it being visible, not as a fourth peer choice. OIDC sits outside this chain entirely, reached only via its own sign-in button, and is the only path with its own denial branch (an unrecognized or inactive email is refused, not signed in). Every successful path converges on the same session; MFA is the only structural difference among the three supported methods, and it applies to Local accounts alone. Session establishment is authentication only — it says nothing about what that session can do. That's authorization, a separate mechanism covered in Figure 7.</dd>
       <dt>Why the site</dt><dd>Answers a security-evaluating reader's actual question — "what happens when I sign in, and is MFA actually enforced" — with the real branching logic, not just a feature-list mention.</dd>
     </dl>
 
@@ -734,7 +746,101 @@
       </div>
       <div class="finding gap">
         <h3>The installer doesn't offer Local as an install-time choice yet</h3>
-        <p><code>chooser.js</code> and <code>install-pyx.sh</code>'s network-type question still only offers <code>ldap</code>, <code>oidc</code>, or skip — skip maps to the insecure Dev-Mode Fallback shown above. Wiring Local into the installer scripts is separate, unbuilt work.</p>
+        <p><code>chooser.js</code> and <code>install-pyx.sh</code>'s network-type question still only offers <code>ldap</code>, <code>oidc</code>, or skip — skip maps to the insecure development-only fallback shown above (dashed, not one of the three supported methods), meaning a real deployment can end up on it by installer choice, not just by leaving env vars unset in dev. Wiring Local into the installer scripts is separate, unbuilt work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DIAGRAM 7 ================= -->
+  <section id="d7">
+    <h2><span class="num">§7</span> Authorization: Roles &amp; Permissions</h2>
+    <p class="section-note">What a signed-in session can actually do inside KEEP — a separate question from Figure 6's "how did this session get established," answered by an additive, union-based role model rather than a single rank.</p>
+
+    <figure class="diagram">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 1180 800" role="img" aria-label="Authorization: roles and permissions. A signed-in technician's assigned roles come from two independent sources — Active Directory/LDAP group mapping, re-evaluated on every sign-in, and manual assignment by a Director or Senior Technician, unaffected by AD/LDAP-driven changes — and both can apply to the same technician at once. Generic OIDC/SSO authenticates identity only; it does not currently map any OIDC group or claim to a KEEP role. A technician may hold any number of roles from either group simultaneously; effective permissions are the union of everything every assigned role grants, with no deny-list and no conflicting-role restriction in this version. Three predefined roles — Technician, Senior Technician, Director — and four composable roles — Remote-Access Specialist, Onboarding Coordinator, Compliance Reviewer, Security Administrator — are drawn as equal, independent options, not a ranked ladder.">
+        <defs>
+          <marker id="a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+        </defs>
+
+        <rect x="430" y="20" width="320" height="60" rx="4" class="box-current"/>
+        <text x="590" y="48" text-anchor="middle" class="label-title">Signed-In Technician</text>
+        <text x="590" y="66" text-anchor="middle" class="label-sub">already authenticated — see Figure 6</text>
+
+        <path d="M590,80 L590,110 L250,110 L250,140" class="arrow" marker-end="url(#a7)"/>
+        <path d="M590,80 L590,110 L930,110 L930,140" class="arrow" marker-end="url(#a7)"/>
+
+        <rect x="100" y="140" width="300" height="110" rx="4" class="box-current"/>
+        <text x="250" y="164" text-anchor="middle" class="label-title">AD / LDAP Group Mapping</text>
+        <text x="250" y="182" text-anchor="middle" class="label-sub">AD/LDAP group membership → KEEP roles</text>
+        <text x="250" y="198" text-anchor="middle" class="label-sub">re-evaluated on every sign-in</text>
+        <text x="250" y="220" text-anchor="middle" class="status-tag status-current">CURRENT — Additive RBAC</text>
+
+        <rect x="780" y="140" width="300" height="110" rx="4" class="box-current"/>
+        <text x="930" y="164" text-anchor="middle" class="label-title">Manually Assigned</text>
+        <text x="930" y="182" text-anchor="middle" class="label-sub">by a Director or Senior Technician</text>
+        <text x="930" y="198" text-anchor="middle" class="label-sub">unaffected by AD/LDAP-driven changes</text>
+        <text x="930" y="220" text-anchor="middle" class="status-tag status-current">CURRENT — Additive RBAC</text>
+
+        <path d="M250,250 L250,270 L590,270" class="arrow"/>
+        <path d="M930,250 L930,270 L590,270" class="arrow"/>
+        <path d="M590,270 L590,300" class="arrow" marker-end="url(#a7)"/>
+        <text x="605" y="264" class="label-flow" fill="var(--ink-soft)">both sources can apply to the same technician at once</text>
+        <text x="605" y="286" class="label-flow" fill="var(--slate)">generic OIDC/SSO authenticates identity only — no OIDC group or claim maps to a KEEP role</text>
+
+        <rect x="310" y="300" width="560" height="150" rx="4" class="box-current"/>
+        <text x="590" y="324" text-anchor="middle" class="label-title">This Technician's Assigned Roles (example)</text>
+        <text x="590" y="342" text-anchor="middle" class="label-sub">a technician may hold any number of roles from either group, at once</text>
+        <rect x="350" y="365" width="220" height="55" rx="4" class="box-current"/>
+        <text x="460" y="390" text-anchor="middle" class="label-title">Senior Technician</text>
+        <text x="460" y="408" text-anchor="middle" class="label-sub">predefined</text>
+        <rect x="610" y="365" width="220" height="55" rx="4" class="box-current"/>
+        <text x="720" y="390" text-anchor="middle" class="label-title">Onboarding Coordinator</text>
+        <text x="720" y="408" text-anchor="middle" class="label-sub">composable</text>
+
+        <path d="M590,450 L590,480" class="arrow" marker-end="url(#a7)"/>
+
+        <rect x="340" y="480" width="500" height="100" rx="4" class="box-current"/>
+        <text x="590" y="508" text-anchor="middle" class="label-title">Effective Permissions</text>
+        <text x="590" y="526" text-anchor="middle" class="label-sub">the union of everything every assigned role grants</text>
+        <text x="590" y="544" text-anchor="middle" class="label-sub">no deny-list, no conflicting-role restriction in this version</text>
+
+        <text x="590" y="612" text-anchor="middle" class="label-title" font-size="12">PREDEFINED ROLES</text>
+        <text x="590" y="627" text-anchor="middle" class="label-sub">each is its own role, like any other — not a ranked ladder</text>
+        <rect x="180" y="638" width="260" height="50" rx="4" class="box-current"/>
+        <text x="310" y="668" text-anchor="middle" class="label-title">Technician</text>
+        <rect x="460" y="638" width="260" height="50" rx="4" class="box-current"/>
+        <text x="590" y="668" text-anchor="middle" class="label-title">Senior Technician</text>
+        <rect x="740" y="638" width="260" height="50" rx="4" class="box-current"/>
+        <text x="870" y="668" text-anchor="middle" class="label-title">Director</text>
+
+        <text x="590" y="722" text-anchor="middle" class="label-title" font-size="12">COMPOSABLE ROLES</text>
+        <text x="590" y="737" text-anchor="middle" class="label-sub">assignable standalone or alongside any other role</text>
+        <rect x="40" y="748" width="260" height="50" rx="4" class="box-current"/>
+        <text x="170" y="778" text-anchor="middle" class="label-title">Remote-Access Specialist</text>
+        <rect x="320" y="748" width="260" height="50" rx="4" class="box-current"/>
+        <text x="450" y="778" text-anchor="middle" class="label-title">Onboarding Coordinator</text>
+        <rect x="600" y="748" width="260" height="50" rx="4" class="box-current"/>
+        <text x="730" y="778" text-anchor="middle" class="label-title">Compliance Reviewer</text>
+        <rect x="880" y="748" width="260" height="50" rx="4" class="box-current"/>
+        <text x="1010" y="778" text-anchor="middle" class="label-title">Security Administrator</text>
+
+      </svg>
+      </div>
+      <figcaption><strong>Figure 7.</strong> Effective access is the union of every role a technician holds, from either source — never a single rank, never a deny-list.</figcaption>
+    </figure>
+
+    <dl class="fields">
+      <dt>Purpose</dt><dd>Make KEEP's authorization model legible once a session already exists — which roles a technician can hold, where those roles come from, and how they combine into what that technician can actually do.</dd>
+      <dt>Major components</dt><dd>Two independent role-assignment sources (AD/LDAP group mapping, manual assignment); three predefined roles (Technician, Senior Technician, Director); four composable roles (Remote-Access Specialist, Onboarding Coordinator, Compliance Reviewer, Security Administrator); the union operation that turns an assigned-role set into effective permissions.</dd>
+      <dt>Relationships</dt><dd>A technician's assigned roles are the combination of whatever AD/LDAP groups currently map to them and whatever a Director or Senior Technician assigned by hand — both can apply at once, independently, and neither source erases the other. Generic OIDC/SSO is deliberately absent from this pair: it authenticates identity only, and no OIDC group or claim currently maps to a KEEP role. Effective permissions are the union of everything every assigned role grants; there is no deny-list and no conflicting-role restriction in this version, so holding an additional role only ever adds access. The predefined and composable roles are drawn as equal, independent options specifically to avoid implying a ranked ladder is how the system decides access — permissions are the actual primitive.</dd>
+      <dt>Why the site</dt><dd>Answers the natural follow-on to Figure 6 — "OK, I'm signed in, so what can I actually do, and who decides that" — with the real model, not just "roles exist."</dd>
+    </dl>
+
+    <div class="findings">
+      <div class="finding holds">
+        <h3>Live-verified end-to-end, not just designed</h3>
+        <p>Confirmed against a disposable KEEP deployment, not only reviewed in source: role assignment through the real administrative screen, the permission union it produces, AD/LDAP-group-driven role mapping and revocation on re-sign-in, and coexistence between a manually assigned role and a directory-derived one all behaved exactly as described above.</p>
       </div>
     </div>
   </section>
@@ -743,6 +849,8 @@
     Method: derived from KEEP's approved architecture documentation via GBrain retrieval (schema_graph → get_page → query/search → traverse_graph), cross-checked against direct code inspection where an existing internal audit (documentation/merlin-architecture-diagrams.html, 2026-08-04) already established implementation status. No new architecture decisions were made while producing these diagrams. Planned/Future items are labeled as such, not presented as shipped.
     <br><br>
     Corrected 2026-08-15, re-verified against current source, not re-derived from this file's own prior claims: "Merlin(Core)"/"Merlin(Intelligence)" renamed to "Merlin Governance"/"Merlin Narrative Layer" (§3) to match the site's own corrected terminology; the §8 audit-coverage finding (§1) updated to reflect the 2026-08-10 Director decision that narrowed the rule rather than requiring more audit code.
+    <br><br>
+    Extended 2026-08-29: added §7 (Authorization: Roles &amp; Permissions), reconciling this library against the shipped additive multi-role RBAC system — a session's authorization was previously undepicted entirely, not stale or wrong, just absent. §6 (Authentication &amp; Sign-In) corrected in the same pass: added JumpCloud to the OIDC/SSO example list (already true of the implementation, missing from this diagram), added the OIDC/SSO pending/inactive-approval denial branch, and added an explicit pointer from session establishment to §7 so identity/authentication and KEEP's own authorization read as two separate mechanisms rather than one undifferentiated "you're in" outcome. Every claim added to both diagrams is backed by direct source inspection (src/lib/auth.ts, src/lib/rbac/*.ts, src/app/api/msp/techs/route.ts) or the live end-to-end validation performed the same session — not re-derived from either diagram's own prior claims.
   </footer>
 
 </div>
