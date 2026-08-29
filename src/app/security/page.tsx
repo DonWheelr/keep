@@ -122,8 +122,27 @@ export default function SecurityPage() {
             Your team signs in one of three ways: through your own Active
             Directory or LDAP-speaking directory, through your
             organization&apos;s OIDC/SSO identity provider (Microsoft Entra
-            ID, Google Workspace, Okta, and similar), or through a
+            ID, Google Workspace, Okta, JumpCloud, and similar), or through a
             KEEP-native local account.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Signing in through your directory or SSO provider establishes who
+            someone is — it does not, by itself, grant them any authority
+            inside KEEP. KEEP controls authorization separately: what a
+            signed-in person can actually do is determined by the KEEP
+            role(s) associated with their account, never by which sign-in
+            method they used to get in.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            For OIDC/SSO sign-ins specifically: the first time someone signs in with an
+            email address KEEP doesn&apos;t already recognize, KEEP creates
+            an inactive record and denies sign-in — authenticating with the
+            identity provider does not activate the account. A Director or
+            Senior Technician has to actively approve the person before that
+            account can access anything. Your identity provider vouching for
+            an email is never, by itself, enough to get in.{" "}
             <Citation source={KEEP_SECURITY_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
@@ -131,6 +150,65 @@ export default function SecurityPage() {
             accounts. Active Directory/LDAP and OIDC/SSO sign-ins are
             governed by your own identity provider&apos;s security policy,
             not KEEP&apos;s. <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+        </div>
+      </section>
+
+      {/* ---------- Authorization: roles and permissions ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Authorization</Eyebrow>
+          <H2 className="mt-3">Technician roles and permissions</H2>
+          <Body className="mt-3 max-w-[62ch] text-ink-soft">
+            Once someone is signed in, what they can actually do inside KEEP
+            is controlled by the role or roles a Director or Senior
+            Technician has assigned them — not by which sign-in method they
+            used. A technician can hold more than one role at the same time;
+            what they&apos;re able to do is the combination of everything
+            every role they hold grants. There&apos;s no deny-list and no
+            conflicting-role restriction in this version — assigning a role
+            only ever adds access, never removes it.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+              <h3 className="font-medium text-ink">Predefined roles</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Technician, Senior Technician, and Director are the general
+                access levels most organizations start with — each is
+                defined as its own ordinary role, like any other, and each
+                happens to include everything the level before it does, plus
+                more. If your team was already using KEEP, existing
+                technicians carried forward into whichever of these three
+                matches what they already had, automatically — no one lost
+                or gained anything in the transition.
+              </p>
+            </div>
+            <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+              <h3 className="font-medium text-ink">Composable roles</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Remote-Access Specialist, Onboarding Coordinator, Compliance
+                Reviewer, and Security Administrator each grant one specific
+                area of access and can be assigned in any combination,
+                alongside a predefined role or on their own — for example, a
+                technician who only ever handles new client onboarding
+                doesn&apos;t need to also be made a Senior Technician just to
+                get that one capability.
+              </p>
+            </div>
+          </div>
+          <Body className="mt-6 max-w-[62ch] text-ink-soft">
+            When your team signs in through Active Directory or an
+            LDAP-speaking directory, KEEP can also map your existing
+            directory groups directly to KEEP roles — belonging to more than
+            one mapped group grants more than one KEEP role. That mapping is
+            re-checked every time the person signs in: remove them from the
+            directory group and KEEP revokes the role that group granted on
+            their next login. A role a KEEP administrator assigned directly,
+            rather than through a directory group, is never affected by that
+            directory-driven check — the two coexist independently, and
+            either can grant the same role without the other one deleting
+            it. <Citation source={KEEP_SECURITY_ARCHITECTURE} />
           </Body>
         </div>
       </section>

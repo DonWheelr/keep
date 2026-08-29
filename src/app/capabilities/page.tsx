@@ -176,6 +176,16 @@ export default function CapabilitiesPage() {
         />
       </ul>
 
+      <H2 className="mt-12">Access Control &amp; Administration</H2>
+      <ul>
+        <Capability
+          status="validated"
+          name="Multi-role technician authorization"
+          description="Assigns each technician one or more roles — Technician, Senior Technician, and Director cover the traditional tiered levels, alongside composable roles (Remote-Access Specialist, Onboarding Coordinator, Compliance Reviewer, Security Administrator) for specific responsibilities — with effective access the union of everything their assigned roles grant. When signing in through Active Directory or LDAP, directory group membership can map to KEEP roles automatically, reconciled on every login. Role assignment, directory-driven mapping and revocation, session behavior, and every server-side access check were live-verified end-to-end; the administrative screen that manages this was confirmed correct by direct code review against that same access-check logic, not yet through a live walkthrough."
+          source={KEEP_SECURITY_ARCHITECTURE}
+        />
+      </ul>
+
       <H2 className="mt-12">Asset & License Management</H2>
       <ul>
         <Capability
