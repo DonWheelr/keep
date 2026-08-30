@@ -72,7 +72,8 @@ export default function MerlinTechnicalReferencePage() {
 
       <H2 className="mt-12">Approval Mechanics</H2>
       <Body className="mt-4">
-        Two shapes exist for authorizing an action Merlin proposes.{" "}
+        Two shapes exist for authorizing an action Merlin proposes, plus one
+        narrow, named exception.{" "}
         <Citation source={KEEP_MERLIN_ARCHITECTURE} />
       </Body>
       <Body className="mt-4">
@@ -88,6 +89,13 @@ export default function MerlinTechnicalReferencePage() {
         re-invoke the AI model live. This is a reliability requirement
         (latency, cost, and misinterpretation risk are all wrong for a
         live-triggered decision), not a style preference.{" "}
+        <Citation source={KEEP_MERLIN_ARCHITECTURE} />
+      </Body>
+      <Body className="mt-4">
+        <strong>Duress</strong> (one named exception): a duress-PIN trigger
+        is immediate and automatic, with no confirmation step and no visible
+        difference from a normal PIN entry — the one case where live human
+        confirmation does not apply first.{" "}
         <Citation source={KEEP_MERLIN_ARCHITECTURE} />
       </Body>
 

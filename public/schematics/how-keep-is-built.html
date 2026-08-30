@@ -466,7 +466,7 @@
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 620" role="img" aria-label="Merlin architecture as four stacked layers. KEEP at the base is the deterministic platform, fully functional with zero AI dependency. Merlin Core sits above it as the governance, audit, and policy layer, shipping free with every install. Merlin Intelligence sits above that as the optional AI layer, currently Device Diagnosis and Incident Coordination, KEEP-managed by default with bring-your-own-license available. Future Merlin sits at the top as explicitly not version one: a cinematic installer theme, behavioral risk and silent escalation, and multi-provider or offline model support.">
+      <svg viewBox="0 0 1180 620" role="img" aria-label="Merlin architecture as four stacked layers. KEEP at the base is the deterministic platform, fully functional with zero AI dependency. Merlin Core sits above it as the governance, audit, and policy layer, shipping free with every install. Merlin Intelligence sits above that as the optional AI layer — Version 1 scope is Device Diagnosis, Incident Coordination, and Onboarding Scan Analysis, all three built — KEEP-managed by default with bring-your-own-license available. Future Merlin sits at the top as explicitly not version one: a cinematic installer theme, behavioral risk and silent escalation, and multi-provider or offline model support.">
         <defs>
           <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
@@ -489,7 +489,7 @@
 
         <rect x="260" y="235" width="660" height="90" rx="4" class="box-current"/>
         <text x="590" y="262" text-anchor="middle" class="label-title">Merlin Narrative Layer — optional AI layer</text>
-        <text x="590" y="280" text-anchor="middle" class="label-sub">V1 scope: Device Diagnosis · Incident Coordination</text>
+        <text x="590" y="280" text-anchor="middle" class="label-sub">V1 scope: Device Diagnosis · Incident Coordination · Onboarding Scan Analysis</text>
         <text x="590" y="295" text-anchor="middle" class="label-sub">KEEP-managed provider by default — BYOL available at the same price</text>
         <text x="590" y="312" text-anchor="middle" class="status-tag status-current">CURRENT — removable without breaking governance</text>
 
@@ -525,7 +525,7 @@
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 560" role="img" aria-label="Incident and signal intelligence model: a detected condition on a device is classified along two independent axes, severity which determines color and flash which determines urgency and is condition-type driven, not severity-driven; the condition is also sorted into one of two SLA categories, operational emergency measured in minutes or security and compliance measured in hours to weeks; when two or more distinct condition types are open on the same device simultaneously, compound risk elevates the combined signal above either condition alone and applies an additional health-score penalty.">
+      <svg viewBox="0 0 1180 620" role="img" aria-label="Incident and signal intelligence model: a detected condition on a device is classified along two independent axes, severity which determines color and flash which determines urgency and is condition-type driven, not severity-driven. Nine condition types currently flash: device unreachable, UPS on battery, UPS battery, temperature, rogue device detected, zero-day threat, temperature anomaly, mass data inaccessibility, and environment mismatch — every other condition type, including high-risk vulnerabilities, renders solid with no flash. The condition is also sorted into one of two SLA categories, operational emergency measured in minutes or security and compliance measured in hours to weeks; when two or more distinct condition types are open on the same device simultaneously, compound risk elevates the combined signal above either condition alone and applies an additional health-score penalty.">
         <defs>
           <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
@@ -544,36 +544,38 @@
         <text x="280" y="195" text-anchor="middle" class="label-sub">never assigned directly elsewhere</text>
         <text x="280" y="212" text-anchor="middle" class="status-tag status-current">CURRENT</text>
 
-        <rect x="740" y="133" width="320" height="90" rx="4" class="box-current"/>
+        <rect x="740" y="133" width="320" height="150" rx="4" class="box-current"/>
         <text x="900" y="160" text-anchor="middle" class="label-title">Condition Type → Flash</text>
-        <text x="900" y="180" text-anchor="middle" class="label-sub">DEVICE_UNREACHABLE, UPS_ON_BATTERY,</text>
-        <text x="900" y="195" text-anchor="middle" class="label-sub">TEMPERATURE_ANOMALY, ROGUE_DEVICE — only these flash</text>
-        <text x="900" y="212" text-anchor="middle" class="status-tag status-current">CURRENT — HIGH_RISK vulns: solid, no flash</text>
+        <text x="900" y="178" text-anchor="middle" class="label-sub" font-size="9.5">DEVICE_UNREACHABLE · UPS_ON_BATTERY · UPS_BATTERY</text>
+        <text x="900" y="195" text-anchor="middle" class="label-sub" font-size="9.5">TEMPERATURE · ROGUE_DEVICE_DETECTED · ZERO_DAY_THREAT</text>
+        <text x="900" y="212" text-anchor="middle" class="label-sub" font-size="9.5">TEMPERATURE_ANOMALY · MASS_DATA_INACCESSIBILITY ·</text>
+        <text x="900" y="229" text-anchor="middle" class="label-sub" font-size="9.5">ENVIRONMENT_MISMATCH — only these nine flash</text>
+        <text x="900" y="252" text-anchor="middle" class="status-tag status-current">CURRENT — HIGH_RISK vulns: solid, no flash</text>
 
-        <path d="M280,223 L280,255" class="arrow" marker-end="url(#a4)"/>
-        <path d="M900,223 L900,255" class="arrow" marker-end="url(#a4)"/>
+        <path d="M280,223 L280,318" class="arrow" marker-end="url(#a4)"/>
+        <path d="M900,283 L900,318" class="arrow" marker-end="url(#a4)"/>
 
-        <rect x="120" y="258" width="320" height="95" rx="4" class="box-current"/>
-        <text x="280" y="284" text-anchor="middle" class="label-title">SLA Category</text>
-        <text x="280" y="304" text-anchor="middle" class="label-sub">Operational Emergency — minutes</text>
-        <text x="280" y="318" text-anchor="middle" class="label-sub">(device down, UPS, temperature)</text>
-        <text x="280" y="338" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">clock starts on first response (double-click)</text>
+        <rect x="120" y="318" width="320" height="95" rx="4" class="box-current"/>
+        <text x="280" y="344" text-anchor="middle" class="label-title">SLA Category</text>
+        <text x="280" y="364" text-anchor="middle" class="label-sub">Operational Emergency — minutes</text>
+        <text x="280" y="378" text-anchor="middle" class="label-sub">(device down, UPS, temperature)</text>
+        <text x="280" y="398" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">clock starts on first response (double-click)</text>
 
-        <rect x="740" y="258" width="320" height="95" rx="4" class="box-current"/>
-        <text x="900" y="284" text-anchor="middle" class="label-title">SLA Category</text>
-        <text x="900" y="304" text-anchor="middle" class="label-sub">Security / Compliance — hours to weeks</text>
-        <text x="900" y="318" text-anchor="middle" class="label-sub">(vulnerability, AV, patch)</text>
-        <text x="900" y="338" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">per-client, signed at onboarding</text>
+        <rect x="740" y="318" width="320" height="95" rx="4" class="box-current"/>
+        <text x="900" y="344" text-anchor="middle" class="label-title">SLA Category</text>
+        <text x="900" y="364" text-anchor="middle" class="label-sub">Security / Compliance — hours to weeks</text>
+        <text x="900" y="378" text-anchor="middle" class="label-sub">(vulnerability, AV, patch)</text>
+        <text x="900" y="398" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">per-client, signed at onboarding</text>
 
-        <path d="M280,353 L280,390 L590,390 L590,415" class="arrow" marker-end="url(#a4)"/>
-        <path d="M900,353 L900,390 L590,390" class="arrow"/>
+        <path d="M280,413 L280,450 L590,450 L590,475" class="arrow" marker-end="url(#a4)"/>
+        <path d="M900,413 L900,450 L590,450" class="arrow"/>
 
-        <rect x="290" y="418" width="600" height="115" rx="4" class="box-current"/>
-        <text x="590" y="446" text-anchor="middle" class="label-title">Compound Risk</text>
-        <text x="590" y="466" text-anchor="middle" class="label-sub">2+ open incidents, distinct condition types, same device</text>
-        <text x="590" y="482" text-anchor="middle" class="label-sub">elevated above either condition alone — not additive, qualitative</text>
-        <text x="590" y="499" text-anchor="middle" class="label-sub">e.g. PATCH_MISSING + AV_STALE → "unpatched and blind"</text>
-        <text x="590" y="518" text-anchor="middle" class="status-tag status-current">CURRENT — +12pt health-score penalty per compound device</text>
+        <rect x="290" y="478" width="600" height="115" rx="4" class="box-current"/>
+        <text x="590" y="506" text-anchor="middle" class="label-title">Compound Risk</text>
+        <text x="590" y="526" text-anchor="middle" class="label-sub">2+ open incidents, distinct condition types, same device</text>
+        <text x="590" y="542" text-anchor="middle" class="label-sub">elevated above either condition alone — not additive, qualitative</text>
+        <text x="590" y="559" text-anchor="middle" class="label-sub">e.g. PATCH_MISSING + AV_STALE → "unpatched and blind"</text>
+        <text x="590" y="578" text-anchor="middle" class="status-tag status-current">CURRENT — +12pt health-score penalty per compound device</text>
 
       </svg>
       </div>

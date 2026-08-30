@@ -208,8 +208,8 @@ export default function Home() {
               <h3 className="font-medium text-ink">UPS &amp; power</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 UPS runtime and battery-degradation trending, watched
-                continuously today. Temperature monitoring is built but not
-                yet wired to a live sensor feed — see{" "}
+                continuously today. Temperature monitoring is planned —
+                scaffolded but not yet collecting from a real sensor — see{" "}
                 <Link href="/capabilities" className="underline underline-offset-2">
                   Capabilities
                 </Link>
