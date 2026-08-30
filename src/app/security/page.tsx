@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   title: "Security & Data Ownership",
   description:
-    "What data KEEP keeps local, what reaches the Control Plane, how authentication and trust boundaries work, and how to remove an evaluation deployment.",
+    "What data KEEP keeps local, what reaches the Control Plane, how authentication and trust boundaries work, backup responsibility, device signing and replacement, and how to remove an evaluation deployment.",
 };
 
 export default function SecurityPage() {
@@ -69,6 +69,29 @@ export default function SecurityPage() {
             that operational network data. See{" "}
             <span className="italic">What reaches the Control Plane</span>,
             below. <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+        </div>
+      </section>
+
+      {/* ---------- Data durability and backup responsibility ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Data Durability</Eyebrow>
+          <H2 className="mt-3">Backup and disaster recovery responsibility</H2>
+          <Body className="mt-3 max-w-[62ch] text-ink-soft">
+            KEEP does not provide built-in backup or disaster recovery for
+            the durable data store used by your KEEP deployment. As the
+            deployment owner, you are responsible for protecting and
+            backing up the infrastructure and storage that hold that
+            durable data, the same way you would for any other system of
+            record you operate.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            KEEP does not keep a separate copy of that durable customer
+            data on its Control Plane, so it cannot restore data it never
+            held a copy of.{" "}
+            <Citation source={KEEP_CONTROL_PLANE} />
           </Body>
         </div>
       </section>
@@ -249,6 +272,45 @@ export default function SecurityPage() {
           <p className="mt-3 text-xs text-ink-soft">
             <Citation source={KEEP_ARCHITECTURE} />
           </p>
+        </div>
+      </section>
+
+      {/* ---------- Device trust: signing keys and replacement ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Device Trust</Eyebrow>
+          <H2 className="mt-3">Signing keys, and replacing a Hub or Spoke</H2>
+          <Body className="mt-3 max-w-[62ch] text-ink-soft">
+            The onboarding artifact used to enroll a Spoke (see{" "}
+            <span className="italic">Hub enrollment</span>, above) is
+            cryptographically signed. KEEP can rotate its signing keys, and
+            a compromised or retired signing key can be revoked. Once a
+            signing key is revoked, onboarding artifacts signed by that key
+            are rejected.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            If a Hub or Spoke device fails, is retired, or is deliberately
+            replaced, KEEP has an authorized replacement process for
+            bringing a new device online in its place — this is not the
+            same as any new machine being able to simply claim an existing
+            device&apos;s identity. A replacement has to be explicitly
+            authorized, and the predecessor device&apos;s own access —
+            including its certificate, where one applies to that specific
+            device — is retired as part of that same controlled
+            transition, not left valid indefinitely.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Browser-based remote sessions (see{" "}
+            <Link href="/capabilities" className="underline underline-offset-2">
+              Capabilities
+            </Link>
+            ) use an additional device-trust boundary on top of this: the
+            relay transport itself is certificate-authenticated, in
+            addition to KEEP&apos;s normal application authorization.{" "}
+            <Citation source={KEEP_SECURITY_ARCHITECTURE} />
+          </Body>
         </div>
       </section>
 
