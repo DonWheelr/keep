@@ -56,7 +56,9 @@
   body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.55; margin: 0; padding: 0 0 80px; }
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
 
-  header.page { padding: 56px 0 32px; border-bottom: 1px solid var(--line); margin-bottom: 40px; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12.5px; color: var(--slate); text-decoration: none; margin-top: 28px; }
+  .back-link:hover, .back-link:focus-visible { color: var(--signal); }
+  header.page { padding: 24px 0 32px; border-bottom: 1px solid var(--line); margin-bottom: 40px; }
   .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); margin: 0 0 14px; }
   h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.12; letter-spacing: -0.01em; margin: 0 0 16px; text-wrap: balance; max-width: 24ch; }
   .dek { font-size: 17px; color: var(--ink-soft); max-width: 72ch; margin: 0 0 20px; }
@@ -131,6 +133,8 @@
 </head>
 <body>
 <div class="wrap">
+
+  <a class="back-link" href="/schematics" target="_top">&larr; Back to Schematics</a>
 
   <header class="page">
     <p class="eyebrow">Engineering Diagram Library — v1</p>

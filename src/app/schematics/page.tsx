@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Technical diagrams of how KEEP is actually built — Hub/Spoke topology, authentication and sign-in, technician authorization and roles, Merlin's governance and decision model, signal intelligence, and Spoke trust — sourced from KEEP's own approved architecture documentation.",
 };
 
-function SchematicCard({
+function SchematicEmbed({
   name,
   description,
   href,
@@ -21,19 +21,33 @@ function SchematicCard({
   diagramCount: number;
 }) {
   return (
-    <a
-      href={href}
-      className="flex flex-col gap-2 rounded-sm border border-stone-200 bg-paper-raised p-6 transition-colors hover:border-accent"
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-medium text-ink">{name}</span>
-        <span className="font-mono text-[10px] uppercase tracking-wide text-ink-soft">
-          {diagramCount} diagrams
-        </span>
+    <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-medium text-ink">{name}</span>
+          <span className="font-mono text-[10px] uppercase tracking-wide text-ink-soft">
+            {diagramCount} diagrams
+          </span>
+        </div>
+        <a
+          href={href}
+          className="text-xs text-accent underline underline-offset-2"
+        >
+          Open full schematic →
+        </a>
       </div>
-      <p className="text-sm leading-relaxed text-ink-soft">{description}</p>
-      <span className="mt-1 text-xs text-accent">Open schematic →</span>
-    </a>
+      <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+        {description}
+      </p>
+      <div className="mt-4 overflow-hidden rounded-sm border border-stone-200">
+        <iframe
+          src={href}
+          title={`${name} — embedded schematic`}
+          loading="lazy"
+          className="h-[75vh] max-h-[900px] min-h-[420px] w-full bg-white"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -67,19 +81,24 @@ export default function SchematicsPage() {
         </div>
       </section>
 
-      {/* ---------- The two schematic sets ---------- */}
+      {/* ---------- The two schematic sets, embedded directly ---------- */}
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
           <Eyebrow>Diagram Sets</Eyebrow>
           <H2 className="mt-3">Two schematic sets, nine diagrams total</H2>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <SchematicCard
+          <Body className="mt-4 max-w-[70ch] text-ink-soft">
+            Embedded below, not summarized — each frame loads the exact same
+            HTML file that &quot;Open full schematic&quot; opens full-size.
+            Update either file and both views update together.
+          </Body>
+          <div className="mt-8 flex flex-col gap-8">
+            <SchematicEmbed
               name="How KEEP Is Built"
               href="/schematics/how-keep-is-built.html"
               diagramCount={7}
               description="Merlin's governance and decision model, Hub/Spoke system architecture, the Merlin layer stack, incident and signal intelligence, Spoke enrollment's root of trust, authentication and sign-in, and technician authorization and roles."
             />
-            <SchematicCard
+            <SchematicEmbed
               name="Merlin Architecture — Current State & Proposed Direction"
               href="/schematics/merlin-architecture.html"
               diagramCount={2}
@@ -87,12 +106,12 @@ export default function SchematicsPage() {
             />
           </div>
           <Body className="mt-8 max-w-[62ch] text-xs text-ink-soft">
-            Each schematic opens as its own page, outside this site&apos;s
-            usual layout — that&apos;s deliberate, not a broken link. They
-            carry their own legend, their own light/dark theme, and their
-            own findings sections calling out exactly where a claim in the
-            underlying architecture documentation didn&apos;t hold up under
-            direct code inspection, corrected rather than smoothed over.
+            Each embed carries its own legend, its own light/dark theme, and
+            its own findings sections calling out exactly where a claim in
+            the underlying architecture documentation didn&apos;t hold up
+            under direct code inspection, corrected rather than smoothed
+            over. &quot;Open full schematic&quot; opens the same document
+            full-size, with in-page section navigation, and links back here.
           </Body>
         </div>
       </section>

@@ -21,6 +21,13 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // /schematics embeds these two files in a same-origin <iframe>.
+        // Site-wide X-Frame-Options: DENY above would block that; scope
+        // the relaxation to exactly these two files, same-origin only.
+        source: "/schematics/:file(how-keep-is-built|merlin-architecture).html",
+        headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }],
+      },
     ];
   },
 };
