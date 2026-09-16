@@ -113,6 +113,17 @@ export default function EvaluatePage() {
           </p>
 
           <Body className="mt-6 max-w-[62ch] text-ink-soft">
+            KEEP runs as a containerized workload on a supported
+            Linux/Docker host, physical or virtual — it isn&apos;t tied to
+            a specific hardware vendor. The supported evaluation
+            installation path today is Ubuntu 22.04 LTS with Docker and
+            the documented Node v24 (via NVM) prerequisite the installer
+            expects. Other stable Linux/Docker hosts may work, but
+            they&apos;re outside the supported evaluation path.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+
+          <Body className="mt-6 max-w-[62ch] text-ink-soft">
             Outbound internet access is required to activate and register
             the deployment before it begins normal operation.{" "}
             <Citation source={KEEP_EVALUATION_PROGRAM} />

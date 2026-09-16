@@ -72,6 +72,14 @@ export default function HowItWorksPage() {
             <Citation source={KEEP_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            Either way, KEEP runs as a containerized workload on a
+            supported Linux/Docker host, physical or virtual. See{" "}
+            <Link href="/evaluate" className="underline underline-offset-2">
+              Evaluate KEEP
+            </Link>{" "}
+            for the currently supported evaluation installation path.
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
             A Spoke&apos;s job is discovery and monitoring of the devices on
             the network it&apos;s deployed to. The one deliberate exception:
             a technician can explicitly request a switch port be shut down

@@ -82,13 +82,17 @@ export default function MerlinTechnicalReferencePage() {
         does KEEP execute it.
       </Body>
       <Body className="mt-4">
-        <strong>Standing pre-authorization</strong> (opt-in): a Director
-        configures a rule in advance, in plain language, and signs off on it
-        once. From that point on, KEEP evaluates the stored rule
-        deterministically at the moment it&apos;s triggered — it does not
-        re-invoke the AI model live. This is a reliability requirement
-        (latency, cost, and misinterpretation risk are all wrong for a
-        live-triggered decision), not a style preference.{" "}
+        <strong>Standing pre-authorization</strong> (opt-in, once
+        available): a Director will configure a rule in advance, in plain
+        language, and sign off on it once. From that point on, KEEP
+        evaluates the stored rule deterministically at the moment
+        it&apos;s triggered — it does not re-invoke the AI model live.
+        This is a reliability requirement (latency, cost, and
+        misinterpretation risk are all wrong for a live-triggered
+        decision), not a style preference. The deterministic evaluation,
+        persistence, and audit trail this depends on are already built;
+        the Director-facing interface to actually create and sign a
+        standing policy is Planned, not yet available.{" "}
         <Citation source={KEEP_MERLIN_ARCHITECTURE} />
       </Body>
       <Body className="mt-4">
