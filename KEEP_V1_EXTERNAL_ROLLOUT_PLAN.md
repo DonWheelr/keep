@@ -83,12 +83,52 @@ form/backend required~~. The actual `keep-website` implementation (wiring
 `/evaluate`'s CTA and copy, and the landing page's CTAs, to this decision)
 is planned but **not started** — held pending a live coordination check
 with whatever session is concurrently active on this repo. Domain/hosting
-and the legal/privacy page remain exactly as undecided as before this
-correction; this note touches only the contact-path item.
+remains exactly as undecided as before this correction; this note touches
+only the contact-path item. **The legal/privacy page item below is
+superseded by the 2026-09-16 correction immediately following this note —
+it is no longer an open Director decision.**
 
-**Owner:** Don (domain/hosting and legal/privacy remain his open business
-decisions; contact-path mechanism itself is now decided, build work
-remains).
+**Owner:** Don (domain/hosting remains his open business decision;
+contact-path mechanism itself is now decided, build work remains;
+legal/privacy is no longer a Director decision — see the 2026-09-16
+correction below).
+
+**Corrected 2026-09-16** — the legal/privacy page item this table and the
+note above describe as "undecided"/"a Director decision" is not actually
+a product decision at all: baseline-benchmarked against three current
+comparable products (NinjaOne, N-able, Atera), all of which publish a
+separate Privacy Policy and Terms of Use, footer-linked, with signup
+acknowledgment — this is now treated as the ordinary minimum baseline, not
+something requiring Don's judgment call. `/privacy` and `/terms` pages
+have been built in `keep-website` (real content, describing KEEP as it
+actually works today, sourced from `documentation/evaluation/
+data-handling.md` and `documentation/architecture/evaluation-program.md`),
+the public footer links to both, and the real Control Plane signup form
+(`control-plane/app/page.tsx`) now links to them and requires a checked
+acknowledgment before account creation — replacing the prior dead
+`<span>` placeholders that referenced Terms/Privacy documents which didn't
+exist. **Resolved 2026-09-16 (same session, later):** contact address
+(`privacy@keepmsp.io` / `legal@keepmsp.io`, Namecheap Email Forwarding —
+recorded as configured; Don has not separately confirmed a test message
+arrived), governing jurisdiction (State of Arizona, no county-level
+venue), and effective date (September 16, 2026) are all live on both
+pages, no `[[PLACEHOLDER]]` tokens remain. **Legal entity name and a
+notice address are explicitly NOT required for Phase 0** — Don-decided:
+KEEP has no LLC/corporation yet, pages identify the product/business
+simply as "KEEP," no personal legal name or residential address is
+published, and this is not a launch blocker (see "LLC formation trigger"
+below). Not yet done: deploying this to production (the live
+`keepmsp.io` site is still serving the stale `main` branch, a
+pre-existing, separate gap — see this document's own Phase 0 asset
+table's "Production website" row).
+
+**LLC formation trigger (internal business-readiness milestone, not
+published on the website):** do not form an LLC merely to begin the
+Reddit/evaluation rollout. First validate KEEP with external Reddit/
+evaluation users. If that rollout produces strong positive validation
+and KEEP is moving toward real paying customers, Don will form the LLC
+before normal commercial operation. If the rollout fails or KEEP isn't
+worth continuing commercially, no LLC expense is incurred.
 
 **Exit criteria to Phase 1:** contact path live, domain resolves,
 legal-page question closed one way or the other, `cdacs` launch-readiness

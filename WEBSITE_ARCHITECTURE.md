@@ -35,6 +35,17 @@ website architecture with implemented site." Verified directly against
 `src/lib/nav-links.ts` and a grep for every `/merlin`/`/docs/merlin`
 reference in `src/` — not re-derived from this document's own prior claims.
 
+**Corrected 2026-09-16** — this table also predates `/privacy` and
+`/terms` (Phase 0 legal implementation, same session): Privacy Policy and
+Terms of Use, footer-linked only (not primary nav), `[Current]`. No
+`[[PLACEHOLDER]]` tokens remain on either page — contact addresses,
+governing law, and effective date were resolved later the same session.
+Legal entity name/notice address are not published by design (KEEP has
+no LLC yet; Don-decided not required for Phase 0). This table was already
+known-stale for `/sign-up` and `/schematics` before this correction (not
+fixed here — out of this correction's narrow scope; a broader Site Map
+reconciliation remains a separate, not-yet-scheduled pass).
+
 **[Current]** `src/app/not-found.tsx` exists with real, tailored content —
 a 404 heading, a short explanation, and direct links to Home,
 Capabilities, and Documentation, rather than Next's bare built-in

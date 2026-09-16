@@ -1,6 +1,12 @@
+import Link from "next/link";
 import { navLinks } from "@/lib/nav-links";
 import { NavListLink } from "@/components/nav-link";
 import { Wordmark, Tagline } from "@/components/logo";
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
+];
 
 export function SiteFooter() {
   return (
@@ -24,9 +30,25 @@ export function SiteFooter() {
             </ul>
           </nav>
         </div>
-        <p className="mt-10 text-xs text-ink-soft">
-          {`© ${new Date().getFullYear()} KEEP. This site describes KEEP's public, evaluator-facing information only and holds no customer operational data.`}
-        </p>
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-ink-soft">
+            {`© ${new Date().getFullYear()} KEEP. This site describes KEEP's public, evaluator-facing information only and holds no customer operational data.`}
+          </p>
+          <nav aria-label="Legal">
+            <ul className="flex gap-4 text-xs">
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-ink-soft underline underline-offset-2 hover:text-ink"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </footer>
   );

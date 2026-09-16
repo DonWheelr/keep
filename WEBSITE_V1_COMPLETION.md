@@ -159,3 +159,38 @@ corrected and committed. No further website-content, architecture, or
 messaging deficiencies remain. The site is ready to go live the moment the
 four external Director decisions above are resolved; nothing in the
 repository itself blocks that.
+
+---
+
+## 7. Correction, 2026-09-16 — appended, not a rewrite of the record above
+
+This document is a permanent historical record of the 2026-08-08 effort
+and is preserved unedited above. This section only notes that two of its
+own findings have since been superseded:
+
+- **Evaluation contact path (C1)**, listed above as "no functioning way
+  for an evaluator to reach KEEP," was resolved and implemented on
+  `homepage-template-port` shortly after this document was written
+  (`/sign-up`, wired from `/evaluate` and the homepage) — not part of this
+  correction, discovered during a later Phase 0 investigation.
+- **Legal/privacy page determination (L2)**, listed above as a legal/
+  business judgment left pending, was not actually a business decision —
+  baseline-benchmarked against three current comparable products
+  (NinjaOne, N-able, Atera), all of which publish a separate Privacy
+  Policy and Terms of Use, footer-linked, with signup acknowledgment.
+  `/privacy` and `/terms` now exist in this repository, the public footer
+  links to both, and the real Control Plane signup form requires a
+  checked acknowledgment before account creation. Contact address
+  (`privacy@keepmsp.io` / `legal@keepmsp.io`, Namecheap Email Forwarding
+  — recorded as configured, mail delivery not separately confirmed),
+  governing jurisdiction (Arizona, no county venue), and effective date
+  (September 16, 2026) were resolved later the same session — no
+  `[[PLACEHOLDER]]` tokens remain on either page. Legal entity name and a
+  notice address are Don-decided as not required for Phase 0: KEEP has
+  no LLC yet, pages identify the product/business simply as "KEEP," no
+  personal legal name or residential address is published, and this is
+  not a launch blocker.
+
+Production domain and hosting (C2) and DNS configuration are unaffected
+by this correction — see `documentation`-external Phase 0 investigation
+notes for their current status instead of this document.

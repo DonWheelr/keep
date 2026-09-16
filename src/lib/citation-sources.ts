@@ -29,3 +29,8 @@ export const KEEP_MERLIN_ARCHITECTURE: CitationSource = {
   type: "internal-doc",
   label: "Merlin architecture documentation",
 };
+
+export const KEEP_DATA_HANDLING: CitationSource = {
+  type: "internal-doc",
+  label: "KEEP Data Handling documentation",
+};
