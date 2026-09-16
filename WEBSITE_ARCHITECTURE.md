@@ -744,3 +744,21 @@ the `unknown` state already built into `CapabilityStatus`.
   --noEmit`, and `npm run build` are today run manually before any
   commit; these should become an automated gate before this repo is
   trusted to serve production traffic.
+
+**Corrected 2026-09-16 — this entire section describes a pre-deployment
+state that no longer holds.** All of the above predates this repo's
+actual production launch and is preserved for history, not current:
+
+- **Hosting platform: Vercel.** Decided and live, not `[Unknown]`.
+  Production Branch is `main`; this repo's `main` and
+  `homepage-template-port` are identical as of commit `54ed2da6`.
+- **`NEXT_PUBLIC_SITE_URL` is set** (`https://keepmsp.io`) for both
+  Production and Preview in Vercel — no longer unset/blocked.
+- **The relationship to the existing `keepmsp.io` surface is resolved,
+  not `[Unknown]`.** The prior occupant (a separate, non-website
+  postgres-saas Railway deployment) was retired 2026-08-11 (`cdacs`
+  T26, see that repo's `DECISIONS.md`) — this repo is now the sole
+  thing `keepmsp.io` serves. `app.keepmsp.io` (the Control Plane, a
+  separate app entirely) coexists on its own subdomain, confirmed live.
+- **CI/CD** remains genuinely `[Planned]` — this one item is still
+  accurate as originally written; nothing above changes it.

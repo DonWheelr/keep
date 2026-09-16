@@ -57,7 +57,7 @@ out before Phase 1's cohort actually depends on this path working.
 
 | Asset | Status |
 |---|---|
-| Production website | Content complete (`WEBSITE_V1_COMPLETION.md`, 2026-08-08); **domain/hosting undecided** (`NEXT_PUBLIC_SITE_URL` unset, no platform chosen) |
+| Production website | **Live in production** (Vercel, `main`, `NEXT_PUBLIC_SITE_URL=https://keepmsp.io` — corrected 2026-09-16, see note below the table) |
 | Concise KEEP explanation | Built — homepage, `/why-keep` |
 | V1 capability description | Built — `/capabilities`, four-state Validated/Evaluation/Planned/Unknown labeling |
 | Evaluation/access path | Built — `/evaluate` (prerequisites, program terms, data handling) |
@@ -117,10 +117,26 @@ notice address are explicitly NOT required for Phase 0** — Don-decided:
 KEEP has no LLC/corporation yet, pages identify the product/business
 simply as "KEEP," no personal legal name or residential address is
 published, and this is not a launch blocker (see "LLC formation trigger"
-below). Not yet done: deploying this to production (the live
-`keepmsp.io` site is still serving the stale `main` branch, a
-pre-existing, separate gap — see this document's own Phase 0 asset
-table's "Production website" row).
+below).
+
+**Resolved 2026-09-16 (same day, later still) — full production
+deployment closes every remaining Phase 0 item.** `homepage-template-port`
+(all of the above: Sign Up flow, legal pages, documentation and
+schematic reconciliation) was fast-forward-merged into `main` and
+pushed — a clean fast-forward with zero divergent commits on `main`'s
+side, confirmed via `git merge-base --is-ancestor` before merging.
+Vercel's Production Branch (`main`) picked it up automatically.
+Live-verified directly against `https://keepmsp.io` after deploy:
+`/`, `/sign-up`, `/privacy`, `/terms`, `/schematics`, `/evaluate`,
+`/docs`, `/docs/merlin` all return `200`; `/privacy` and `/terms` render
+the real emails/jurisdiction/date; `/sign-up` links to the real Control
+Plane. **Don has since confirmed real test messages sent to
+`privacy@keepmsp.io` and `legal@keepmsp.io` both arrived** in the KEEP
+admin inbox — the one remaining truthfulness gap named above is closed.
+Domain/hosting (this table's own "Production website" row, above) is
+resolved, not undecided. Every Phase 0 exit criterion this document
+names — contact path live, domain resolves, legal-page question closed,
+launch-readiness changes committed — is now met.
 
 **LLC formation trigger (internal business-readiness milestone, not
 published on the website):** do not form an LLC merely to begin the
