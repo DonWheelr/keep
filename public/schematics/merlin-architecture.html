@@ -560,10 +560,11 @@
 
         <!-- Undercroft -->
         <rect x="620" y="710" width="290" height="90" rx="4" class="box-current"/>
-        <text x="765" y="734" text-anchor="middle" class="label-title">Undercroft (Postgres)</text>
-        <text x="765" y="751" text-anchor="middle" class="label-sub">SYSTEM OF RECORD — Hub</text>
-        <text x="765" y="766" text-anchor="middle" class="label-sub">bind-mounted, outside container</text>
-        <text x="765" y="781" text-anchor="middle" class="label-sub">all KEEP operational data</text>
+        <text x="765" y="732" text-anchor="middle" class="label-title">Undercroft (Postgres)</text>
+        <text x="765" y="747" text-anchor="middle" class="label-sub" font-size="10">separately-provisioned — own</text>
+        <text x="765" y="760" text-anchor="middle" class="label-sub" font-size="10">compose project, own CA; same-host</text>
+        <text x="765" y="773" text-anchor="middle" class="label-sub" font-size="10">or separate infra — MSP's choice</text>
+        <text x="765" y="789" text-anchor="middle" class="status-tag status-current">SYSTEM OF RECORD, placement revised 2026-09-02</text>
 
         <path d="M710,690 L765,710" class="arrow" marker-end="url(#arrowhead)"/>
         <path d="M765,710 L710,690" class="arrow" marker-end="url(#arrowhead)"/>
@@ -680,7 +681,7 @@
     <div class="findings">
       <div class="finding">
         <h3>Two systems of record, never merged</h3>
-        <p>Undercroft (Hub-local Postgres) holds all operational KEEP data. KEEPMSP.io's Neon Postgres holds licensing/billing/account data. <code>CLAUDE.md</code>'s own rule forbids merging them.</p>
+        <p>Undercroft (separately-provisioned Postgres — its own compose project and CA, placed same-host or on separate infrastructure by MSP choice, revised 2026-09-02) holds all operational KEEP data. KEEPMSP.io's Neon Postgres holds licensing/billing/account data. <code>CLAUDE.md</code>'s own rule forbids merging them.</p>
       </div>
       <div class="finding">
         <h3>Four trust-boundary crossings carry real payload</h3>
@@ -847,6 +848,9 @@
     </div>
   </section>
 
+  <footer class="page">
+    Corrected 2026-09-16, re-verified against current source rather than left as originally drawn: Undercroft was shown nested inside the Hub App's own box, described as "bind-mounted, outside container" as if it were part of the Hub's bundled stack. <code>documentation/architecture/hub-spoke.md</code>'s "Undercroft placement" section (revised 2026-09-02) establishes Undercroft as a separately-provisioned service — its own compose project, its own CA — with same-host-or-separate placement an explicit MSP choice, not a KEEP-enforced requirement; redrawn accordingly. Everything else on this page was independently re-checked in the same pass and held up: the hardcoded Anthropic model id (<code>claude-sonnet-4-6</code>, <code>src/lib/merlin-provider.ts</code>), the three built Merlin surfaces and their capability classes, the audit-destination gaps (<code>console.warn</code> for two of three routes' refusals), and the "no reviewed BAA/DPA" status (<code>documentation/DECISIONS.md</code>, "Merlin AI Commercial Model") all remain accurate today — retained as independently re-proven current, not left unexamined.
+  </footer>
 
 </div>
 

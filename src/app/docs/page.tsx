@@ -150,7 +150,7 @@ export default function DocsPage() {
               status="current"
               name="Schematics"
               href="/schematics"
-              description="Nine diagrams of how KEEP is actually built — boxes, arrows, and trust boundaries, not narrative — with an explicit findings section for where a claim didn't hold up under code inspection."
+              description="Ten diagrams of how KEEP is actually built — boxes, arrows, and trust boundaries, not narrative — with an explicit findings section for where a claim didn't hold up under code inspection."
               citation={KEEP_ARCHITECTURE}
             />
           </div>

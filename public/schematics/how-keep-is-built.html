@@ -113,7 +113,7 @@
 
   .fields { display: grid; grid-template-columns: 140px 1fr; gap: 6px 18px; margin: 18px 0 0; font-size: 14px; }
   .fields dt { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--slate); padding-top: 2px; }
-  .fields dd { margin: 0 0 14px; color: var(--ink-soft); }
+  .fields dd { margin: 0 0 14px; color: var(--ink-soft); min-width: 0; overflow-wrap: anywhere; }
   .fields dd strong { color: var(--ink); font-weight: 600; }
 
   .findings { display: grid; gap: 14px; margin-top: 18px; }
@@ -139,7 +139,7 @@
   <header class="page">
     <p class="eyebrow">Engineering Diagram Library — v1</p>
     <h1>How KEEP Is Built</h1>
-    <p class="dek">Seven diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, how technician authorization works once someone is signed in, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
+    <p class="dek">Eight diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, how technician authorization works once someone is signed in, how a technician reaches a live remote session on a client device, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
     <div class="meta-row">
       <span><strong>Source</strong> documentation/architecture/*, merlin.md, merlin-onboarding.md, KEEP_PRODUCT_STRATEGY_V1.md</span>
       <span><strong>Date</strong> 2026-08-07</span>
@@ -156,6 +156,7 @@
     <a href="#d5">5. Root of Trust</a>
     <a href="#d6">6. Authentication &amp; Sign-In</a>
     <a href="#d7">7. Authorization: Roles &amp; Permissions</a>
+    <a href="#d8">8. Tech Workbench &amp; Remote Session Relay</a>
   </nav>
 
   <section id="legend">
@@ -384,10 +385,11 @@
         <path d="M610,165 L610,200" class="arrow" marker-end="url(#a2)"/>
 
         <rect x="415" y="203" width="390" height="90" rx="4" class="box-current"/>
-        <text x="610" y="231" text-anchor="middle" class="label-title">Undercroft (Postgres)</text>
-        <text x="610" y="249" text-anchor="middle" class="label-sub">the Hub's own system of record</text>
-        <text x="610" y="264" text-anchor="middle" class="label-sub">bind-mounted on the host, outside the container</text>
-        <text x="610" y="281" text-anchor="middle" class="label-sub">devices, incidents, vulnerabilities, UPS readings</text>
+        <text x="610" y="225" text-anchor="middle" class="label-title">Undercroft (Postgres)</text>
+        <text x="610" y="242" text-anchor="middle" class="label-sub">separately-provisioned — own compose project, own CA</text>
+        <text x="610" y="257" text-anchor="middle" class="label-sub">same host or separate infra — an MSP choice, not a mandate</text>
+        <text x="610" y="272" text-anchor="middle" class="label-sub">the Hub's system of record regardless of placement</text>
+        <text x="610" y="288" text-anchor="middle" class="status-tag status-current">CURRENT — placement choice revised 2026-09-02</text>
 
         <rect x="415" y="330" width="390" height="105" rx="4" class="box-current"/>
         <text x="610" y="356" text-anchor="middle" class="label-title">Self-contained services</text>
@@ -449,7 +451,7 @@
 
     <dl class="fields">
       <dt>Purpose</dt><dd>Establish what KEEP physically is — one product, deployed twice, in two roles, with a clean data-ownership split.</dd>
-      <dt>Major components</dt><dd>Client Devices, Spoke, the Hub App, Undercroft (Hub-local Postgres), the Hub's self-contained service stack, and the external KEEPMSP.io Control Plane.</dd>
+      <dt>Major components</dt><dd>Client Devices, Spoke, the Hub App, Undercroft (separately-provisioned Postgres — its own compose project and CA, placed same-host or on separate infrastructure by MSP choice), the Hub's self-contained service stack, and the external KEEPMSP.io Control Plane.</dd>
       <dt>Relationships</dt><dd>Spoke always initiates its tunnel to the Hub; the Hub waits and admits. The Hub is the sole operational authority — device data, incidents, and credentials never leave it. KEEPMSP.io is the business authority only — licensing, entitlement, billing — and structurally never stores customer operational data. Separately, <strong>both the Hub and the Spoke talk directly to KEEPMSP.io</strong>: the Hub does a one-time registration plus an ongoing two-way heartbeat; the Spoke does its own direct two-way heartbeat, not relayed through the Hub. A Spoke's eligibility to register at all is capped by the Hub's own account-level license grant, but its ongoing heartbeat/entitlement status is then checked individually. A Solo deployment is simply a Hub with zero Spokes.</dd>
       <dt>Why the site</dt><dd>The single fact every visitor needs first: vendor-agnostic, one codebase, and data sovereignty by architecture, not by promise.</dd>
     </dl>
@@ -597,65 +599,123 @@
   <!-- ================= DIAGRAM 5 ================= -->
   <section id="d5">
     <h2><span class="num">§5</span> Root of Trust / Enrollment</h2>
+    <p class="section-note">Rebuilt 2026-09-16 from current source, not patched — see the finding below for exactly what this replaces. The 2026-07-08 "three independent trust decisions" model still names the right questions, but a real cryptographic identity/enrollment chain has since been built and, as of today, fully verified against live Production — this diagram now shows both, honestly distinguishing what's still unbuilt from what the old version simply never depicted. <strong>Two different things share the word "trust" below — do not conflate them:</strong> the first box names one narrow, specific, still-unbuilt claim (is this physical device genuinely KEEP-manufactured hardware, not a clone); everything below it is a real, separate, already-built cryptographic identity and enrollment chain that answers a different question entirely (which already-enrolled instance is this, and is its token/certificate genuine and unrevoked). KEEP is not without a trust mechanism today — it is specifically without device-manufacture attestation.</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 480" role="img" aria-label="Root of trust for Spoke enrollment: three independent trust decisions must all be satisfied before a Hub admits a Spoke and issues operational credentials. KEEP Trust verifies the joining device is genuine KEEP hardware or software and is a future, unbuilt mechanism. Network Trust is the director's own access to the customer's network and is current. Enrollment Authorization is the director deliberately opening the admission window, currently satisfied by the act of issuing a deployment token. All three converge before any credential is issued.">
+      <svg viewBox="0 0 1180 900" role="img" aria-label="Root of trust and enrollment: the 2026-07-08 model names three independent trust decisions — KEEP Trust, verifying the joining device is genuine KEEP hardware, remains future and unbuilt; Network Trust, the Director's own access to the customer network, is current; Enrollment Authorization, the Director deliberately opening the admission window, is current. Since then a real cryptographic chain was built on top of Network Trust and Enrollment Authorization: a persistent Ed25519 logical-instance identity generated before role dispatch; automatic Hub signing-key provisioning with rotation and revocation; a Director-issued, Ed25519-signed onboarding token verified by the installer against a Control-Plane-published key; a Spoke certificate-signing-request enrolled against a Hub-local certificate authority; and two independent, still-live ongoing gates, a universal bearer-token ingest check and an additive mTLS client-certificate check scoped to two relay endpoints only. A full production spoke-onboarding rehearsal closed today, 2026-09-16, live end to end against real Production, not a lab environment. None of this proves the joining device is genuine KEEP-manufactured hardware rather than a valid software clone — that specific claim remains exactly where the 2026-07-08 model left it, honestly unbuilt.">
         <defs>
           <marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
 
-        <rect x="40" y="30" width="330" height="130" rx="4" class="box-future"/>
-        <text x="205" y="58" text-anchor="middle" class="label-title">KEEP Trust</text>
-        <text x="205" y="78" text-anchor="middle" class="label-sub">the joining device is genuine</text>
-        <text x="205" y="92" text-anchor="middle" class="label-sub">KEEP hardware/software</text>
-        <text x="205" y="112" text-anchor="middle" class="label-sub">embedded manufacturer identity —</text>
-        <text x="205" y="126" text-anchor="middle" class="label-sub">certificate or equivalent root of trust</text>
-        <text x="205" y="147" text-anchor="middle" class="status-tag status-future">FUTURE — not built, no mechanism exists yet</text>
+        <text x="40" y="20" class="label-boundary">2026-07-08 MODEL — STILL THE RIGHT QUESTIONS, NOT THE FULL PICTURE</text>
 
-        <rect x="425" y="30" width="330" height="130" rx="4" class="box-current"/>
-        <text x="590" y="58" text-anchor="middle" class="label-title">Network Trust</text>
-        <text x="590" y="78" text-anchor="middle" class="label-sub">the Director's own authenticated</text>
-        <text x="590" y="92" text-anchor="middle" class="label-sub">access to the customer's LAN</text>
-        <text x="590" y="112" text-anchor="middle" class="label-sub">independent of KEEP's control plane —</text>
-        <text x="590" y="126" text-anchor="middle" class="label-sub">a statement about the customer's network</text>
-        <text x="590" y="147" text-anchor="middle" class="status-tag status-current">CURRENT — already how this works</text>
+        <rect x="40" y="30" width="330" height="110" rx="4" class="box-future"/>
+        <text x="205" y="54" text-anchor="middle" class="label-title">KEEP Trust</text>
+        <text x="205" y="70" text-anchor="middle" class="label-sub" font-weight="700" fill="var(--ink)">device/manufacturer attestation only</text>
+        <text x="205" y="86" text-anchor="middle" class="label-sub">embedded root of trust —</text>
+        <text x="205" y="100" text-anchor="middle" class="label-sub">no such mechanism exists in code today</text>
+        <text x="205" y="126" text-anchor="middle" class="status-tag status-future">FUTURE — unchanged since 2026-07-08</text>
 
-        <rect x="810" y="30" width="330" height="130" rx="4" class="box-current"/>
-        <text x="975" y="58" text-anchor="middle" class="label-title">Enrollment Authorization</text>
-        <text x="975" y="78" text-anchor="middle" class="label-sub">the Director deliberately opens</text>
-        <text x="975" y="92" text-anchor="middle" class="label-sub">the admission window</text>
-        <text x="975" y="112" text-anchor="middle" class="label-sub">today: issuing a deployment token</text>
-        <text x="975" y="126" text-anchor="middle" class="label-sub">is itself the authorization act</text>
-        <text x="975" y="147" text-anchor="middle" class="status-tag status-current">CURRENT, in substance</text>
+        <rect x="425" y="30" width="330" height="110" rx="4" class="box-current"/>
+        <text x="590" y="56" text-anchor="middle" class="label-title">Network Trust</text>
+        <text x="590" y="74" text-anchor="middle" class="label-sub">the Director's own authenticated</text>
+        <text x="590" y="88" text-anchor="middle" class="label-sub">access to the customer's LAN</text>
+        <text x="590" y="102" text-anchor="middle" class="label-sub">independent of KEEP's control plane</text>
+        <text x="590" y="132" text-anchor="middle" class="status-tag status-current">CURRENT — unchanged</text>
 
-        <path d="M205,160 L205,220 L590,220 L590,250" class="arrow" marker-end="url(#a5)"/>
-        <path d="M590,160 L590,250" class="arrow" marker-end="url(#a5)"/>
-        <path d="M975,160 L975,220 L590,220" class="arrow"/>
+        <rect x="810" y="30" width="330" height="110" rx="4" class="box-current"/>
+        <text x="975" y="56" text-anchor="middle" class="label-title">Enrollment Authorization</text>
+        <text x="975" y="74" text-anchor="middle" class="label-sub">the Director deliberately opens</text>
+        <text x="975" y="88" text-anchor="middle" class="label-sub">the admission window</text>
+        <text x="975" y="102" text-anchor="middle" class="label-sub">today: issuing a Spoke token</text>
+        <text x="975" y="132" text-anchor="middle" class="status-tag status-current">CURRENT — unchanged</text>
 
-        <text x="600" y="235" class="label-flow" fill="var(--ink-soft)">all three independently required — none substitutes for another</text>
+        <path d="M205,140 L205,163 L590,163" class="arrow"/>
+        <path d="M975,140 L975,163 L590,163" class="arrow"/>
+        <path d="M590,140 L590,185" class="arrow" marker-end="url(#a5)"/>
+        <text x="600" y="178" text-anchor="middle" class="label-flow" fill="var(--ink-soft)">since built well beyond one token issuance — the real chain below</text>
 
-        <rect x="330" y="253" width="520" height="90" rx="4" class="box-current"/>
-        <text x="590" y="282" text-anchor="middle" class="label-title">Hub admits the Spoke</text>
-        <text x="590" y="302" text-anchor="middle" class="label-sub">issues operational credentials —</text>
-        <text x="590" y="318" text-anchor="middle" class="label-sub">Headscale key, ingest token, mesh credentials, mTLS client cert</text>
-        <text x="590" y="335" text-anchor="middle" class="status-tag status-current">CURRENT — bundled in one signed token today</text>
+        <rect x="140" y="188" width="900" height="90" rx="4" class="box-current"/>
+        <text x="590" y="212" text-anchor="middle" class="label-title">Persistent Logical KEEP-Instance Identity</text>
+        <text x="590" y="230" text-anchor="middle" class="label-sub">one Ed25519 keypair per install, generated before Hub/Spoke role dispatch</text>
+        <text x="590" y="245" text-anchor="middle" class="label-sub">stored only in local /app/data — never Undercroft, never Control Plane</text>
+        <text x="590" y="260" text-anchor="middle" class="label-sub">canonical ID = SHA-256 fingerprint of the key's own public bytes</text>
+        <text x="590" y="273" text-anchor="middle" class="status-tag status-current">CURRENT — built 2026-08-23</text>
 
-        <rect x="140" y="380" width="900" height="70" rx="4" class="box-warn"/>
-        <text x="590" y="405" text-anchor="middle" class="label-sub">Today, one token issuance action satisfies Network Trust + Enrollment Authorization together.</text>
-        <text x="590" y="423" text-anchor="middle" class="label-sub">KEEP Trust remains unbuilt — an impostor device is not yet cryptographically excluded. Named honestly, not implied solved.</text>
+        <path d="M590,278 L590,298" class="arrow" marker-end="url(#a5)"/>
+
+        <rect x="140" y="301" width="900" height="78" rx="4" class="box-current"/>
+        <text x="590" y="325" text-anchor="middle" class="label-title">Hub Signing-Key Provisioning</text>
+        <text x="590" y="343" text-anchor="middle" class="label-sub">automatic Ed25519 keypair for onboarding-token signing, registered with Control Plane</text>
+        <text x="590" y="358" text-anchor="middle" class="label-sub">rotation, revocation, and re-issuance all live and production-verified</text>
+        <text x="590" y="371" text-anchor="middle" class="status-tag status-current">CURRENT — auto-provisioned 2026-08-25</text>
+
+        <path d="M590,379 L590,399" class="arrow" marker-end="url(#a5)"/>
+
+        <rect x="140" y="402" width="900" height="88" rx="4" class="box-current"/>
+        <text x="590" y="425" text-anchor="middle" class="label-title">Director Issues Spoke Onboarding Token (v2)</text>
+        <text x="590" y="443" text-anchor="middle" class="label-sub">POST /api/onboard/spoke-token — Ed25519-signed, Director/T3-gated</text>
+        <text x="590" y="458" text-anchor="middle" class="label-sub">installer verifies against the Control-Plane-published key over WebPKI</text>
+        <text x="590" y="472" text-anchor="middle" class="label-sub">v1 (HMAC) and revoked-key tokens rejected outright — no insecure fallback</text>
+        <text x="590" y="482" text-anchor="middle" class="status-tag status-current">CURRENT</text>
+
+        <path d="M280,490 L280,500 L280,515" class="arrow" marker-end="url(#a5)"/>
+        <path d="M900,490 L900,500 L900,515" class="arrow" marker-end="url(#a5)"/>
+        <text x="600" y="503" text-anchor="middle" class="label-flow" fill="var(--ink-soft)">the Spoke then satisfies two independent, ongoing gates</text>
+
+        <rect x="80" y="518" width="460" height="112" rx="4" class="box-current"/>
+        <text x="310" y="541" text-anchor="middle" class="label-title">Spoke Enrolls — mTLS Client Cert</text>
+        <text x="310" y="559" text-anchor="middle" class="label-sub">PKCS#10 CSR → Hub-local CA (spoke-ca.ts)</text>
+        <text x="310" y="573" text-anchor="middle" class="label-sub">Subject always the Hub's own authenticated</text>
+        <text x="310" y="587" text-anchor="middle" class="label-sub">identity — never what the CSR claims</text>
+        <text x="310" y="601" text-anchor="middle" class="label-sub">additive hardening on 2 relay endpoints only</text>
+        <text x="310" y="618" text-anchor="middle" class="status-tag status-current">CURRENT — tracked in spoke_mtls_certificates</text>
+
+        <rect x="640" y="518" width="460" height="112" rx="4" class="box-current"/>
+        <text x="870" y="541" text-anchor="middle" class="label-title">Bearer-Token Ingest Auth</text>
+        <text x="870" y="559" text-anchor="middle" class="label-sub">ingest_tokens — hashed lookup,</text>
+        <text x="870" y="573" text-anchor="middle" class="label-sub">mandatory on every ingest/relay/</text>
+        <text x="870" y="587" text-anchor="middle" class="label-sub">enroll call, with no exception</text>
+        <text x="870" y="601" text-anchor="middle" class="label-sub">not replaced or superseded by mTLS</text>
+        <text x="870" y="618" text-anchor="middle" class="status-tag status-current">CURRENT — the universal gate</text>
+
+        <path d="M310,630 L310,650 L590,650 L590,662" class="arrow"/>
+        <path d="M870,630 L870,650 L590,650" class="arrow"/>
+        <path d="M590,650 L590,675" class="arrow" marker-end="url(#a5)"/>
+
+        <rect x="140" y="678" width="900" height="78" rx="4" class="box-current"/>
+        <text x="590" y="701" text-anchor="middle" class="label-title">Full Production Spoke-Onboarding Rehearsal</text>
+        <text x="590" y="719" text-anchor="middle" class="label-sub">fresh identity, fresh signing key, real v2 token, real CSR/mTLS enrollment,</text>
+        <text x="590" y="734" text-anchor="middle" class="label-sub">first authorized ingest, restart-persistence — all against real Production</text>
+        <text x="590" y="747" text-anchor="middle" class="status-tag status-current">CLOSED 2026-09-16 — live, end-to-end, not LAB</text>
+
+        <rect x="60" y="776" width="1060" height="105" rx="4" class="box-warn"/>
+        <text x="590" y="799" text-anchor="middle" class="label-title">What none of this proves</text>
+        <text x="590" y="817" text-anchor="middle" class="label-sub">Everything above proves which already-enrolled logical instance is which, and hardens the channel it uses.</text>
+        <text x="590" y="833" text-anchor="middle" class="label-sub">It does not prove a device is genuine KEEP-manufactured hardware rather than a valid software clone —</text>
+        <text x="590" y="849" text-anchor="middle" class="label-sub">that specific claim (embedded manufacturer identity) stays exactly where KEEP Trust, above, left it:</text>
+        <text x="590" y="865" text-anchor="middle" class="label-sub" fill="var(--bad)">named honestly as unbuilt, not implied solved by everything built since.</text>
 
       </svg>
       </div>
-      <figcaption><strong>Figure 5.</strong> Three independently-answered questions, not one. Naming KEEP Trust as unbuilt is deliberate — the honesty is more credible than implying a finished mechanism.</figcaption>
+      <figcaption><strong>Figure 5.</strong> The 2026-07-08 three-question model still frames the problem correctly — but a real, production-verified cryptographic chain now sits underneath Network Trust and Enrollment Authorization. KEEP Trust (device/manufacturer authenticity) is the one piece that is still, honestly, unbuilt.</figcaption>
     </figure>
 
     <dl class="fields">
-      <dt>Purpose</dt><dd>Make KEEP's Spoke-enrollment security posture legible and checkable, not just asserted.</dd>
-      <dt>Major components</dt><dd>KEEP Trust (device authenticity — Future, unbuilt), Network Trust (Director's own LAN access — Current), Enrollment Authorization (Director deliberately opens the window — Current); the Hub's credential-issuance step they all gate.</dd>
-      <dt>Relationships</dt><dd>All three are independently required before the Hub issues Spoke operational credentials — none substitutes for another. Today, one action (token issuance) happens to satisfy two of the three at once; the third has no mechanism yet.</dd>
-      <dt>Why the site</dt><dd>Answers "how do I know an impostor device can't join my network" with an actual decision model — and naming what's still unbuilt is more convincing than a blanket security assurance would be.</dd>
+      <dt>Purpose</dt><dd>Make KEEP's Spoke-enrollment security posture legible and checkable against what's actually built today, not what was built when this diagram was first drawn.</dd>
+      <dt>Major components</dt><dd>The three 2026-07-08 trust questions (KEEP Trust — still Future; Network Trust and Enrollment Authorization — Current); Persistent Logical KEEP-Instance Identity (Ed25519, generated pre-role-dispatch); Hub Signing-Key Provisioning (automatic, rotatable, revocable); the Ed25519-signed onboarding token (v2); Spoke mTLS client-certificate enrollment via CSR; bearer-token ingest auth as the universal, always-on gate; and the closed, live, end-to-end Production rehearsal.</dd>
+      <dt>Relationships</dt><dd>Network Trust and Enrollment Authorization are no longer just "one token issuance" — they now sit above a real, verifiable cryptographic chain: instance identity → signing-key provisioning → signed onboarding token → Spoke mTLS enrollment, alongside a bearer-token check that applies to every ingest/relay/enroll call regardless of certificate status. mTLS is additive hardening on two specific relay endpoints, never a replacement for the bearer-token gate. KEEP Trust remains the one independent question this chain does not answer.</dd>
+      <dt>Why the site</dt><dd>Answers "how do I know an impostor device can't join my network, and what's actually been proven, not just designed" — with the real mechanism and a real, dated, production closure record, while still naming the one honest gap rather than papering over it.</dd>
     </dl>
+
+    <div class="findings">
+      <div class="finding gap">
+        <span class="tag gap">Rebuilt 2026-09-16 — the prior version was materially stale, not just uncorrected</span>
+        <h3>This diagram described real, since-built, now production-verified mechanisms as nonexistent</h3>
+        <p>The version this replaces drew only the 2026-07-08 three-question model and named the entire cryptographic side of enrollment as unbuilt beyond "one signed token." Direct inspection of <code>documentation/architecture/hub-spoke.md</code>'s own later sections — "Onboarding-Token Cryptographic Verification" (Open Item #3, 2026-08-22), "Persistent Logical KEEP-Instance Identity" (2026-08-23), and "Spoke Client Certificate Enrollment (mTLS) — Phase 3" — found a real, live, cryptographically verified identity and enrollment chain that the old diagram simply never depicted, not a chain that was drawn incorrectly. <code>hub-spoke.md</code>'s own "Root of Trust" section (still dated 2026-07-08) and its "What's Not Yet Built" list were never updated to cross-reference these later sections either — an internal contradiction in the source document itself, not invented by this rebuild. This diagram now shows both: the real chain built since, and the one thing (KEEP Trust — embedded manufacturer identity) that genuinely remains unbuilt, confirmed by direct search to still have zero implementation anywhere in the codebase.</p>
+      </div>
+    </div>
   </section>
 
   <section id="d6">
@@ -851,12 +911,133 @@
     </div>
   </section>
 
+  <!-- ================= DIAGRAM 8 ================= -->
+  <section id="d8">
+    <h2><span class="num">§8</span> Tech Workbench &amp; Remote Session Relay</h2>
+    <p class="section-note">Added 2026-09-16 — a real, fully-shipped, production-verified KEEP capability with no schematic representation anywhere before this. How a technician reaches a live RDP/SSH/VNC session on a client device without the Hub ever dialing into the client's network itself. Sourced from <code>documentation/research/tech-workbench-v1-architecture.md</code> (APPROVED 2026-08-08) and its implementation roadmap (Phase 6 CLOSED 2026-08-10, live-hardware-verified, 97/97 unit tests), cross-checked directly against the current route files.</p>
+
+    <figure class="diagram">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 1180 1000" role="img" aria-label="Tech Workbench remote session relay: a technician launches a tool from an already-selected client workspace device; the Remote Session Broker authorizes the request, looks up the device scoped to its client, checks Spoke liveness failing closed if not live, then dispatches an OPEN_RELAY_SESSION command onto the existing spoke_commands table. The Spoke, on its own independent short-interval poll separate from its monitoring cycle, picks up the command over an mTLS and bearer-token gated endpoint, opens a local connection to the target device using its already-proven reachability, and opens an outbound Spoke Relay Channel back to the Hub over another mTLS and bearer-token gated endpoint. On the Hub side, guacd-bridge opens an ephemeral local listener and bridges guacd's connection directly onto that relay channel, container to container only, never dialing the client network itself. Only at this point is the technician's own saved per-device credential decrypted and used to mint a Guacamole session, tracked once in a durable table to prevent double-minting. The browser then holds a live session through guacd exactly as it would for a co-located device. Every request, authorization, denial, start, end, and failure is recorded in an append-only audit table tied to the named technician. Merlin has no special path into this flow; it may only recommend a session, which a human then launches through this identical mechanism.">
+        <defs>
+          <marker id="a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+          <marker id="a8-audit" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--slate)"/></marker>
+        </defs>
+
+        <rect x="390" y="20" width="400" height="58" rx="4" class="box-current"/>
+        <text x="590" y="45" text-anchor="middle" class="label-title">Technician — Browser</text>
+        <text x="590" y="63" text-anchor="middle" class="label-sub">already inside a Client Workspace — selects a device, clicks a tool (RDP/SSH/VNC)</text>
+
+        <path d="M590,78 L590,100" class="arrow" marker-end="url(#a8)"/>
+
+        <rect x="140" y="103" width="900" height="100" rx="4" class="box-current"/>
+        <text x="590" y="127" text-anchor="middle" class="label-title">Remote Session Broker — POST /api/tech-workbench/session</text>
+        <text x="590" y="145" text-anchor="middle" class="label-sub">requireTech() — same session gate as Guacamole's original route, no extra tier restriction</text>
+        <text x="590" y="160" text-anchor="middle" class="label-sub">device lookup, client_id-scoped · Spoke liveness check — fails closed, no queue or retry, if not live</text>
+        <text x="590" y="175" text-anchor="middle" class="label-sub">dispatches OPEN_RELAY_SESSION onto spoke_commands — existing table, one new command type</text>
+        <text x="590" y="190" text-anchor="middle" class="status-tag status-current">CURRENT — Phase 1+2, closed 2026-08-10</text>
+
+        <path d="M590,203 L590,225" class="arrow" marker-end="url(#a8)"/>
+        <text x="600" y="219" class="label-flow" fill="var(--ink-soft)">Spoke live — command dispatched</text>
+
+        <!-- Customer network boundary -->
+        <rect x="60" y="228" width="480" height="260" rx="4" class="boundary"/>
+        <text x="74" y="250" class="label-boundary">CUSTOMER NETWORK</text>
+
+        <rect x="90" y="262" width="420" height="88" rx="4" class="box-current"/>
+        <text x="300" y="286" text-anchor="middle" class="label-title">Spoke — independent short-interval poll</text>
+        <text x="300" y="304" text-anchor="middle" class="label-sub">GET /api/relay-commands/pending</text>
+        <text x="300" y="319" text-anchor="middle" class="label-sub">mTLS client cert + bearer-token gated — same 2 endpoints as Figure 5</text>
+        <text x="300" y="336" text-anchor="middle" class="status-tag status-current">CURRENT — decoupled from the monitoring cycle</text>
+
+        <path d="M300,350 L300,378" class="arrow" marker-end="url(#a8)"/>
+
+        <rect x="90" y="381" width="420" height="60" rx="4" class="box-current"/>
+        <text x="300" y="405" text-anchor="middle" class="label-title">Target Device</text>
+        <text x="300" y="422" text-anchor="middle" class="label-sub">local TCP — the same reachability the Spoke already proves every polling cycle</text>
+
+        <path d="M540,300 L620,300" class="arrow" marker-end="url(#a8)"/>
+        <text x="580" y="292" text-anchor="middle" class="label-flow" fill="var(--ink-soft)" font-size="8.5">relay channel</text>
+
+        <rect x="620" y="262" width="420" height="88" rx="4" class="box-current"/>
+        <text x="830" y="284" text-anchor="middle" class="label-title">guacd-bridge — ephemeral local listener</text>
+        <text x="830" y="300" text-anchor="middle" class="label-sub">receives the Spoke's outbound Relay Channel — the same mTLS +</text>
+        <text x="830" y="313" text-anchor="middle" class="label-sub">bearer-token gate as Figure 5, via POST /api/tech-workbench/relay-channel</text>
+        <text x="830" y="328" text-anchor="middle" class="label-sub">bridges it onto guacd — container-to-container, never dials the client LAN</text>
+        <text x="830" y="343" text-anchor="middle" class="status-tag status-current">CURRENT — Phase 5, closed 2026-08-10</text>
+
+        <path d="M830,350 L830,378" class="arrow" marker-end="url(#a8)"/>
+
+        <rect x="620" y="381" width="420" height="90" rx="4" class="box-current"/>
+        <text x="830" y="404" text-anchor="middle" class="label-title">Credential Lookup + Guacamole Session Mint</text>
+        <text x="830" y="421" text-anchor="middle" class="label-sub">remote_credentials + vault.ts — the tech's own saved credential,</text>
+        <text x="830" y="435" text-anchor="middle" class="label-sub">decrypted only now, never earlier in this path</text>
+        <text x="830" y="450" text-anchor="middle" class="label-sub">json-auth token minted once — tracked durably in remote_sessions</text>
+        <text x="830" y="464" text-anchor="middle" class="status-tag status-current">CURRENT — table added 2026-09-01</text>
+
+        <path d="M830,471 L830,505 L590,505 L590,528" class="arrow" marker-end="url(#a8)"/>
+        <path d="M300,488 L300,505 L590,505" class="arrow"/>
+        <text x="600" y="518" text-anchor="middle" class="label-flow" fill="var(--ink-soft)">device connection and mint converge — guacd speaks the protocol exactly as if co-located</text>
+
+        <rect x="440" y="531" width="300" height="55" rx="4" class="box-current"/>
+        <text x="590" y="555" text-anchor="middle" class="label-title">guacd</text>
+        <text x="590" y="573" text-anchor="middle" class="label-sub">existing, unchanged — same self-hosted container as every co-located session</text>
+
+        <path d="M590,586 L590,610" class="arrow" marker-end="url(#a8)"/>
+
+        <rect x="390" y="613" width="400" height="58" rx="4" class="box-current"/>
+        <text x="590" y="638" text-anchor="middle" class="label-title">Live Browser Session</text>
+        <text x="590" y="656" text-anchor="middle" class="label-sub">RDP / SSH / VNC — no device credential ever transits this relay path itself</text>
+
+        <!-- Audit -->
+        <path d="M1040,180 L1080,180 L1080,760 L1080,780" class="arrow-audit" marker-end="url(#a8-audit)"/>
+        <path d="M790,642 L1080,642 L1080,780" class="arrow-audit"/>
+        <rect x="900" y="783" width="240" height="130" rx="4" class="box-current"/>
+        <text x="1020" y="806" text-anchor="middle" class="label-title">tech_workbench_session_audit</text>
+        <text x="1020" y="826" text-anchor="middle" class="label-sub" font-size="10">append-only — 6 event types:</text>
+        <text x="1020" y="841" text-anchor="middle" class="label-sub" font-size="10">requested / authorized / denied /</text>
+        <text x="1020" y="856" text-anchor="middle" class="label-sub" font-size="10">started / ended / failed</text>
+        <text x="1020" y="874" text-anchor="middle" class="label-sub" font-size="10">tied to client_id, device_id, and</text>
+        <text x="1020" y="889" text-anchor="middle" class="label-sub" font-size="10">the named acting technician</text>
+        <text x="1020" y="905" text-anchor="middle" class="status-tag status-current">CURRENT</text>
+
+        <rect x="60" y="783" width="800" height="80" rx="4" class="box-warn"/>
+        <text x="80" y="806" class="label-sub" font-weight="700">Merlin has no special path into this flow.</text>
+        <text x="80" y="823" class="label-sub">Merlin may only recommend a session — a human then launches it through this exact same Launch Tool</text>
+        <text x="80" y="838" class="label-sub">mechanism. No Execute capability exists for this, or anything, in Version 1 (merlin.md §16).</text>
+        <text x="80" y="855" class="label-sub" fill="var(--ink-soft)">One transport, one entry point — never a parallel or privileged Merlin-only mechanism.</text>
+
+      </svg>
+      </div>
+      <figcaption><strong>Figure 8.</strong> The Hub never dials into a client network — the Spoke always does, outbound-only, the same posture as every other Spoke↔Hub interaction in the product. guacd never sees the client device directly either; it only ever bridges to an already-accepted relay channel inside the Hub's own container network.</figcaption>
+    </figure>
+
+    <dl class="fields">
+      <dt>Purpose</dt><dd>Show how a technician reaches a live remote session on a client device without the Hub ever gaining routed access into that client's network — a real, shipped capability this diagram library previously had zero representation of.</dd>
+      <dt>Major components</dt><dd>The Remote Session Broker (the one genuinely new Hub-side orchestration piece); the reused <code>spoke_commands</code> dispatch mechanism (one new command type, <code>OPEN_RELAY_SESSION</code>); the Spoke's own decoupled, short-interval relay poll; the new outbound Spoke Relay Channel; <code>guacd-bridge</code>'s container-to-container bridge; the existing, unchanged Guacamole/<code>guacd</code> credential and protocol layer; and the new, append-only <code>tech_workbench_session_audit</code> table.</dd>
+      <dt>Relationships</dt><dd>The Spoke is the only component that ever dials into the client network, and only outbound — the same posture the Hub already holds for ordinary monitoring. Two of the Spoke↔Hub calls in this path (command pickup, relay-channel accept) are the same two endpoints Figure 5's mTLS layer hardens — this is what that hardening is <em>for</em>. No device credential is ever included in the relay/dispatch path; the tech's own saved credential is decrypted only once a real relay channel exists to hand it to. Merlin has no separate mechanism here at all — it shares the identical entry point a technician uses.</dd>
+      <dt>Why the site</dt><dd>A visitor asking "how does a technician actually reach a device at a client site, and does the Hub get routed access to do it" gets the real, live-verified answer — including the one governance fact (Merlin gets no shortcut) that matters most to a security-conscious evaluator.</dd>
+    </dl>
+
+    <div class="findings">
+      <div class="finding gap">
+        <span class="tag gap">Added 2026-09-16 — a real capability that was simply never diagrammed, not a correction of a wrong claim</span>
+        <h3>This diagram didn't exist because the capability had no schematic representation at all, in either document</h3>
+        <p>Tech Workbench's remote-session relay is real, shipped, and live-hardware-verified (Phase 6 closed 2026-08-10 — a real browser opened a real Guacamole session over the full Broker → <code>spoke_commands</code> → Spoke → relay channel → <code>guacd-bridge</code> → <code>guacd</code> chain against a real second Spoke, with <code>guacd</code>'s own log confirming a successful SSH connection). It shares its trust hardening directly with Figure 5 (the same two mTLS-gated endpoints) but had never been drawn anywhere in this library. Absence is a form of staleness too: a schematic set that omits a major, current, production-verified control/data path can misrepresent the architecture as completely as a wrong box would. One correction found while building this diagram: <code>/api/guacamole/session</code> (the route an earlier internal note described as part of this chain) is now permanently disabled — a Phase 5 pre-commit security review found it as a live, unused, direct-IP bypass around the entire Broker/liveness/audit chain; <code>/api/tech-workbench/session</code> is the real, current entry point, reflected above.</p>
+      </div>
+    </div>
+  </section>
+
   <footer class="page">
     Method: derived from KEEP's approved architecture documentation via GBrain retrieval (schema_graph → get_page → query/search → traverse_graph), cross-checked against direct code inspection where an existing internal audit (documentation/merlin-architecture-diagrams.html, 2026-08-04) already established implementation status. No new architecture decisions were made while producing these diagrams. Planned/Future items are labeled as such, not presented as shipped.
     <br><br>
     Corrected 2026-08-15, re-verified against current source, not re-derived from this file's own prior claims: "Merlin(Core)"/"Merlin(Intelligence)" renamed to "Merlin Governance"/"Merlin Narrative Layer" (§3) to match the site's own corrected terminology; the §8 audit-coverage finding (§1) updated to reflect the 2026-08-10 Director decision that narrowed the rule rather than requiring more audit code.
     <br><br>
     Extended 2026-08-29: added §7 (Authorization: Roles &amp; Permissions), reconciling this library against the shipped additive multi-role RBAC system — a session's authorization was previously undepicted entirely, not stale or wrong, just absent. §6 (Authentication &amp; Sign-In) corrected in the same pass: added JumpCloud to the OIDC/SSO example list (already true of the implementation, missing from this diagram), added the OIDC/SSO pending/inactive-approval denial branch, and added an explicit pointer from session establishment to §7 so identity/authentication and KEEP's own authorization read as two separate mechanisms rather than one undifferentiated "you're in" outcome. Every claim added to both diagrams is backed by direct source inspection (src/lib/auth.ts, src/lib/rbac/*.ts, src/app/api/msp/techs/route.ts) or the live end-to-end validation performed the same session — not re-derived from either diagram's own prior claims.
+    <br><br>
+    Rebuilt 2026-09-16, treating all prior claims as unproven until independently re-verified against current source (not a targeted patch): §5 (Root of Trust / Enrollment) replaced wholesale — the prior version depicted only the 2026-07-08 three-question model and named the entire cryptographic enrollment chain as unbuilt, when <code>hub-spoke.md</code>'s own later sections (2026-08-22 through today) document a real, live Persistent Logical KEEP-Instance Identity system, automatic Hub signing-key provisioning, an Ed25519-signed onboarding token (v2), and CSR-based Spoke mTLS enrollment — all now closed by a real, live, end-to-end Production rehearsal (2026-09-16). KEEP Trust (embedded manufacturer/hardware identity) remains honestly unbuilt; that has not changed. §2 (Hub / Spoke System Architecture) corrected: Undercroft was previously drawn nested inside the Hub's own trust boundary as if bind-mounted into the Hub's stack — <code>hub-spoke.md</code>'s "Undercroft placement" section (revised 2026-09-02) establishes it as a separately-provisioned service whose same-host-or-separate placement is an MSP choice, not a KEEP-enforced mandate; redrawn accordingly. §1, §3, §4, §6, and §7 were independently re-checked against current source in this same pass (RBAC role names/union model against <code>src/lib/rbac/roles.ts</code>; the Anthropic model id and BAA/DPA status against current code and <code>DECISIONS.md</code>; Merlin's capability classes and Standing Policy status against the current <code>merlin.md</code>) and held up — retained as independently re-proven current, not left unexamined.
+    <br><br>
+    Extended 2026-09-16, same session — completeness audit, not just correctness: added §8 (Tech Workbench &amp; Remote Session Relay), a real, fully-shipped, live-hardware-verified capability (Phase 6 closed 2026-08-10) with no representation anywhere in this library before now. Also sharpened §5's "KEEP Trust" label in place, to <strong>KEEP Trust — Device/Manufacturer Attestation</strong>, plus an explicit callout in that diagram's own section note: the term names one specific, narrow, still-unbuilt claim (is this physical device genuinely KEEP-manufactured, not a clone) and was never meant to describe the enrollment chain as a whole — a reader skimming only the box title, without the surrounding chain or the bottom callout, could otherwise mistake it for "KEEP has no trust mechanism," which is now false. The label itself was accurate; its clarity in isolation was not — corrected without touching <code>hub-spoke.md</code>'s own wording, which stays exactly as it is (a documentation-reconciliation item recorded separately, not resolved by this website pass).
   </footer>
 
 </div>
