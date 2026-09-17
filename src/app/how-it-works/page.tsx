@@ -51,7 +51,9 @@ export default function HowItWorksPage() {
             <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
               <h3 className="font-medium text-ink">Solo deployment</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                A single Hub monitors one network directly.
+                A single Hub discovers and monitors its own network
+                directly, using the same collector logic a Spoke runs at a
+                client site.
               </p>
             </div>
             <div className="rounded-sm border border-stone-200 bg-paper-raised p-6">
@@ -72,21 +74,36 @@ export default function HowItWorksPage() {
             <Citation source={KEEP_ARCHITECTURE} />
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            Either way, KEEP runs as a containerized workload on a
-            supported Linux/Docker host, physical or virtual. See{" "}
+            Either way, KEEP ships as a standard Linux container — the same
+            container technology that runs on Linux, and, through
+            Docker&apos;s own VM-backed execution, technically on macOS or
+            Windows too. The currently validated, supported deployment
+            path is Ubuntu 22.04 LTS on physical or virtual Linux
+            infrastructure — see{" "}
             <Link href="/evaluate" className="underline underline-offset-2">
               Evaluate KEEP
             </Link>{" "}
             for the currently supported evaluation installation path.
           </Body>
           <Body className="mt-4 max-w-[62ch] text-ink-soft">
-            A Spoke&apos;s job is discovery and monitoring of the devices on
-            the network it&apos;s deployed to. The one deliberate exception:
-            a technician can explicitly request a switch port be shut down
-            or re-enabled, the platform&apos;s only write operation to
-            network hardware. Every other Spoke-initiated interaction is
-            read-only — a technician&apos;s own browser-based remote-access
-            session to a device (see{" "}
+            A Hub and a Spoke run the identical discovery and monitoring
+            logic against their own network — a Hub watches its own
+            network exactly the way a Spoke watches a client site&apos;s,
+            using the same collector code either way. What differs is
+            where the data goes next: a Hub&apos;s own findings write
+            straight into its database; a Spoke&apos;s findings are
+            relayed to the Hub, which writes them in. The Hub also carries
+            responsibilities a Spoke doesn&apos;t: aggregating every client
+            into one view, running the dashboard, and holding the database
+            itself.{" "}
+            <Citation source={KEEP_ARCHITECTURE} />
+          </Body>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            The one deliberate write operation to customer network
+            hardware: a technician can explicitly request a switch port be
+            shut down or re-enabled. Every other interaction is read-only —
+            a technician&apos;s own browser-based remote-access session to
+            a device (see{" "}
             <Link href="/capabilities" className="underline underline-offset-2">
               Capabilities
             </Link>
@@ -203,10 +220,10 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      {/* ---------- Continue ---------- */}
+      {/* ---------- Related reading ---------- */}
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <H2>Continue</H2>
+          <H2>Related reading</H2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <Link
               href="/security"

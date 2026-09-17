@@ -44,8 +44,10 @@ const principles = [
     linkLabel: "How this applies to onboarding",
   },
   {
-    title: "Stated boundaries",
-    body: "Designed to produce supporting evidence for compliance and audit processes, not to certify compliance itself. Compliance determinations remain the responsibility of qualified auditors and legal counsel.",
+    title: "Evidence, not certification",
+    body: "Continuously discovers, monitors, and records real state — vulnerability findings, endpoint protection status, access and identity signals, change-control history — as structured, reviewable evidence, including a dedicated SOX IT General Controls report. KEEP provides definitive evidence of what it actually observed, measured, or verified at a given time; a qualified auditor determines whether that evidence satisfies a specific certification.",
+    href: "/capabilities",
+    linkLabel: "The full evidence catalog",
   },
 ];
 
@@ -70,8 +72,7 @@ const forWhom = [
 const notForWhom = [
   "Not a helpdesk or ticketing system.",
   "Not a backup solution — it does not replace dedicated backup tooling.",
-  "Does not certify compliance with any standard. Organizations that need formal certification need a qualified auditor — KEEP is not a substitute for that process.",
-  "Not a large-enterprise IT service-management platform — scoped for MSPs and IT teams managing a bounded set of client networks.",
+  "Not a certification authority, and not a substitute for the auditor's own review — see the evidence it produces, above.",
 ];
 
 export default function WhyKeepPage() {
@@ -202,12 +203,36 @@ export default function WhyKeepPage() {
         </div>
       </section>
 
+      {/* ---------- Scale ---------- */}
+      <section className="border-b border-stone-200">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <Eyebrow>Scale</Eyebrow>
+          <H2 className="mt-3">
+            Who KEEP serves today isn&apos;t a technical ceiling
+          </H2>
+          <Body className="mt-4 max-w-[62ch] text-ink-soft">
+            KEEP&apos;s initial commercial and evaluation focus is smaller
+            MSPs and IT teams — that&apos;s a go-to-market decision, not an
+            architectural one. The Hub/Spoke model has no hard
+            device-count limit built into it, and nothing about the
+            architecture stops adding more Spokes to cover a larger
+            environment. What&apos;s actually been proven end-to-end is
+            more modest: a live discovery and ingest run against 58 real
+            hosts on one network.{" "}
+            <Citation source={KEEP_ARCHITECTURE} /> Larger deployments are
+            architecturally plausible; they simply haven&apos;t been
+            tested yet, and we won&apos;t publish a number we
+            haven&apos;t proven.
+          </Body>
+        </div>
+      </section>
+
       {/* ---------- Who KEEP is not intended for ---------- */}
       <section className="border-b border-stone-200">
         <div className="mx-auto max-w-5xl px-6 py-16">
           <Eyebrow>Boundaries</Eyebrow>
           <H2 className="mt-3">Who KEEP is not intended for</H2>
-          <ul className="mt-8 grid gap-4 md:grid-cols-2">
+          <ul className="mt-8 grid gap-4 md:grid-cols-3">
             {notForWhom.map((line) => (
               <li
                 key={line}
@@ -223,10 +248,10 @@ export default function WhyKeepPage() {
         </div>
       </section>
 
-      {/* ---------- Continue ---------- */}
+      {/* ---------- Related reading ---------- */}
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <H2>Continue</H2>
+          <H2>Related reading</H2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <Link
               href="/how-it-works"

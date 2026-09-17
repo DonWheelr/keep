@@ -356,10 +356,10 @@ export default function SecurityPage() {
         </div>
       </section>
 
-      {/* ---------- Continue ---------- */}
+      {/* ---------- Related reading ---------- */}
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
-          <H2>Continue</H2>
+          <H2>Related reading</H2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <Link
               href="/capabilities"
