@@ -93,6 +93,13 @@
   svg .box-future  { stroke: var(--future); stroke-width: 1.3; stroke-dasharray: 2 4; fill: none; }
   svg .box-external { stroke: var(--slate); stroke-width: 1.4; fill: var(--paper); }
   svg .box-warn { stroke: var(--bad); stroke-width: 1.4; fill: rgba(184,64,43,0.06); }
+  svg .box-app { stroke: var(--signal); stroke-width: 3; fill: var(--signal-fill); }
+  svg .box-support { stroke: var(--slate); stroke-width: 1.4; stroke-dasharray: 6 4; fill: var(--paper); }
+  svg .box-banner { stroke: var(--amber); stroke-width: 1.8; fill: var(--amber-fill); }
+  svg .arrow-spoke { stroke: var(--signal); stroke-width: 2; fill: none; }
+  svg .arrow-hub { stroke: var(--amber); stroke-width: 2; fill: none; }
+  svg .boundary-neutral { fill: none; stroke: var(--slate); stroke-width: 1.6; stroke-dasharray: 6 4; }
+  svg .label-boundary-neutral { font-size: 11.5px; fill: var(--slate); font-weight: 700; letter-spacing: 0.03em; }
   svg .boundary { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 10 4 2 4; }
   svg .boundary-signal { fill: none; stroke: var(--signal); stroke-width: 2; stroke-dasharray: 10 4 2 4; opacity: 0.6; }
   svg .arrow { stroke: var(--ink-soft); stroke-width: 1.4; fill: none; }
@@ -139,10 +146,10 @@
   <header class="page">
     <p class="eyebrow">Engineering Diagram Library — v1</p>
     <h1>How KEEP Is Built</h1>
-    <p class="dek">Eight diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how a Hub and its Spokes fit together, how sign-in and authentication work, how technician authorization works once someone is signed in, how a technician reaches a live remote session on a client device, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
+    <p class="dek">Nine diagrams for the public site: what KEEP is, how Merlin is governed and bounded, how discovery/monitoring data actually moves through a deployment, what business relationship exists with KEEP's own Control Plane, how sign-in and authentication work, how technician authorization works once someone is signed in, how a technician reaches a live remote session on a client device, and two concrete proofs of engineering discipline (signal intelligence and Spoke trust). Sourced from KEEP's approved architecture documentation; every Planned/Future item is labeled as such, not presented as shipped.</p>
     <div class="meta-row">
       <span><strong>Source</strong> documentation/architecture/*, merlin.md, merlin-onboarding.md, KEEP_PRODUCT_STRATEGY_V1.md</span>
-      <span><strong>Date</strong> 2026-08-07</span>
+      <span><strong>Date</strong> 2026-08-07, redesigned 2026-09-17</span>
       <span><strong>Audience</strong> keepmsp.io — evaluators &amp; technical visitors</span>
     </div>
   </header>
@@ -150,18 +157,19 @@
   <nav class="toc">
     <a href="#legend">Legend</a>
     <a href="#d1">1. Governance &amp; Decision Model</a>
-    <a href="#d2">2. Hub / Spoke Architecture</a>
-    <a href="#d3">3. Merlin Architecture</a>
-    <a href="#d4">4. Incident &amp; Signal Intelligence</a>
-    <a href="#d5">5. Root of Trust</a>
-    <a href="#d6">6. Authentication &amp; Sign-In</a>
-    <a href="#d7">7. Authorization: Roles &amp; Permissions</a>
-    <a href="#d8">8. Tech Workbench &amp; Remote Session Relay</a>
+    <a href="#d2">2. Operational Data Path</a>
+    <a href="#d3">3. Control Plane, Entitlement &amp; Heartbeats</a>
+    <a href="#d4">4. Merlin Architecture</a>
+    <a href="#d5">5. Incident &amp; Signal Intelligence</a>
+    <a href="#d6">6. Root of Trust</a>
+    <a href="#d7">7. Authentication &amp; Sign-In</a>
+    <a href="#d8">8. Authorization: Roles &amp; Permissions</a>
+    <a href="#d9">9. Tech Workbench &amp; Remote Session Relay</a>
   </nav>
 
   <section id="legend">
     <h2><span class="num">§0</span> Legend</h2>
-    <p class="section-note">One shared encoding across all six diagrams.</p>
+    <p class="section-note">One shared encoding across all nine diagrams.</p>
     <div class="legend">
       <div class="legend-item">
         <svg class="legend-swatch" viewBox="0 0 34 20"><rect x="1" y="1" width="32" height="18" rx="2" class="box-current"/></svg>
@@ -194,6 +202,18 @@
       <div class="legend-item">
         <svg class="legend-swatch" viewBox="0 0 34 20"><path d="M1,10 L33,10" class="arrow-refuse"/></svg>
         <div class="legend-label"><strong>Refused</strong><span>Blocked by governance, never executes</span></div>
+      </div>
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 34 20"><rect x="1" y="1" width="32" height="18" rx="2" class="box-app"/></svg>
+        <div class="legend-label"><strong>KEEP application container</strong><span>The one unified Docker image — Hub or Spoke is a runtime role of it</span></div>
+      </div>
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 34 20"><rect x="1" y="1" width="32" height="18" rx="2" class="box-support"/></svg>
+        <div class="legend-label"><strong>Bundled/supporting</strong><span>Part of a KEEP deployment, not the application container itself</span></div>
+      </div>
+      <div class="legend-item">
+        <svg class="legend-swatch" viewBox="0 0 34 20"><path d="M1,10 L33,10" class="boundary-neutral"/></svg>
+        <div class="legend-label"><strong>Optional grouping</strong><span>Not a trust-boundary crossing — an organizational note only</span></div>
       </div>
     </div>
   </section>
@@ -335,139 +355,190 @@
 
   <!-- ================= DIAGRAM 2 ================= -->
   <section id="d2">
-    <h2><span class="num">§2</span> Hub / Spoke System Architecture</h2>
+    <h2><span class="num">§2</span> Operational Data Path</h2>
+    <p class="section-note">Rebuilt 2026-09-17 — split out of the prior combined Hub/Spoke figure, which crammed this operational question together with the separate Control Plane/entitlement question (now §3) into one crowded picture and, in the process, ran two lines of Undercroft's own caption text directly on top of each other. Answers one question only: how does discovery/monitoring data actually move through a KEEP deployment?</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 620" role="img" aria-label="Hub and Spoke architecture: client devices on a customer network are polled by a Spoke, which tunnels telemetry to the MSP's Hub; the Hub is the operational authority, holding Undercroft Postgres as its own system of record; both the Hub and the Spoke independently talk to the external KEEPMSP.io control plane, which is the business authority for licensing, entitlement, and billing only, and never stores customer operational data; the Hub performs a one-time registration plus an ongoing two-way heartbeat, the Spoke performs its own direct two-way heartbeat not relayed through the Hub, and a Spoke's eligibility to register at all is capped by the Hub's own account-level license grant even though its ongoing heartbeat status is checked individually; a Solo deployment is a Hub with no Spokes, scanning its own network directly.">
+      <svg viewBox="0 0 1180 800" role="img" aria-label="Operational data path: a Spoke on a customer network and, symmetrically, a Hub-Local Collector on the Hub's own network when it monitors its own site, both run the identical discover.js and poll.js logic against their respective local devices. The Spoke's findings are tunneled to the Hub; the Hub-Local Collector's findings need no tunnel at all. Both converge on one KEEP application container running in the Hub role, which is the single unified Docker image also used for the Spoke role. That container writes every finding, Spoke-relayed or Hub-local, into Undercroft, a separately-provisioned Postgres service drawn clearly outside the application container's own boundary, placed on the same host or separate infrastructure as an MSP choice, with same-host placement creating a shared failure boundary. A Solo deployment is a Hub with zero Spokes, using only the Hub-Local Collector path. Bundled supporting services such as Guacamole, Greenbone, Uptime Kuma, and ntopng are part of a KEEP deployment but not the application container itself.">
         <defs>
           <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
         </defs>
 
-        <!-- Customer network boundary -->
-        <rect x="30" y="30" width="330" height="500" rx="4" class="boundary"/>
-        <text x="44" y="52" class="label-boundary">CUSTOMER NETWORK</text>
+        <!-- Left: Customer Network (genuine trust-boundary crossing) -->
+        <rect x="30" y="40" width="330" height="290" rx="4" class="boundary"/>
+        <text x="44" y="62" class="label-boundary">CUSTOMER NETWORK — PER CLIENT SITE</text>
 
-        <rect x="60" y="75" width="270" height="90" rx="4" class="box-current"/>
-        <text x="195" y="103" text-anchor="middle" class="label-title">Client Devices</text>
-        <text x="195" y="121" text-anchor="middle" class="label-sub">switches, servers, UPS,</text>
-        <text x="195" y="136" text-anchor="middle" class="label-sub">workstations, printers</text>
+        <rect x="55" y="80" width="280" height="70" rx="4" class="box-current"/>
+        <text x="195" y="106" text-anchor="middle" class="label-title">Client Devices</text>
+        <text x="195" y="124" text-anchor="middle" class="label-sub">switches, servers, UPS, workstations</text>
 
-        <path d="M195,205 L195,165" class="arrow" marker-end="url(#a2)"/>
-        <text x="205" y="188" class="label-flow" font-size="10">SNMP / WinRM / SSH / LDAP</text>
-        <text x="205" y="200" class="label-flow" font-size="10">read-only, no configuration changes</text>
+        <path d="M195,230 L195,150" class="arrow" marker-end="url(#a2)"/>
+        <text x="205" y="175" class="label-flow" font-size="9.5">SNMP / WinRM / SSH</text>
+        <text x="205" y="187" class="label-flow" font-size="9.5">read-only</text>
 
-        <rect x="60" y="205" width="270" height="90" rx="4" class="box-current"/>
-        <text x="195" y="233" text-anchor="middle" class="label-title">SPOKE</text>
-        <text x="195" y="251" text-anchor="middle" class="label-sub mono" font-size="10">discover.js · poll.js</text>
-        <text x="195" y="264" text-anchor="middle" class="label-sub">same codebase as the Hub</text>
-        <text x="195" y="281" text-anchor="middle" class="status-tag status-current">CURRENT — Spoke initiates, Hub waits</text>
+        <rect x="55" y="230" width="280" height="80" rx="4" class="box-app"/>
+        <text x="195" y="256" text-anchor="middle" class="label-title" font-size="12">SPOKE — KEEP application, Spoke role</text>
+        <text x="195" y="274" text-anchor="middle" class="label-sub mono" font-size="10">discover.js · poll.js</text>
+        <text x="195" y="292" text-anchor="middle" class="status-tag status-current">CURRENT</text>
 
-        <rect x="60" y="330" width="270" height="70" rx="4" class="box-external"/>
-        <text x="195" y="356" text-anchor="middle" class="label-title">SOLO variant</text>
-        <text x="195" y="374" text-anchor="middle" class="label-sub">Hub with no Spokes — scans</text>
-        <text x="195" y="388" text-anchor="middle" class="label-sub">its own network directly</text>
+        <!-- Right: Hub's own local network — NOT a trust-boundary crossing,
+             a distinct neutral-gray style so it is never mistaken for one. -->
+        <rect x="460" y="40" width="330" height="290" rx="4" class="boundary-neutral"/>
+        <text x="474" y="62" class="label-boundary-neutral">HUB'S OWN NETWORK — SOLO, OR AN MSP'S OWN SITE</text>
 
-        <path d="M330,250 L390,250" class="arrow" marker-end="url(#a2)"/>
-        <text x="335" y="235" class="label-flow" font-size="10">Tailscale / self-hosted Headscale tunnel</text>
-        <text x="335" y="272" class="label-flow" font-size="10">(or direct HTTPS — cloud-hosted Hub)</text>
+        <rect x="485" y="80" width="280" height="70" rx="4" class="box-current"/>
+        <text x="625" y="106" text-anchor="middle" class="label-title">Local Devices</text>
+        <text x="625" y="124" text-anchor="middle" class="label-sub">present only if the Hub also monitors its own site</text>
 
-        <!-- Hub boundary -->
-        <rect x="390" y="30" width="440" height="500" rx="4" class="boundary-signal"/>
-        <text x="404" y="52" class="label-boundary-signal">HUB — MSP-OPERATED, ON-PREM OR CLOUD</text>
+        <path d="M625,230 L625,150" class="arrow" marker-end="url(#a2)"/>
+        <text x="635" y="175" class="label-flow" font-size="9.5">same SNMP / WinRM / SSH</text>
+        <text x="635" y="187" class="label-flow" font-size="9.5">read-only</text>
 
-        <rect x="415" y="75" width="390" height="90" rx="4" class="box-current"/>
-        <text x="610" y="103" text-anchor="middle" class="label-title">Hub App (Next.js)</text>
-        <text x="610" y="121" text-anchor="middle" class="label-sub">operational authority — device data,</text>
-        <text x="610" y="136" text-anchor="middle" class="label-sub">incidents, credentials</text>
-        <text x="610" y="153" text-anchor="middle" class="status-tag status-current">CURRENT</text>
+        <rect x="485" y="230" width="280" height="80" rx="4" class="box-app"/>
+        <text x="625" y="253" text-anchor="middle" class="label-title" font-size="12">Hub-Local Collector</text>
+        <text x="625" y="270" text-anchor="middle" class="label-sub">runs the SAME discover.js · poll.js</text>
+        <text x="625" y="286" text-anchor="middle" class="label-sub">as a real Spoke, against this network</text>
+        <text x="625" y="302" text-anchor="middle" class="status-tag status-current">CURRENT — hub_local device type</text>
 
-        <path d="M610,165 L610,200" class="arrow" marker-end="url(#a2)"/>
+        <text x="590" y="357" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">Spoke and Hub run identical discovery/poll logic — the difference is only where the data goes next</text>
 
-        <rect x="415" y="203" width="390" height="90" rx="4" class="box-current"/>
-        <text x="610" y="225" text-anchor="middle" class="label-title">Undercroft (Postgres)</text>
-        <text x="610" y="242" text-anchor="middle" class="label-sub">separately-provisioned — own compose project, own CA</text>
-        <text x="610" y="257" text-anchor="middle" class="label-sub">same host or separate infra — an MSP choice, not a mandate</text>
-        <text x="610" y="272" text-anchor="middle" class="label-sub">the Hub's system of record regardless of placement</text>
-        <text x="610" y="288" text-anchor="middle" class="status-tag status-current">CURRENT — placement choice revised 2026-09-02</text>
+        <!-- KEEP APPLICATION CONTAINER — thick, unambiguous border; Undercroft
+             (below) is deliberately drawn far enough outside it, with its own
+             different box style, that the two can never read as one nested box. -->
+        <rect x="230" y="378" width="720" height="120" rx="6" class="box-app"/>
+        <text x="590" y="405" text-anchor="middle" class="label-title" font-size="15">KEEP Application Container — Hub role</text>
+        <text x="590" y="427" text-anchor="middle" class="label-sub">one unified Docker image — the same image a Spoke runs, in the opposite role</text>
+        <text x="590" y="445" text-anchor="middle" class="label-sub">writes Spoke-relayed findings AND its own Hub-Local Collector findings into Undercroft, below</text>
+        <text x="590" y="466" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">also runs the Hub's UI, aggregation across every client, and the bundled services below</text>
+        <text x="590" y="485" text-anchor="middle" class="status-tag status-current">CURRENT — KEEP_ROLE=hub</text>
 
-        <rect x="415" y="330" width="390" height="105" rx="4" class="box-current"/>
-        <text x="610" y="356" text-anchor="middle" class="label-title">Self-contained services</text>
-        <text x="610" y="376" text-anchor="middle" class="label-sub">Uptime Kuma · Guacamole · ntopng ·</text>
-        <text x="610" y="390" text-anchor="middle" class="label-sub">Greenbone/OpenVAS · self-hosted Headscale</text>
-        <text x="610" y="410" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">no third-party accounts required to run a Hub</text>
+        <path d="M195,310 L195,335 L470,335 L470,378" class="arrow" marker-end="url(#a2)"/>
+        <text x="205" y="330" class="label-flow" font-size="9.5">Spoke's findings — tunneled</text>
+        <path d="M625,310 L625,335 L590,335 L590,378" class="arrow" marker-end="url(#a2)"/>
 
-        <!-- Control Plane -->
-        <rect x="880" y="265" width="270" height="180" rx="4" class="box-external"/>
-        <text x="1015" y="293" text-anchor="middle" class="label-title">KEEPMSP.io Control Plane</text>
-        <text x="1015" y="313" text-anchor="middle" class="label-sub">business authority — licensing,</text>
-        <text x="1015" y="327" text-anchor="middle" class="label-sub">entitlement, billing, updates</text>
-        <text x="1015" y="352" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">its own database — never customer</text>
-        <text x="1015" y="366" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">operational data (devices, incidents,</text>
-        <text x="1015" y="380" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">credentials — those never leave the Hub)</text>
-        <text x="1015" y="405" text-anchor="middle" class="status-tag status-current">CURRENT — separate app, separate DB</text>
+        <!-- Undercroft — clearly OUTSIDE and separate from the application
+             container above; see §3 for the Control Plane relationship,
+             deliberately not drawn here. -->
+        <path d="M590,498 L590,536" class="arrow" marker-end="url(#a2)"/>
+        <text x="605" y="521" class="label-flow" font-size="9.5">every finding, Spoke-relayed or Hub-local, writes here</text>
 
-        <!-- Corrected 2026-08-15 (3rd pass, Director feedback): box raised 60px
-             (was y=325, now y=265). Architecture itself corrected, not just
-             position: verified directly against control-plane/app/api/hub/
-             register/route.ts that a successful registration response is only
-             {ok:true, deploymentId} — nothing is issued back on that call. The
-             deployment token was already held by the Hub before this call,
-             delivered out-of-band at provisioning (staff, for Evaluation
-             accounts; the account portal, for commercial accounts) — not a
-             live wire on this diagram. What IS a real, ongoing, two-way
-             exchange is the heartbeat (verified against control-plane/app/
-             api/v1/heartbeat/route.ts: responds {valid, revoked, voided,
-             latestSpokeVersion} on every call) — replaces the old, inaccurate
-             "license grant / deployment token" label below. -->
-        <path d="M805,100 L845,100 L845,310 L878,310" class="arrow" marker-end="url(#a2)"/>
-        <path d="M878,390 L860,390 L860,140 L805,140" class="arrow" marker-start="url(#a2)" marker-end="url(#a2)"/>
-        <text x="815" y="90" class="label-flow" font-size="10">registration (one-way, one-time)</text>
-        <text x="815" y="155" class="label-flow" font-size="10">heartbeat — entitlement / revocation status</text>
+        <rect x="290" y="539" width="600" height="115" rx="4" class="box-external"/>
+        <text x="590" y="565" text-anchor="middle" class="label-title">Undercroft (Postgres) — separately provisioned</text>
+        <text x="590" y="584" text-anchor="middle" class="label-sub">NOT part of the KEEP application container above — its own compose project, own CA</text>
+        <text x="590" y="602" text-anchor="middle" class="label-sub">same host or separate infrastructure — an MSP choice, not a KEEP mandate</text>
+        <text x="590" y="620" text-anchor="middle" class="label-sub" fill="var(--amber)">same-host placement creates a shared failure boundary — the operator's own backup/DR responsibility</text>
+        <text x="590" y="638" text-anchor="middle" class="status-tag status-current">CURRENT — system of record, placement revised 2026-09-02</text>
 
-        <text x="1015" y="470" text-anchor="middle" class="label-sub" fill="var(--ink-soft)" font-size="11">Hub operational secrets</text>
-        <text x="1015" y="484" text-anchor="middle" class="label-sub" fill="var(--ink-soft)" font-size="11">never transit the Control Plane —</text>
-        <text x="1015" y="498" text-anchor="middle" class="label-sub" fill="var(--ink-soft)" font-size="11">the Hub mints Spoke credentials locally</text>
+        <rect x="70" y="675" width="360" height="65" rx="4" class="box-support"/>
+        <text x="90" y="698" class="label-sub" font-weight="700">SOLO deployment</text>
+        <text x="90" y="716" class="label-sub" font-size="10.5">a Hub with zero Spokes — the</text>
+        <text x="90" y="730" class="label-sub" font-size="10.5">Hub-Local Collector path above is the only source</text>
 
-        <!-- Added 2026-08-15 (3rd pass, Director feedback) — a real, previously
-             missing connection. Verified directly: spoke/heartbeat.js posts to
-             ${config.keepmspUrl}/api/spoke/heartbeat, NOT relayed through the
-             Hub — heartbeat_instances.subject_type is 'hub' | 'spoke', tracked
-             as two independent device types. Routed below both boundary boxes
-             (both end at y=530) to avoid crossing through either. A Spoke's
-             eligibility to register at all is capped by the Hub's own
-             account-level license grant (control-plane/app/api/hub/spokes/
-             route.ts checks license_grants.max_spokes) — but once registered,
-             its ongoing heartbeat/entitlement status is checked individually,
-             same {valid, revoked, voided} response shape as the Hub's own. -->
-        <path d="M330,280 L375,280 L375,555 L1015,555 L1015,447" class="arrow" marker-start="url(#a2)" marker-end="url(#a2)"/>
-        <text x="390" y="545" class="label-flow" font-size="10">Spoke's own direct heartbeat — entitlement / revocation status, not relayed through the Hub</text>
-        <text x="390" y="570" class="label-flow" font-size="10" fill="var(--ink-soft)">(registration eligibility capped by the Hub's own license — license_grants.max_spokes)</text>
+        <rect x="750" y="675" width="360" height="95" rx="4" class="box-support"/>
+        <text x="770" y="698" class="label-sub" font-weight="700">Bundled/supporting services</text>
+        <text x="770" y="716" class="label-sub" font-size="10.5">Guacamole · Greenbone/OpenVAS ·</text>
+        <text x="770" y="730" class="label-sub" font-size="10.5">Uptime Kuma · ntopng</text>
+        <text x="770" y="746" class="label-sub" font-size="10.5">part of a KEEP deployment, not the</text>
+        <text x="770" y="760" class="label-sub" font-size="10.5">application container itself</text>
 
       </svg>
       </div>
-      <figcaption><strong>Figure 2.</strong> One boundary carries device/customer data (Spoke↔Hub); a second, entirely separate boundary carries only business-relationship data — and both the Hub and the Spoke cross it independently, each with their own direct heartbeat to KEEPMSP.io. The two boundaries are never merged.</figcaption>
+      <figcaption><strong>Figure 2.</strong> A Spoke and a Hub-Local Collector run the identical discovery/poll logic against their own respective networks — the only difference is where the data goes next. Undercroft is drawn as a clearly separate box outside the KEEP application container, never nested inside it.</figcaption>
     </figure>
 
     <dl class="fields">
-      <dt>Purpose</dt><dd>Establish what KEEP physically is — one product, deployed twice, in two roles, with a clean data-ownership split.</dd>
-      <dt>Major components</dt><dd>Client Devices, Spoke, the Hub App, Undercroft (separately-provisioned Postgres — its own compose project and CA, placed same-host or on separate infrastructure by MSP choice), the Hub's self-contained service stack, and the external KEEPMSP.io Control Plane.</dd>
-      <dt>Relationships</dt><dd>Spoke always initiates its tunnel to the Hub; the Hub waits and admits. The Hub is the sole operational authority — device data, incidents, and credentials never leave it. KEEPMSP.io is the business authority only — licensing, entitlement, billing — and structurally never stores customer operational data. Separately, <strong>both the Hub and the Spoke talk directly to KEEPMSP.io</strong>: the Hub does a one-time registration plus an ongoing two-way heartbeat; the Spoke does its own direct two-way heartbeat, not relayed through the Hub. A Spoke's eligibility to register at all is capped by the Hub's own account-level license grant, but its ongoing heartbeat/entitlement status is then checked individually. A Solo deployment is simply a Hub with zero Spokes.</dd>
-      <dt>Why the site</dt><dd>The single fact every visitor needs first: vendor-agnostic, one codebase, and data sovereignty by architecture, not by promise.</dd>
+      <dt>Purpose</dt><dd>Show exactly how discovery/monitoring data moves through a KEEP deployment, and exactly where Undercroft sits relative to the KEEP application container — nothing about business/licensing relationships, which is a separate question answered in §3.</dd>
+      <dt>Major components</dt><dd>Client Devices and the Spoke (Customer Network); Local Devices and the Hub-Local Collector (the Hub's own network, present only for Solo or when a Hub also monitors its own site); the KEEP Application Container itself (one unified Docker image, Hub role); Undercroft (separately-provisioned Postgres, drawn outside the application container); bundled/supporting services.</dd>
+      <dt>Relationships</dt><dd>A Spoke and the Hub-Local Collector run identical discovery/poll code against their own respective networks — this is genuine symmetry, not "Hub manages, Spoke discovers." A Spoke's findings are tunneled to the Hub; the Hub-Local Collector's findings need no tunnel at all, since they already originate inside the same application container. Both paths converge on the one KEEP application container, which writes everything into Undercroft. Undercroft is never part of that container — it is separately provisioned, placed same-host or on separate infrastructure by MSP choice, with same-host placement creating a disclosed shared failure boundary. A Solo deployment is simply a Hub with zero Spokes, using only the Hub-Local Collector path.</dd>
+      <dt>Why the site</dt><dd>The single fact every visitor needs first: vendor-agnostic, one application container, and a clean, visually unambiguous separation between that container and its persistence layer.</dd>
     </dl>
-
-    <div class="findings">
-      <div class="finding gap">
-        <span class="tag gap">Corrected 2026-08-15 — real gap found while fixing a layout bug</span>
-        <h3>The Spoke's own direct Control Plane connection was missing from this diagram entirely</h3>
-        <p>This diagram originally showed only Hub↔Control Plane, with a line labeled "license grant / deployment token" that turned out, on direct code inspection, not to represent anything that actually happens on that connection — the deployment token is delivered out-of-band, before the Hub's first registration call, not pushed back over it. Two real, separate things were missing: the Hub's <em>ongoing</em> heartbeat (distinct from its one-time registration, verified against <code>control-plane/app/api/v1/heartbeat/route.ts</code>), and the Spoke's own <em>independent</em> heartbeat directly to KEEPMSP.io (verified against <code>spoke/heartbeat.js</code> and <code>control-plane/app/api/spoke/heartbeat/route.ts</code> — not relayed through the Hub, contrary to how this diagram, and <code>hub-spoke.md</code>'s own "What's Not Yet Built" list, previously implied). Both are now drawn.</p>
-      </div>
-    </div>
   </section>
 
   <!-- ================= DIAGRAM 3 ================= -->
   <section id="d3">
-    <h2><span class="num">§3</span> Merlin Architecture</h2>
+    <h2><span class="num">§3</span> Control Plane, Entitlement &amp; Heartbeats</h2>
+    <p class="section-note">New 2026-09-17 — split out of the prior combined Hub/Spoke figure specifically so this business/licensing question gets its own uncrowded space, separate from §2's operational data-path question. Answers: what business relationship exists between a deployment and KEEP's own Control Plane — and, just as importantly, what does <em>not</em> reach it.</p>
+
+    <figure class="diagram">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 1180 640" role="img" aria-label="Control Plane, entitlement and heartbeats: a Spoke keeps its own direct heartbeat to KEEPMSP.io's Control Plane, confirming its own license and entitlement status, never relayed through the Hub. The Hub separately performs a one-time registration and its own ongoing two-way heartbeat. A new Spoke may only register while the Hub's own license has room, but once registered its ongoing heartbeat and entitlement status are checked individually. The Control Plane enforces real entitlement locks for both Evaluation and paid commercial accounts, and offers both a self-serve tier-and-Stripe-Checkout path and a staff-provisioned Evaluation path to a real license. Operational and customer network data — device inventories, incidents, credentials, and scan results — never flows to the Control Plane; that all stays on the Hub's own Undercroft, covered in the Operational Data Path figure.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
+          <marker id="a3-spoke" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--signal)"/></marker>
+          <marker id="a3-hub" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--amber)"/></marker>
+        </defs>
+
+        <text x="40" y="35" class="label-sub" font-weight="700" fill="var(--ink)">A KEEP DEPLOYMENT (simplified — see §2, Operational Data Path, for the full topology)</text>
+
+        <rect x="40" y="55" width="290" height="85" rx="4" class="box-current"/>
+        <text x="185" y="80" text-anchor="middle" class="label-title">Spoke</text>
+        <text x="185" y="98" text-anchor="middle" class="label-sub">KEEP application, Spoke role</text>
+        <text x="185" y="115" text-anchor="middle" class="label-sub">keeps its own credential locally</text>
+
+        <rect x="40" y="290" width="290" height="110" rx="4" class="box-current"/>
+        <text x="185" y="315" text-anchor="middle" class="label-title">Hub</text>
+        <text x="185" y="333" text-anchor="middle" class="label-sub">KEEP application, Hub role</text>
+        <text x="185" y="351" text-anchor="middle" class="label-sub">keeps its own credential locally</text>
+        <text x="185" y="369" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">device/incident data → Undercroft only</text>
+        <text x="185" y="384" text-anchor="middle" class="label-sub" fill="var(--ink-soft)">(§2, Operational Data Path) — never here</text>
+
+        <rect x="770" y="150" width="370" height="230" rx="4" class="box-external"/>
+        <text x="955" y="177" text-anchor="middle" class="label-title">KEEPMSP.io Control Plane</text>
+        <text x="955" y="195" text-anchor="middle" class="label-sub">KEEP-operated — not a 3rd party — separate app, separate DB</text>
+        <text x="955" y="217" text-anchor="middle" class="label-sub mono" font-size="10">license_grants · billing_standing ·</text>
+        <text x="955" y="232" text-anchor="middle" class="label-sub mono" font-size="10">account_operational_states</text>
+        <text x="955" y="254" text-anchor="middle" class="label-sub">enforces real entitlement locks —</text>
+        <text x="955" y="269" text-anchor="middle" class="label-sub">not a soft reminder — for both</text>
+        <text x="955" y="284" text-anchor="middle" class="label-sub">Evaluation and paid accounts</text>
+        <text x="955" y="306" text-anchor="middle" class="label-sub">self-serve tier selection + Stripe</text>
+        <text x="955" y="321" text-anchor="middle" class="label-sub">Checkout is one path to a license;</text>
+        <text x="955" y="336" text-anchor="middle" class="label-sub">staff-provisioned Evaluation is another</text>
+        <text x="955" y="360" text-anchor="middle" class="status-tag status-current">CURRENT — live in production</text>
+
+        <path d="M330,97 L770,220" class="arrow-spoke" marker-end="url(#a3-spoke)"/>
+        <text x="400" y="150" class="label-flow" fill="var(--signal)">Spoke's own direct heartbeat</text>
+        <text x="400" y="164" class="label-flow" fill="var(--signal)">— confirms its own license/entitlement</text>
+        <text x="400" y="178" class="label-flow" fill="var(--signal)">— never relayed through the Hub</text>
+
+        <path d="M330,320 L770,280" class="arrow-hub" marker-end="url(#a3-hub)"/>
+        <path d="M330,350 L770,320" class="arrow-hub" marker-end="url(#a3-hub)"/>
+        <text x="400" y="418" class="label-flow" fill="var(--amber)">Hub: one-time registration, then</text>
+        <text x="400" y="432" class="label-flow" fill="var(--amber)">its own ongoing two-way heartbeat</text>
+
+        <rect x="40" y="450" width="580" height="70" rx="4" class="box-support"/>
+        <text x="60" y="472" class="label-sub" font-weight="700">Registration is capped; ongoing status is checked individually</text>
+        <text x="60" y="490" class="label-sub" font-size="10.5">A new Spoke may only register while the Hub's own license has room</text>
+        <text x="60" y="504" class="label-sub" font-size="10.5">(license_grants.max_spokes) — after that, its heartbeat is its own, independent check.</text>
+
+        <rect x="40" y="545" width="1100" height="70" rx="4" class="box-banner"/>
+        <text x="590" y="573" text-anchor="middle" class="label-title" fill="var(--amber)" font-size="15">Operational / customer network data does not flow to the Control Plane</text>
+        <text x="590" y="596" text-anchor="middle" class="label-sub" fill="var(--ink)">Device inventories, incidents, credentials, and scan results stay on the Hub's own Undercroft — always. The Control Plane only ever exchanges account, licensing, and deployment-identity information.</text>
+
+      </svg>
+      </div>
+      <figcaption><strong>Figure 3.</strong> Two independent heartbeats, visually distinct and never running along a trust-boundary line — the Spoke's own (blue) and the Hub's own (amber). Neither carries operational data; the banner below states that boundary explicitly rather than leaving it implicit.</figcaption>
+    </figure>
+
+    <dl class="fields">
+      <dt>Purpose</dt><dd>Establish the business/licensing relationship between a deployment and KEEP's own Control Plane, and state explicitly that operational/customer data never flows there — a question deliberately kept separate from §2's operational data-path question.</dd>
+      <dt>Major components</dt><dd>A simplified Hub and Spoke (full topology is §2); the external KEEPMSP.io Control Plane (business authority — licensing, entitlement, billing); the Hub's one-time registration plus ongoing heartbeat; the Spoke's own independent heartbeat; the license-cap-vs-ongoing-check distinction; the self-serve-tier-vs-staff-provisioned-Evaluation licensing paths.</dd>
+      <dt>Relationships</dt><dd>Both the Hub and the Spoke talk directly to the Control Plane — the Hub does a one-time registration plus an ongoing two-way heartbeat; the Spoke does its own direct two-way heartbeat, never relayed through the Hub. A Spoke's eligibility to register at all is capped by the Hub's own account-level license grant, but its ongoing heartbeat/entitlement status is then checked individually. The Control Plane structurally never stores customer operational data — devices, incidents, credentials, and scan results stay on the Hub's own Undercroft (§2), always.</dd>
+      <dt>Why the site</dt><dd>Answers a security-conscious evaluator's real question — "does my network data go anywhere near KEEP's own servers" — with an explicit, unmissable boundary statement, not an inference left to the reader.</dd>
+    </dl>
+
+    <div class="findings">
+      <div class="finding gap">
+        <span class="tag gap">Corrected 2026-08-15 — real gap found while fixing a layout bug; retained here, this figure's content having moved from the prior combined diagram</span>
+        <h3>The Spoke's own direct Control Plane connection was originally missing entirely</h3>
+        <p>The prior combined Hub/Spoke diagram originally showed only Hub↔Control Plane, with a line labeled "license grant / deployment token" that turned out, on direct code inspection, not to represent anything that actually happens on that connection — the deployment token is delivered out-of-band, before the Hub's first registration call, not pushed back over it. Two real, separate things were missing: the Hub's <em>ongoing</em> heartbeat (distinct from its one-time registration, verified against <code>control-plane/app/api/v1/heartbeat/route.ts</code>), and the Spoke's own <em>independent</em> heartbeat directly to KEEPMSP.io (verified against <code>spoke/heartbeat.js</code> and <code>control-plane/app/api/spoke/heartbeat/route.ts</code> — not relayed through the Hub, contrary to how that diagram, and <code>hub-spoke.md</code>'s own "What's Not Yet Built" list, previously implied). Both are drawn above.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DIAGRAM 4 ================= -->
+  <section id="d4">
+    <h2><span class="num">§4</span> Merlin Architecture</h2>
     <p class="section-note">KEEP → Merlin Governance → Merlin Narrative Layer → Future Merlin. Each layer sits strictly on top of the one below without replacing it. Verified against <code>KEEP_PRODUCT_STRATEGY_V1.md</code> §4 (layers 1–3, exact terms "KEEP," "Merlin Governance," "Merlin Narrative Layer") and <code>merlin.md</code> §13/§14/§17 (Future Merlin — a synthesis of three separate future-only sections, not a single named layer in the source).</p>
 
     <figure class="diagram">
@@ -514,7 +585,7 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 3.</strong> KEEP works completely with Merlin Governance alone — no AI required. Merlin Narrative Layer can be removed without touching governance. Future Merlin is drawn separately because none of it is committed for Version 1.</figcaption>
+      <figcaption><strong>Figure 4.</strong> KEEP works completely with Merlin Governance alone — no AI required. Merlin Narrative Layer can be removed without touching governance. Future Merlin is drawn separately because none of it is committed for Version 1.</figcaption>
     </figure>
 
     <dl class="fields">
@@ -525,9 +596,9 @@
     </dl>
   </section>
 
-  <!-- ================= DIAGRAM 4 ================= -->
-  <section id="d4">
-    <h2><span class="num">§4</span> Incident &amp; Signal Intelligence</h2>
+  <!-- ================= DIAGRAM 5 ================= -->
+  <section id="d5">
+    <h2><span class="num">§5</span> Incident &amp; Signal Intelligence</h2>
 
     <figure class="diagram">
       <div class="svg-scroll">
@@ -585,7 +656,7 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 4.</strong> Color and flash are deliberately decoupled — a HIGH_RISK vulnerability is just as severe as an unreachable device, but only the unreachable device demands the technician's eyes right now.</figcaption>
+      <figcaption><strong>Figure 5.</strong> Color and flash are deliberately decoupled — a HIGH_RISK vulnerability is just as severe as an unreachable device, but only the unreachable device demands the technician's eyes right now.</figcaption>
     </figure>
 
     <dl class="fields">
@@ -596,9 +667,9 @@
     </dl>
   </section>
 
-  <!-- ================= DIAGRAM 5 ================= -->
-  <section id="d5">
-    <h2><span class="num">§5</span> Root of Trust / Enrollment</h2>
+  <!-- ================= DIAGRAM 6 ================= -->
+  <section id="d6">
+    <h2><span class="num">§6</span> Root of Trust / Enrollment</h2>
     <p class="section-note">Rebuilt 2026-09-16 from current source, not patched — see the finding below for exactly what this replaces. The 2026-07-08 "three independent trust decisions" model still names the right questions, but a real cryptographic identity/enrollment chain has since been built and, as of today, fully verified against live Production — this diagram now shows both, honestly distinguishing what's still unbuilt from what the old version simply never depicted. <strong>Two different things share the word "trust" below — do not conflate them:</strong> the first box names one narrow, specific, still-unbuilt claim (is this physical device genuinely KEEP-manufactured hardware, not a clone); everything below it is a real, separate, already-built cryptographic identity and enrollment chain that answers a different question entirely (which already-enrolled instance is this, and is its token/certificate genuine and unrevoked). KEEP is not without a trust mechanism today — it is specifically without device-manufacture attestation.</p>
 
     <figure class="diagram">
@@ -699,7 +770,7 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 5.</strong> The 2026-07-08 three-question model still frames the problem correctly — but a real, production-verified cryptographic chain now sits underneath Network Trust and Enrollment Authorization. KEEP Trust (device/manufacturer authenticity) is the one piece that is still, honestly, unbuilt.</figcaption>
+      <figcaption><strong>Figure 6.</strong> The 2026-07-08 three-question model still frames the problem correctly — but a real, production-verified cryptographic chain now sits underneath Network Trust and Enrollment Authorization. KEEP Trust (device/manufacturer authenticity) is the one piece that is still, honestly, unbuilt.</figcaption>
     </figure>
 
     <dl class="fields">
@@ -718,13 +789,14 @@
     </div>
   </section>
 
-  <section id="d6">
-    <h2><span class="num">§6</span> Authentication &amp; Sign-In</h2>
+  <!-- ================= DIAGRAM 7 ================= -->
+  <section id="d7">
+    <h2><span class="num">§7</span> Authentication &amp; Sign-In</h2>
     <p class="section-note">KEEP supports three deployment authentication methods — a KEEP-native local account, Active Directory/LDAP, and generic OIDC/SSO — plus exactly where multi-factor authentication does and doesn't apply. A fourth, non-customer-facing development fallback exists in the code and is shown here for completeness, clearly separated from the three real options.</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
-      <svg viewBox="0 0 1180 560" role="img" aria-label="Authentication and sign-in: KEEP supports three deployment authentication methods, evaluated per tech, not per deployment. Local Account (bcrypt) is checked first if a password hash is set for that tech. Active Directory or LDAP is checked next if a directory server is configured. OIDC/SSO is a separate, parallel path reached only through its own sign-in button, and is the only path with its own denial branch: an unrecognized or not-yet-approved email is refused, creating a pending record rather than a session. A fourth path, a development-only fallback that accepts any password when neither a local password hash nor a directory server is configured, is not a supported deployment authentication method — it is drawn small, dashed, and visually separated from the three real options, shown only because it exists in the code and an existing finding on this page depends on it being visible. Every successful path converges on the same session, but only the Local Account path passes through a multi-factor authentication gate — Active Directory/LDAP and OIDC/SSO are identity-provider-owned and are not gated by KEEP's own MFA. Session establishment is authentication only; what that session can actually do inside KEEP is a separate authorization question, covered in Figure 7.">
+      <svg viewBox="0 0 1180 560" role="img" aria-label="Authentication and sign-in: KEEP supports three deployment authentication methods, evaluated per tech, not per deployment. Local Account (bcrypt) is checked first if a password hash is set for that tech. Active Directory or LDAP is checked next if a directory server is configured. OIDC/SSO is a separate, parallel path reached only through its own sign-in button, and is the only path with its own denial branch: an unrecognized or not-yet-approved email is refused, creating a pending record rather than a session. A fourth path, a development-only fallback that accepts any password when neither a local password hash nor a directory server is configured, is not a supported deployment authentication method — it is drawn small, dashed, and visually separated from the three real options, shown only because it exists in the code and an existing finding on this page depends on it being visible. Every successful path converges on the same session, but only the Local Account path passes through a multi-factor authentication gate — Active Directory/LDAP and OIDC/SSO are identity-provider-owned and are not gated by KEEP's own MFA. Session establishment is authentication only; what that session can actually do inside KEEP is a separate authorization question, covered in Figure 8.">
         <defs>
           <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/></marker>
           <marker id="a6-refuse" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--bad)"/></marker>
@@ -788,20 +860,20 @@
 
         <rect x="390" y="450" width="400" height="70" rx="4" class="box-current"/>
         <text x="590" y="478" text-anchor="middle" class="label-title">Session Established</text>
-        <text x="590" y="496" text-anchor="middle" class="label-sub">authentication only — see Figure 7 for authorization</text>
+        <text x="590" y="496" text-anchor="middle" class="label-sub">authentication only — see Figure 8 for authorization</text>
 
         <path d="M590,520 L590,545" class="arrow" marker-end="url(#a6)"/>
-        <text x="605" y="538" class="label-flow" fill="var(--slate)">continues to Figure 7 — a session alone grants no KEEP authority</text>
+        <text x="605" y="538" class="label-flow" fill="var(--slate)">continues to Figure 8 — a session alone grants no KEEP authority</text>
 
       </svg>
       </div>
-      <figcaption><strong>Figure 6.</strong> Three supported deployment methods, plus the OIDC/SSO pending-approval gate — and multi-factor authentication applies to exactly one of the three. The dashed, visually separated fourth box is a development-only fallback, not a deployment authentication option. Ends at session establishment; what a signed-in session can actually do is a separate question, answered in Figure 7.</figcaption>
+      <figcaption><strong>Figure 7.</strong> Three supported deployment methods, plus the OIDC/SSO pending-approval gate — and multi-factor authentication applies to exactly one of the three. The dashed, visually separated fourth box is a development-only fallback, not a deployment authentication option. Ends at session establishment; what a signed-in session can actually do is a separate question, answered in Figure 8.</figcaption>
     </figure>
 
     <dl class="fields">
       <dt>Purpose</dt><dd>Make KEEP's own sign-in mechanics legible — which of the three supported methods a tech actually authenticates through, exactly where MFA does and doesn't apply, and where OIDC/SSO's pending-approval gate sits in that flow.</dd>
       <dt>Major components</dt><dd>Local Account (bcrypt), Active Directory/LDAP (via ldapts), OIDC/SSO (a separate NextAuth provider) with its own pending/inactive gate for an unrecognized or not-yet-approved email; the MFA Gate hung only off the Local Account path. A development-only fallback also exists in the code (accepts any password when neither Local nor AD/LDAP applies) — drawn small, dashed, and visually separated from the three supported methods, never presented as a customer-facing deployment option.</dd>
-      <dt>Relationships</dt><dd>Local and LDAP are evaluated in that priority order for a given tech — the first that applies wins; the development-only fallback is what happens if neither does, shown here only because an existing finding on this page (below) depends on it being visible, not as a fourth peer choice. OIDC sits outside this chain entirely, reached only via its own sign-in button, and is the only path with its own denial branch (an unrecognized or inactive email is refused, not signed in). Every successful path converges on the same session; MFA is the only structural difference among the three supported methods, and it applies to Local accounts alone. Session establishment is authentication only — it says nothing about what that session can do. That's authorization, a separate mechanism covered in Figure 7.</dd>
+      <dt>Relationships</dt><dd>Local and LDAP are evaluated in that priority order for a given tech — the first that applies wins; the development-only fallback is what happens if neither does, shown here only because an existing finding on this page (below) depends on it being visible, not as a fourth peer choice. OIDC sits outside this chain entirely, reached only via its own sign-in button, and is the only path with its own denial branch (an unrecognized or inactive email is refused, not signed in). Every successful path converges on the same session; MFA is the only structural difference among the three supported methods, and it applies to Local accounts alone. Session establishment is authentication only — it says nothing about what that session can do. That's authorization, a separate mechanism covered in Figure 8.</dd>
       <dt>Why the site</dt><dd>Answers a security-evaluating reader's actual question — "what happens when I sign in, and is MFA actually enforced" — with the real branching logic, not just a feature-list mention.</dd>
     </dl>
 
@@ -817,10 +889,10 @@
     </div>
   </section>
 
-  <!-- ================= DIAGRAM 7 ================= -->
-  <section id="d7">
-    <h2><span class="num">§7</span> Authorization: Roles &amp; Permissions</h2>
-    <p class="section-note">What a signed-in session can actually do inside KEEP — a separate question from Figure 6's "how did this session get established," answered by an additive, union-based role model rather than a single rank.</p>
+  <!-- ================= DIAGRAM 8 ================= -->
+  <section id="d8">
+    <h2><span class="num">§8</span> Authorization: Roles &amp; Permissions</h2>
+    <p class="section-note">What a signed-in session can actually do inside KEEP — a separate question from Figure 7's "how did this session get established," answered by an additive, union-based role model rather than a single rank.</p>
 
     <figure class="diagram">
       <div class="svg-scroll">
@@ -831,7 +903,7 @@
 
         <rect x="430" y="20" width="320" height="60" rx="4" class="box-current"/>
         <text x="590" y="48" text-anchor="middle" class="label-title">Signed-In Technician</text>
-        <text x="590" y="66" text-anchor="middle" class="label-sub">already authenticated — see Figure 6</text>
+        <text x="590" y="66" text-anchor="middle" class="label-sub">already authenticated — see Figure 7</text>
 
         <path d="M590,80 L590,110 L250,110 L250,140" class="arrow" marker-end="url(#a7)"/>
         <path d="M590,80 L590,110 L930,110 L930,140" class="arrow" marker-end="url(#a7)"/>
@@ -893,14 +965,14 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 7.</strong> Effective access is the union of every role a technician holds, from either source — never a single rank, never a deny-list.</figcaption>
+      <figcaption><strong>Figure 8.</strong> Effective access is the union of every role a technician holds, from either source — never a single rank, never a deny-list.</figcaption>
     </figure>
 
     <dl class="fields">
       <dt>Purpose</dt><dd>Make KEEP's authorization model legible once a session already exists — which roles a technician can hold, where those roles come from, and how they combine into what that technician can actually do.</dd>
       <dt>Major components</dt><dd>Two independent role-assignment sources (AD/LDAP group mapping, manual assignment); three predefined roles (Technician, Senior Technician, Director); four composable roles (Remote-Access Specialist, Onboarding Coordinator, Compliance Reviewer, Security Administrator); the union operation that turns an assigned-role set into effective permissions.</dd>
       <dt>Relationships</dt><dd>A technician's assigned roles are the combination of whatever AD/LDAP groups currently map to them and whatever a Director or Senior Technician assigned by hand — both can apply at once, independently, and neither source erases the other. Generic OIDC/SSO is deliberately absent from this pair: it authenticates identity only, and no OIDC group or claim currently maps to a KEEP role. Effective permissions are the union of everything every assigned role grants; there is no deny-list and no conflicting-role restriction in this version, so holding an additional role only ever adds access. The predefined and composable roles are drawn as equal, independent options specifically to avoid implying a ranked ladder is how the system decides access — permissions are the actual primitive.</dd>
-      <dt>Why the site</dt><dd>Answers the natural follow-on to Figure 6 — "OK, I'm signed in, so what can I actually do, and who decides that" — with the real model, not just "roles exist."</dd>
+      <dt>Why the site</dt><dd>Answers the natural follow-on to Figure 7 — "OK, I'm signed in, so what can I actually do, and who decides that" — with the real model, not just "roles exist."</dd>
     </dl>
 
     <div class="findings">
@@ -911,9 +983,9 @@
     </div>
   </section>
 
-  <!-- ================= DIAGRAM 8 ================= -->
-  <section id="d8">
-    <h2><span class="num">§8</span> Tech Workbench &amp; Remote Session Relay</h2>
+  <!-- ================= DIAGRAM 9 ================= -->
+  <section id="d9">
+    <h2><span class="num">§9</span> Tech Workbench &amp; Remote Session Relay</h2>
     <p class="section-note">Added 2026-09-16 — a real, fully-shipped, production-verified KEEP capability with no schematic representation anywhere before this. How a technician reaches a live RDP/SSH/VNC session on a client device without the Hub ever dialing into the client's network itself. Sourced from <code>documentation/research/tech-workbench-v1-architecture.md</code> (APPROVED 2026-08-08) and its implementation roadmap (Phase 6 CLOSED 2026-08-10, live-hardware-verified, 97/97 unit tests), cross-checked directly against the current route files.</p>
 
     <figure class="diagram">
@@ -947,7 +1019,7 @@
         <rect x="90" y="262" width="420" height="88" rx="4" class="box-current"/>
         <text x="300" y="286" text-anchor="middle" class="label-title">Spoke — independent short-interval poll</text>
         <text x="300" y="304" text-anchor="middle" class="label-sub">GET /api/relay-commands/pending</text>
-        <text x="300" y="319" text-anchor="middle" class="label-sub">mTLS client cert + bearer-token gated — same 2 endpoints as Figure 5</text>
+        <text x="300" y="319" text-anchor="middle" class="label-sub">mTLS client cert + bearer-token gated — same 2 endpoints as Figure 6</text>
         <text x="300" y="336" text-anchor="middle" class="status-tag status-current">CURRENT — decoupled from the monitoring cycle</text>
 
         <path d="M300,350 L300,378" class="arrow" marker-end="url(#a8)"/>
@@ -962,7 +1034,7 @@
         <rect x="620" y="262" width="420" height="88" rx="4" class="box-current"/>
         <text x="830" y="284" text-anchor="middle" class="label-title">guacd-bridge — ephemeral local listener</text>
         <text x="830" y="300" text-anchor="middle" class="label-sub">receives the Spoke's outbound Relay Channel — the same mTLS +</text>
-        <text x="830" y="313" text-anchor="middle" class="label-sub">bearer-token gate as Figure 5, via POST /api/tech-workbench/relay-channel</text>
+        <text x="830" y="313" text-anchor="middle" class="label-sub">bearer-token gate as Figure 6, via POST /api/tech-workbench/relay-channel</text>
         <text x="830" y="328" text-anchor="middle" class="label-sub">bridges it onto guacd — container-to-container, never dials the client LAN</text>
         <text x="830" y="343" text-anchor="middle" class="status-tag status-current">CURRENT — Phase 5, closed 2026-08-10</text>
 
@@ -1009,13 +1081,13 @@
 
       </svg>
       </div>
-      <figcaption><strong>Figure 8.</strong> The Hub never dials into a client network — the Spoke always does, outbound-only, the same posture as every other Spoke↔Hub interaction in the product. guacd never sees the client device directly either; it only ever bridges to an already-accepted relay channel inside the Hub's own container network.</figcaption>
+      <figcaption><strong>Figure 9.</strong> The Hub never dials into a client network — the Spoke always does, outbound-only, the same posture as every other Spoke↔Hub interaction in the product. guacd never sees the client device directly either; it only ever bridges to an already-accepted relay channel inside the Hub's own container network.</figcaption>
     </figure>
 
     <dl class="fields">
       <dt>Purpose</dt><dd>Show how a technician reaches a live remote session on a client device without the Hub ever gaining routed access into that client's network — a real, shipped capability this diagram library previously had zero representation of.</dd>
       <dt>Major components</dt><dd>The Remote Session Broker (the one genuinely new Hub-side orchestration piece); the reused <code>spoke_commands</code> dispatch mechanism (one new command type, <code>OPEN_RELAY_SESSION</code>); the Spoke's own decoupled, short-interval relay poll; the new outbound Spoke Relay Channel; <code>guacd-bridge</code>'s container-to-container bridge; the existing, unchanged Guacamole/<code>guacd</code> credential and protocol layer; and the new, append-only <code>tech_workbench_session_audit</code> table.</dd>
-      <dt>Relationships</dt><dd>The Spoke is the only component that ever dials into the client network, and only outbound — the same posture the Hub already holds for ordinary monitoring. Two of the Spoke↔Hub calls in this path (command pickup, relay-channel accept) are the same two endpoints Figure 5's mTLS layer hardens — this is what that hardening is <em>for</em>. No device credential is ever included in the relay/dispatch path; the tech's own saved credential is decrypted only once a real relay channel exists to hand it to. Merlin has no separate mechanism here at all — it shares the identical entry point a technician uses.</dd>
+      <dt>Relationships</dt><dd>The Spoke is the only component that ever dials into the client network, and only outbound — the same posture the Hub already holds for ordinary monitoring. Two of the Spoke↔Hub calls in this path (command pickup, relay-channel accept) are the same two endpoints Figure 6's mTLS layer hardens — this is what that hardening is <em>for</em>. No device credential is ever included in the relay/dispatch path; the tech's own saved credential is decrypted only once a real relay channel exists to hand it to. Merlin has no separate mechanism here at all — it shares the identical entry point a technician uses.</dd>
       <dt>Why the site</dt><dd>A visitor asking "how does a technician actually reach a device at a client site, and does the Hub get routed access to do it" gets the real, live-verified answer — including the one governance fact (Merlin gets no shortcut) that matters most to a security-conscious evaluator.</dd>
     </dl>
 
@@ -1023,7 +1095,7 @@
       <div class="finding gap">
         <span class="tag gap">Added 2026-09-16 — a real capability that was simply never diagrammed, not a correction of a wrong claim</span>
         <h3>This diagram didn't exist because the capability had no schematic representation at all, in either document</h3>
-        <p>Tech Workbench's remote-session relay is real, shipped, and live-hardware-verified (Phase 6 closed 2026-08-10 — a real browser opened a real Guacamole session over the full Broker → <code>spoke_commands</code> → Spoke → relay channel → <code>guacd-bridge</code> → <code>guacd</code> chain against a real second Spoke, with <code>guacd</code>'s own log confirming a successful SSH connection). It shares its trust hardening directly with Figure 5 (the same two mTLS-gated endpoints) but had never been drawn anywhere in this library. Absence is a form of staleness too: a schematic set that omits a major, current, production-verified control/data path can misrepresent the architecture as completely as a wrong box would. One correction found while building this diagram: <code>/api/guacamole/session</code> (the route an earlier internal note described as part of this chain) is now permanently disabled — a Phase 5 pre-commit security review found it as a live, unused, direct-IP bypass around the entire Broker/liveness/audit chain; <code>/api/tech-workbench/session</code> is the real, current entry point, reflected above.</p>
+        <p>Tech Workbench's remote-session relay is real, shipped, and live-hardware-verified (Phase 6 closed 2026-08-10 — a real browser opened a real Guacamole session over the full Broker → <code>spoke_commands</code> → Spoke → relay channel → <code>guacd-bridge</code> → <code>guacd</code> chain against a real second Spoke, with <code>guacd</code>'s own log confirming a successful SSH connection). It shares its trust hardening directly with Figure 6 (the same two mTLS-gated endpoints) but had never been drawn anywhere in this library. Absence is a form of staleness too: a schematic set that omits a major, current, production-verified control/data path can misrepresent the architecture as completely as a wrong box would. One correction found while building this diagram: <code>/api/guacamole/session</code> (the route an earlier internal note described as part of this chain) is now permanently disabled — a Phase 5 pre-commit security review found it as a live, unused, direct-IP bypass around the entire Broker/liveness/audit chain; <code>/api/tech-workbench/session</code> is the real, current entry point, reflected above.</p>
       </div>
     </div>
   </section>
@@ -1038,6 +1110,10 @@
     Rebuilt 2026-09-16, treating all prior claims as unproven until independently re-verified against current source (not a targeted patch): §5 (Root of Trust / Enrollment) replaced wholesale — the prior version depicted only the 2026-07-08 three-question model and named the entire cryptographic enrollment chain as unbuilt, when <code>hub-spoke.md</code>'s own later sections (2026-08-22 through today) document a real, live Persistent Logical KEEP-Instance Identity system, automatic Hub signing-key provisioning, an Ed25519-signed onboarding token (v2), and CSR-based Spoke mTLS enrollment — all now closed by a real, live, end-to-end Production rehearsal (2026-09-16). KEEP Trust (embedded manufacturer/hardware identity) remains honestly unbuilt; that has not changed. §2 (Hub / Spoke System Architecture) corrected: Undercroft was previously drawn nested inside the Hub's own trust boundary as if bind-mounted into the Hub's stack — <code>hub-spoke.md</code>'s "Undercroft placement" section (revised 2026-09-02) establishes it as a separately-provisioned service whose same-host-or-separate placement is an MSP choice, not a KEEP-enforced mandate; redrawn accordingly. §1, §3, §4, §6, and §7 were independently re-checked against current source in this same pass (RBAC role names/union model against <code>src/lib/rbac/roles.ts</code>; the Anthropic model id and BAA/DPA status against current code and <code>DECISIONS.md</code>; Merlin's capability classes and Standing Policy status against the current <code>merlin.md</code>) and held up — retained as independently re-proven current, not left unexamined.
     <br><br>
     Extended 2026-09-16, same session — completeness audit, not just correctness: added §8 (Tech Workbench &amp; Remote Session Relay), a real, fully-shipped, live-hardware-verified capability (Phase 6 closed 2026-08-10) with no representation anywhere in this library before now. Also sharpened §5's "KEEP Trust" label in place, to <strong>KEEP Trust — Device/Manufacturer Attestation</strong>, plus an explicit callout in that diagram's own section note: the term names one specific, narrow, still-unbuilt claim (is this physical device genuinely KEEP-manufactured, not a clone) and was never meant to describe the enrollment chain as a whole — a reader skimming only the box title, without the surrounding chain or the bottom callout, could otherwise mistake it for "KEEP has no trust mechanism," which is now false. The label itself was accurate; its clarity in isolation was not — corrected without touching <code>hub-spoke.md</code>'s own wording, which stays exactly as it is (a documentation-reconciliation item recorded separately, not resolved by this website pass).
+    <br><br>
+    <strong>Note on section numbers in the entries above:</strong> every entry before this one refers to the section numbers current at the time it was written. Those numbers have since shifted — see the redesign entry immediately below for exactly how. Kept unedited, per this project's own history-preservation convention, rather than rewritten to match today's numbering.
+    <br><br>
+    <strong>Redesigned 2026-09-17</strong> — direct rendered-browser visual review (not source-code reading alone) found the prior §2 ("Hub / Spoke System Architecture") had a severe, literal text-over-text collision inside its Undercroft box, and ambiguous, near-parallel arrow labels at the Hub↔Control Plane crossing — both confirmed by screenshot, recorded in <code>WEBSITE-SCHEMATICS-AUDIT.md</code>. Root cause: that one figure was answering two independent questions (the operational data path, and the business/entitlement relationship with the Control Plane) in one crowded 1180×620 picture. Split into two: the new §2 ("Operational Data Path") covers Client Devices/Spoke/Hub-Local Collector/the KEEP application container/Undercroft only, with Undercroft now drawn in its own clearly separate box with generous whitespace beneath a thick, unambiguous application-container border; the new §3 ("Control Plane, Entitlement &amp; Heartbeats") covers the Hub's registration+heartbeat, the Spoke's own independent heartbeat, the license-cap-vs-ongoing-check distinction, and — stated as an explicit, unmissable banner rather than left implicit — that operational/customer data never reaches the Control Plane. Every section from the old §3 onward shifted up by one (§3→§4 ... §8→§9); every "Figure N" cross-reference elsewhere in this file was updated to match. New legend entries were added for the "KEEP application container" (thick border), "bundled/supporting" (dashed), and "optional grouping, not a trust boundary" (neutral gray dashed) visual categories these two new figures introduce. Full before/after detail and the rendered screenshots that drove this redesign: <code>WEBSITE-SCHEMATICS-AUDIT.md</code> in the architecture corpus.
   </footer>
 
 </div>

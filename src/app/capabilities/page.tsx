@@ -140,9 +140,9 @@ export default function CapabilitiesPage() {
           description="Flags a device connecting to a previously idle switch port."
         />
         <Capability
-          status="evaluation"
+          status="validated"
           name="Uptime Kuma availability monitoring"
-          description="Tracks uptime and availability for monitored services and devices via an integrated availability-monitoring instance."
+          description="Automatically provisions and manages availability monitors for every discovered device via an integrated Uptime Kuma instance — not just a read-only display. Live-verified against real disposable Kuma instances exercising the actual management protocol, not simulated."
         />
       </ul>
 
@@ -162,6 +162,11 @@ export default function CapabilitiesPage() {
           status="validated"
           name="Identity conflict detection"
           description="Cross-references directory and endpoint activity to surface stale accounts and related identity mismatches."
+        />
+        <Capability
+          status="validated"
+          name="Ongoing syslog security evidence"
+          description="Collects firewall and network syslog traffic and continuously re-evaluates it for gaps and breach indicators after onboarding — not a one-time scan. Can raise an alert immediately when evidence suggests a prior compromise."
         />
         <Capability
           status="evaluation"

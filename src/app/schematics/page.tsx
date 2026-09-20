@@ -85,7 +85,7 @@ export default function SchematicsPage() {
       <section>
         <div className="mx-auto max-w-5xl px-6 py-16">
           <Eyebrow>Diagram Sets</Eyebrow>
-          <H2 className="mt-3">Two schematic sets, ten diagrams total</H2>
+          <H2 className="mt-3">Two schematic sets, eleven diagrams total</H2>
           <Body className="mt-4 max-w-[70ch] text-ink-soft">
             Embedded below, not summarized — each frame loads the exact same
             HTML file that &quot;Open full schematic&quot; opens full-size.
@@ -95,8 +95,8 @@ export default function SchematicsPage() {
             <SchematicEmbed
               name="How KEEP Is Built"
               href="/schematics/how-keep-is-built.html"
-              diagramCount={8}
-              description="Merlin's governance and decision model, Hub/Spoke system architecture, the Merlin layer stack, incident and signal intelligence, Spoke enrollment's root of trust, authentication and sign-in, technician authorization and roles, and the Tech Workbench remote-session relay."
+              diagramCount={9}
+              description="Merlin's governance and decision model, how discovery/monitoring data actually moves through a deployment, the business relationship with KEEP's own Control Plane, the Merlin layer stack, incident and signal intelligence, Spoke enrollment's root of trust, authentication and sign-in, technician authorization and roles, and the Tech Workbench remote-session relay."
             />
             <SchematicEmbed
               name="Merlin Architecture — Current State & Proposed Direction"
